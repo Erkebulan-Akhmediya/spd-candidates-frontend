@@ -1,10 +1,11 @@
-import axios from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 import type { App } from 'vue'
 
 export default {
-  install(app: App) {
 
-    const axiosInstance = axios.create({
+  install(app: App): void {
+
+    const axiosInstance: AxiosInstance = axios.create({
       baseURL: 'http://localhost:2109',
     });
 
@@ -20,4 +21,5 @@ export default {
     app.config.globalProperties.axios = axiosInstance;
 
   },
+
 }
