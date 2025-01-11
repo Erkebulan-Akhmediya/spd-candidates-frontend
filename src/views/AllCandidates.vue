@@ -2,12 +2,14 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: `User`,
+  name: `Candidate`
 })
 </script>
 
 <template>
-  <p>user</p>
+  <p>Candidate</p>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

@@ -3,39 +3,62 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: `Main template`,
+
   data() {
     return {
+      toHideSideBar: false,
+      selectedSideBarItem: ['/'],
       sideBarItems: [
         {
           name: 'Главная страница',
           path: '/',
+          icon: 'mdi-home'
         },
         {
-          name: 'Пользователи',
-          path: '/user',
+          name: 'Сотрудники',
+          path: '/employee/all',
+          icon: 'mdi-account-tie'
         },
-      ],
+        {
+          name: 'Кандидаты',
+          path: '/candidate/all',
+          icon: 'mdi-account-school'
+        }
+      ]
     }
   },
+
+  mounted() {
+    this.selectedSideBarItem[0] = this.$route.path;
+  },
+
 })
 </script>
 
 <template>
-  <v-row height="100vh">
-    <v-list>
-      <v-list-item>
-        <router-link v-for="item in sideBarItems" :key="item.name" :to="item.path">
-          <v-list-item-title>
-            <p>{{ item.name }}</p>
-          </v-list-item-title>
-        </router-link>
-      </v-list-item>
-    </v-list>
+  <v-layout>
+    <v-app-bar color="primary">
+      <v-app-bar-nav-icon @click.stop="toHideSideBar = !toHideSideBar" />
+    </v-app-bar>
 
-    <div style="padding: 20px">
-      <router-view />
-    </div>
-  </v-row>
+    <v-navigation-drawer :rail="toHideSideBar" permanent>
+      <v-list v-model:selected="selectedSideBarItem">
+        <v-list-item
+          v-for="item in sideBarItems"
+          :key="item.name"
+          :prepend-icon="item.icon"
+          :title="item.name"
+          :value="item.path"
+          :to="item.path"
+          :active="selectedSideBarItem[0] === item.path"
+        />
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+  </v-layout>
 </template>
 
 <style scoped></style>
