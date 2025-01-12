@@ -36,7 +36,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-layout>
+  <v-app>
     <v-app-bar color="primary">
       <v-app-bar-nav-icon @click.stop="toHideSideBar = !toHideSideBar" />
     </v-app-bar>
@@ -58,7 +58,7 @@ export default defineComponent({
     <v-main>
       <router-view></router-view>
     </v-main>
-  </v-layout>
+  </v-app>
 </template>
 
 <style scoped></style>
