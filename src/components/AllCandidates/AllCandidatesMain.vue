@@ -16,7 +16,7 @@ export default defineComponent({
 
   data() {
     return {
-      tab: '1',
+      tab: 'new',
     }
   },
 })
