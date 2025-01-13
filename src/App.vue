@@ -1,17 +1,11 @@
 <script lang="ts">
-import { RouterView } from 'vue-router'
-
-export default {
-  components: {
-    RouterView,
-  }
-}
+export default {}
 </script>
 
 <template>
-  <RouterView />
+  <v-app>
+    <router-view />
+  </v-app>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
