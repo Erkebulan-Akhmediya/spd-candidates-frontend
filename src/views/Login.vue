@@ -1,8 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import LocaleChanger from '@/components/LocaleChanger.vue'
 
 export default defineComponent({
   name: `Login`,
+
+  components: { LocaleChanger },
+
   data() {
     return {
       username: '',
@@ -16,11 +20,11 @@ export default defineComponent({
         const { data } = await this.axios.post('/auth/login', {
           username: this.username,
           password: this.password,
-        });
-        sessionStorage.setItem('token', data.token);
-        await this.$router.push('/');
+        })
+        sessionStorage.setItem('token', data.token)
+        await this.$router.push('/')
       } catch (e: unknown) {
-        console.log(e);
+        console.log(e)
       }
     },
   },
@@ -30,7 +34,7 @@ export default defineComponent({
 <template>
   <v-app-bar elevation="0">
     <template v-slot:append>
-      <v-select class="mt-5" v-model="$i18n.locale" :items="$i18n.availableLocales" dense />
+      <locale-changer />
     </template>
   </v-app-bar>
   <v-main class="d-flex flex-column justify-center align-center">

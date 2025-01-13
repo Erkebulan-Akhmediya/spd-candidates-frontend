@@ -25,11 +25,11 @@ export default defineComponent({
 <template>
   <v-col class="pa-0 ma-0">
     <v-tabs v-model="tab">
-      <v-tab value="new">Новые</v-tab>
-      <v-tab value="onRevision">На проверке ВБ</v-tab>
-      <v-tab value="onApproval">На согласовании</v-tab>
-      <v-tab value="approved">Согласованные</v-tab>
-      <v-tab value="rejected">Отказанные</v-tab>
+      <v-tab value="new">{{ $t('allCandidates.tabs.new') }}</v-tab>
+      <v-tab value="onRevision">{{ $t('allCandidates.tabs.onRevision') }}</v-tab>
+      <v-tab value="onApproval">{{ $t('allCandidates.tabs.onApproval') }}</v-tab>
+      <v-tab value="approved">{{ $t('allCandidates.tabs.approved') }}</v-tab>
+      <v-tab value="rejected">{{ $t('allCandidates.tabs.rejected') }}</v-tab>
     </v-tabs>
 
     <v-tabs-window v-model="tab">

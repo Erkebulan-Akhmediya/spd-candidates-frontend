@@ -1,14 +1,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import LocaleChanger from '@/components/LocaleChanger.vue'
 
 interface SideBarItem {
-  name: string,
-  icon: string,
-  path: string,
+  name: string
+  icon: string
+  path: string
 }
 
 export default defineComponent({
   name: `Main template`,
+  components: { LocaleChanger },
 
   data() {
     return {
@@ -36,9 +38,30 @@ export default defineComponent({
 
   watch: {
     selectedSideBarItem(newVal: string[], oldVal: string[]) {
-      if (!newVal[0]) this.selectedSideBarItem = oldVal;
+      if (!newVal[0]) this.selectedSideBarItem = oldVal
     },
   },
+
+  mounted() {
+    this.setSelectedSideBarItem()
+  },
+
+  methods: {
+
+    setSelectedSideBarItem(): void {
+      const selectedSideBarItem: SideBarItem | undefined = this.sideBarItems.find(
+        (item: SideBarItem): boolean => item.path === this.$route.path,
+      )
+
+      if (selectedSideBarItem === undefined) {
+        this.selectedSideBarItem[0] = 'sideBarItems.main'
+      } else {
+        this.selectedSideBarItem[0] = selectedSideBarItem.name
+      }
+    },
+
+  },
+
 })
 </script>
 
@@ -51,7 +74,7 @@ export default defineComponent({
     <v-spacer />
 
     <template v-slot:append>
-      <v-select class="mt-5" v-model="$i18n.locale" :items="$i18n.availableLocales" dense />
+      <locale-changer />
     </template>
   </v-app-bar>
 
