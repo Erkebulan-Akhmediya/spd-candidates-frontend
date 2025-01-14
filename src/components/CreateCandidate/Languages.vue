@@ -46,6 +46,9 @@ export default defineComponent({
     :items="languages"
     item-value="code"
     :item-title="getLanguageName"
+    multiple
+    chips
+    closable-chips
   />
 </template>
 

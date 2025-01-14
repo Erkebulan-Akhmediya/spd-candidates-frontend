@@ -1,0 +1,112 @@
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+
+interface Experience {
+  index: number
+  startDate: Date
+  endDate: Date
+  position: string
+  companyName: string
+}
+
+export default defineComponent({
+  name: `Experience`,
+
+  components: {
+    VDateInput,
+  },
+
+  data() {
+    return {
+      headers: [
+        {
+          key: 'startDate',
+          title: 'Дата начала',
+        },
+        {
+          key: 'endDate',
+          title: 'Дата начала',
+        },
+        {
+          key: 'position',
+          title: 'Должность',
+        },
+        {
+          key: 'companyName',
+          title: 'Компания',
+        },
+        {
+          key: 'deleteButton',
+          title: '',
+        },
+      ],
+      experiences: new Array<Experience>(),
+    }
+  },
+
+  methods: {
+    addExperience() {
+      this.experiences.push({
+        index: this.getNextExperienceIndex(),
+        startDate: new Date(),
+        endDate: new Date(),
+        position: '',
+        companyName: '',
+      })
+    },
+
+    deleteExperience(experienceToDelete: Experience) {
+      this.experiences = this.experiences.filter(
+        (experience: Experience): boolean => experience.index !== experienceToDelete.index,
+      )
+    },
+
+    getNextExperienceIndex(): number {
+      if (this.experiences.length === 0) return 0
+      return this.experiences[this.experiences.length - 1].index + 1
+    },
+  },
+})
+</script>
+
+<template>
+  <v-card elevation="2">
+    <v-card-text>
+      <v-data-table :headers="headers" :items="experiences" hide-default-footer disable-sort>
+        <template v-slot:top>
+          <v-row justify="space-between" align="center" class="pa-3">
+            <h2>Опыт работы</h2>
+            <v-btn icon @click="addExperience" color="primary">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-row>
+        </template>
+
+        <template v-slot:[`item.startDate`]="{ item }">
+          <v-date-input class="mt-5" v-model="item.startDate" variant="outlined" />
+        </template>
+
+        <template v-slot:[`item.endDate`]="{ item }">
+          <v-date-input class="mt-5" v-model="item.endDate" variant="outlined" />
+        </template>
+
+        <template v-slot:[`item.position`]="{ item }">
+          <v-text-field class="mt-5" v-model="item.position" variant="outlined" />
+        </template>
+
+        <template v-slot:[`item.companyName`]="{ item }">
+          <v-text-field class="mt-5" v-model="item.companyName" variant="outlined" />
+        </template>
+
+        <template v-slot:[`item.deleteButton`]="{ item }">
+          <v-btn icon @click="deleteExperience(item)" color="error">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
+</template>
+
+<style scoped></style>

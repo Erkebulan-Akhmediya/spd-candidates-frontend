@@ -3,11 +3,17 @@ import { defineComponent } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 import Nationalities from '@/components/CreateCandidate/Nationalities.vue'
 import Languages from '@/components/CreateCandidate/Languages.vue'
+import DriverLicenses from '@/components/CreateCandidate/DriverLicenses.vue'
+import RecruitedMethods from '@/components/CreateCandidate/RecruitedMethods.vue'
+import Experience from '@/components/CreateCandidate/Experience.vue'
 
 export default defineComponent({
   name: 'CreateCandidate',
 
   components: {
+    Experience,
+    RecruitedMethods,
+    DriverLicenses,
     Languages,
     Nationalities,
     VDateInput,
@@ -17,6 +23,7 @@ export default defineComponent({
     return {
       errMsg: String(),
       toShowErr: false,
+      toShowComment: false,
     }
   },
 
@@ -31,6 +38,10 @@ export default defineComponent({
       console.log(msg)
       this.errMsg = msg
       this.toShowErr = true
+    },
+
+    showComment(toShowComment: boolean) {
+      this.toShowComment = toShowComment
     },
   },
 })
@@ -61,19 +72,19 @@ export default defineComponent({
       <v-container fluid>
         <v-row justify="space-around">
           <v-col cols="4">
-            <v-text-field label="Фамилия" class="" variant="outlined" />
+            <v-text-field label="Фамилия" variant="outlined" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Имя" class="" variant="outlined" />
+            <v-text-field label="Имя" variant="outlined" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Отество" class="" variant="outlined" />
+            <v-text-field label="Отество" variant="outlined" />
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="4">
-            <v-date-input label="Дата рождения" type="date" variant="outlined" />
+            <v-date-input label="Дата рождения" variant="outlined" />
           </v-col>
           <v-col cols="4">
             <v-text-field label="Место рождения" variant="outlined" />
@@ -97,7 +108,7 @@ export default defineComponent({
             <languages @error="showError" />
           </v-col>
           <v-col cols="4">
-            <v-select label="Водительское удостоверение" variant="outlined" />
+            <driver-licenses @error="showError" />
           </v-col>
         </v-row>
 
@@ -105,9 +116,50 @@ export default defineComponent({
           <v-col cols="4">
             <v-text-field label="Образование" variant="outlined" />
           </v-col>
+          <v-col cols="4">
+            <v-text-field label="Отношение к спорту" variant="outlined" />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="4">
+            <recruited-methods @error="showError" @show-comment="showComment" />
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              label="Коментарий к рекомендации"
+              variant="outlined"
+              v-if="toShowComment"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12">
+            <experience />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12">
+            <v-textarea variant="outlined" label="Результат проверки ВБ" />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12">
+            <v-textarea variant="outlined" label="Дополнительные сведения" />
+          </v-col>
         </v-row>
       </v-container>
     </v-card-text>
+
+    <v-card-actions>
+      <v-row class="pa-5">
+        <v-btn variant="elevated" class="mr-3">Отмена</v-btn>
+        <v-btn variant="elevated" color="primary">Сохранить</v-btn>
+      </v-row>
+    </v-card-actions>
   </v-card>
 </template>
 
