@@ -27,15 +27,12 @@ export default defineComponent({
     }
   },
 
-  async created() {},
-
   methods: {
     async goBack() {
       await this.$router.push('/candidate/all')
     },
 
     showError(msg: string) {
-      console.log(msg)
       this.errMsg = msg
       this.toShowErr = true
     },
