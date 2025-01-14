@@ -22,6 +22,10 @@ const router: Router = createRouter({
         {
           path: 'candidate/all',
           component: () => import('@/views/AllCandidates.vue')
+        },
+        {
+          path: 'candidate/create',
+          component: () => import('@/views/CreateCandidate.vue')
         }
       ]
     }
