@@ -1,17 +1,23 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { mapWritableState } from 'pinia'
+import { useCandidateStore } from '@/stores/candidate.ts'
 
 export default defineComponent({
   name: 'DriverLicenses',
 
   data() {
     return {
-      driverLicenses: new Array<string>(),
+      driverLicenses: new Array<string>()
     }
   },
 
   async created() {
     await this.fetchDriverLicenses()
+  },
+
+  computed: {
+    ...mapWritableState(useCandidateStore, ['candidate'])
   },
 
   methods: {
@@ -23,8 +29,8 @@ export default defineComponent({
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по водительским правам')
       }
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -33,6 +39,7 @@ export default defineComponent({
     label="Водительские права"
     variant="outlined"
     :items="driverLicenses"
+    v-model="candidate.driverLicenseCodes"
     multiple
     chips
     closable-chips

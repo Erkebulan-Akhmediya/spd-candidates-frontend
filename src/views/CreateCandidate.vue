@@ -6,6 +6,8 @@ import Languages from '@/components/CreateCandidate/Languages.vue'
 import DriverLicenses from '@/components/CreateCandidate/DriverLicenses.vue'
 import RecruitedMethods from '@/components/CreateCandidate/RecruitedMethods.vue'
 import Experience from '@/components/CreateCandidate/Experience.vue'
+import { mapWritableState } from 'pinia'
+import { useCandidateStore } from '@/stores/candidate.ts'
 
 export default defineComponent({
   name: 'CreateCandidate',
@@ -16,15 +18,19 @@ export default defineComponent({
     DriverLicenses,
     Languages,
     Nationalities,
-    VDateInput,
+    VDateInput
   },
 
   data() {
     return {
       errMsg: String(),
       toShowErr: false,
-      toShowComment: false,
+      toShowComment: false
     }
+  },
+
+  computed: {
+    ...mapWritableState(useCandidateStore, ['candidate'])
   },
 
   methods: {
@@ -40,7 +46,18 @@ export default defineComponent({
     showComment(toShowComment: boolean) {
       this.toShowComment = toShowComment
     },
-  },
+
+    async save(): Promise<void> {
+      try {
+        await this.axios.post('/candidate', this.candidate)
+        this.$router.push('/candidate/all')
+      } catch (e: unknown) {
+        this.showError('Не удалось сохранить кандидата')
+        console.log(e)
+      }
+    }
+
+  }
 })
 </script>
 
@@ -67,33 +84,41 @@ export default defineComponent({
 
     <v-card-text>
       <v-container fluid>
-        <v-row justify="space-around">
+        <v-row>
           <v-col cols="4">
-            <v-text-field label="Фамилия" variant="outlined" />
+            <v-text-field label="Имя пользователя" variant="outlined" v-model="candidate.username" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Имя" variant="outlined" />
+            <v-text-field label="Пароль" variant="outlined" v-model="candidate.password" />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="4">
+            <v-text-field label="Фамилия" variant="outlined" v-model="candidate.lastName" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Отество" variant="outlined" />
+            <v-text-field label="Имя" variant="outlined" v-model="candidate.firstName" />
+          </v-col>
+          <v-col cols="4">
+            <v-text-field label="Отество" variant="outlined" v-model="candidate.middleName" />
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="4">
-            <v-date-input label="Дата рождения" variant="outlined" />
+            <v-date-input label="Дата рождения" variant="outlined" v-model="candidate.birthDate" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Место рождения" variant="outlined" />
+            <v-text-field label="Место рождения" variant="outlined" v-model="candidate.birthPlace" />
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="4">
-            <v-text-field label="ИИН" variant="outlined" />
+            <v-text-field label="ИИН" variant="outlined" v-model="candidate.identificationNumber" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Номер телефона" variant="outlined" />
+            <v-text-field label="Номер телефона" variant="outlined" v-model="candidate.phoneNumber" />
           </v-col>
         </v-row>
 
@@ -111,10 +136,10 @@ export default defineComponent({
 
         <v-row>
           <v-col cols="4">
-            <v-text-field label="Образование" variant="outlined" />
+            <v-text-field label="Образование" variant="outlined" v-model="candidate.education" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Отношение к спорту" variant="outlined" />
+            <v-text-field label="Отношение к спорту" variant="outlined" v-model="candidate.sport" />
           </v-col>
         </v-row>
 
@@ -127,6 +152,7 @@ export default defineComponent({
               label="Коментарий к рекомендации"
               variant="outlined"
               v-if="toShowComment"
+              v-model="candidate.recruitedMethodComment"
             />
           </v-col>
         </v-row>
@@ -139,13 +165,13 @@ export default defineComponent({
 
         <v-row>
           <v-col cols="12">
-            <v-textarea variant="outlined" label="Результат проверки ВБ" />
+            <v-textarea variant="outlined" label="Результат проверки ВБ" v-model="candidate.securityCheckResult" />
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="12">
-            <v-textarea variant="outlined" label="Дополнительные сведения" />
+            <v-textarea variant="outlined" label="Дополнительные сведения" v-model="candidate.additionalData" />
           </v-col>
         </v-row>
       </v-container>
@@ -154,7 +180,7 @@ export default defineComponent({
     <v-card-actions>
       <v-row class="pa-5">
         <v-btn variant="elevated" class="mr-3">Отмена</v-btn>
-        <v-btn variant="elevated" color="primary">Сохранить</v-btn>
+        <v-btn variant="elevated" color="primary" @click="save">Сохранить</v-btn>
       </v-row>
     </v-card-actions>
   </v-card>

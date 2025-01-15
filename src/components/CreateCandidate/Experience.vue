@@ -1,8 +1,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
+import { mapWritableState } from 'pinia'
+import { useCandidateStore } from '@/stores/candidate.ts'
 
-interface Experience {
+export interface Experience {
   index: number
   startDate: Date
   endDate: Date
@@ -14,7 +16,7 @@ export default defineComponent({
   name: `Experience`,
 
   components: {
-    VDateInput,
+    VDateInput
   },
 
   data() {
@@ -22,58 +24,61 @@ export default defineComponent({
       headers: [
         {
           key: 'startDate',
-          title: 'Дата начала',
+          title: 'Дата начала'
         },
         {
           key: 'endDate',
-          title: 'Дата начала',
+          title: 'Дата начала'
         },
         {
           key: 'position',
-          title: 'Должность',
+          title: 'Должность'
         },
         {
           key: 'companyName',
-          title: 'Компания',
+          title: 'Компания'
         },
         {
           key: 'deleteButton',
-          title: '',
-        },
-      ],
-      experiences: new Array<Experience>(),
+          title: ''
+        }
+      ]
     }
+  },
+
+  computed: {
+    ...mapWritableState(useCandidateStore, ['candidate'])
   },
 
   methods: {
     addExperience() {
-      this.experiences.push({
+      this.candidate.experiences.push({
         index: this.getNextExperienceIndex(),
         startDate: new Date(),
         endDate: new Date(),
         position: '',
-        companyName: '',
+        companyName: ''
       })
     },
 
     deleteExperience(experienceToDelete: Experience) {
-      this.experiences = this.experiences.filter(
-        (experience: Experience): boolean => experience.index !== experienceToDelete.index,
+      this.candidate.experiences = this.candidate.experiences.filter(
+        (experience: Experience): boolean => experience.index !== experienceToDelete.index
       )
     },
 
     getNextExperienceIndex(): number {
-      if (this.experiences.length === 0) return 0
-      return this.experiences[this.experiences.length - 1].index + 1
-    },
-  },
+      if (this.candidate.experiences.length === 0) return 0
+      return this.candidate.experiences[this.candidate.experiences.length - 1].index + 1
+    }
+  }
 })
 </script>
 
 <template>
   <v-card elevation="2">
     <v-card-text>
-      <v-data-table :headers="headers" :items="experiences" hide-default-footer disable-sort>
+      <v-data-table :headers="headers" :items="candidate.experiences" hide-default-footer disable-sort>
         <template v-slot:top>
           <v-row justify="space-between" align="center" class="pa-3">
             <h2>Опыт работы</h2>

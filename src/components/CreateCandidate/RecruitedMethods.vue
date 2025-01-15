@@ -1,5 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { mapWritableState } from 'pinia'
+import { useCandidateStore } from '@/stores/candidate.ts'
 
 interface RecruitedMethod {
   id: number
@@ -13,12 +15,16 @@ export default defineComponent({
   data() {
     return {
       recruitedMethods: new Array<RecruitedMethod>(),
-      selectedMethodId: Number(),
+      selectedMethodId: Number()
     }
   },
 
   async created() {
     await this.fetchRecruitedMethods()
+  },
+
+  computed: {
+    ...mapWritableState(useCandidateStore, ['candidate'])
   },
 
   methods: {
@@ -39,9 +45,9 @@ export default defineComponent({
 
     onMethodUpdate(methodId: number) {
       this.$emit('show-comment', methodId === 4)
-    },
+    }
 
-  },
+  }
 })
 </script>
 
@@ -53,6 +59,7 @@ export default defineComponent({
     item-value="id"
     :item-title="getRecruitedMethodName"
     @update:model-value="onMethodUpdate"
+    v-model="candidate.recruitedMethodId"
   />
 </template>
 

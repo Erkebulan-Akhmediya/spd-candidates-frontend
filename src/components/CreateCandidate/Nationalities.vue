@@ -1,5 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { mapWritableState } from 'pinia'
+import { useCandidateStore } from '@/stores/candidate.ts'
 
 interface Nationality {
   code: number
@@ -12,12 +14,16 @@ export default defineComponent({
 
   data() {
     return {
-      nationalities: new Array<Nationality>(),
+      nationalities: new Array<Nationality>()
     }
   },
 
   async created() {
     await this.fetchNationalities()
+  },
+
+  computed: {
+    ...mapWritableState(useCandidateStore, ['candidate'])
   },
 
   methods: {
@@ -34,8 +40,8 @@ export default defineComponent({
     getNationalityName(nationality: Nationality): string {
       if (this.$i18n.locale === 'ru') return nationality.nameRus
       return nationality.nameKaz
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -46,6 +52,7 @@ export default defineComponent({
     :items="nationalities"
     item-value="code"
     :item-title="getNationalityName"
+    v-model="candidate.nationalityCode"
   />
 </template>
 

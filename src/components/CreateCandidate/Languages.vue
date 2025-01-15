@@ -1,5 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { mapWritableState } from 'pinia'
+import { useCandidateStore } from '@/stores/candidate.ts'
 
 interface Language {
   code: string
@@ -12,12 +14,16 @@ export default defineComponent({
 
   data() {
     return {
-      languages: new Array<Language>(),
+      languages: new Array<Language>()
     }
   },
 
   async created() {
     await this.fetchLanguages()
+  },
+
+  computed: {
+    ...mapWritableState(useCandidateStore, ['candidate'])
   },
 
   methods: {
@@ -34,8 +40,8 @@ export default defineComponent({
     getLanguageName(language: Language) {
       if (this.$i18n.locale === 'ru') return language.nameRus
       return language.nameKaz
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -46,6 +52,7 @@ export default defineComponent({
     :items="languages"
     item-value="code"
     :item-title="getLanguageName"
+    v-model="candidate.languageCodes"
     multiple
     chips
     closable-chips
