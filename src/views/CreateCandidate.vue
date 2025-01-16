@@ -62,7 +62,6 @@ export default defineComponent({
       if (!this.candidate.education) err.push('образование')
       if (!this.candidate.sport) err.push('отношение к спорту')
       if (!this.candidate.recruitedMethodId) err.push('откуда подобран кандидат')
-      if (this.candidate.experiences.length === 0) err.push('опыт работы')
       if (!this.candidate.securityCheckResult) err.push('результат проверки ВБ')
 
       if (err.length > 0) throw `следующие поля обязательны: ${err.join(', ')}`
