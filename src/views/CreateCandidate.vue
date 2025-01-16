@@ -183,13 +183,22 @@ export default defineComponent({
 
         <v-row>
           <v-col cols="4">
-            <v-text-field label="ИИН" variant="outlined" v-model="candidate.identificationNumber" />
+            <v-text-field
+              label="ИИН"
+              variant="outlined"
+              v-model="candidate.identificationNumber"
+              type="number"
+              :rules="[
+                t => t.length === 12 || 'ИИН должен содержать 12 цифр',
+              ]"
+            />
           </v-col>
           <v-col cols="4">
             <v-text-field
               label="Номер телефона"
               variant="outlined"
               v-model="candidate.phoneNumber"
+              type="number"
             />
           </v-col>
         </v-row>

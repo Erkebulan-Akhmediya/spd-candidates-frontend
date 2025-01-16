@@ -72,7 +72,6 @@ export default defineComponent({
         })
         this.count = data.count
         this.candidates = data.candidates
-        console.log(data)
       } catch (e: unknown) {
         console.log(e)
       }
@@ -91,7 +90,7 @@ export default defineComponent({
   <v-data-table-server
     :items-length="count"
     v-model:items-per-page="pageSize"
-    :page="pageNumber"
+    v-model:page="pageNumber"
     :items="candidates"
     :headers="headers"
     @update:options="fetchCandidates"
