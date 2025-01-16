@@ -26,8 +26,8 @@ export default defineComponent({
   <v-col class="pa-0 ma-0">
     <v-tabs v-model="tab">
       <v-tab value="new">{{ $t('allCandidates.tabs.new') }}</v-tab>
-      <v-tab value="onRevision">{{ $t('allCandidates.tabs.onRevision') }}</v-tab>
-      <v-tab value="onApproval">{{ $t('allCandidates.tabs.onApproval') }}</v-tab>
+      <v-tab value="security">{{ $t('allCandidates.tabs.onRevision') }}</v-tab>
+      <v-tab value="approval">{{ $t('allCandidates.tabs.onApproval') }}</v-tab>
       <v-tab value="approved">{{ $t('allCandidates.tabs.approved') }}</v-tab>
       <v-tab value="rejected">{{ $t('allCandidates.tabs.rejected') }}</v-tab>
     </v-tabs>
@@ -37,11 +37,11 @@ export default defineComponent({
         <all-candidates-tab :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
 
-      <v-tabs-window-item value="onRevision">
+      <v-tabs-window-item value="security">
         <all-candidates-tab :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
 
-      <v-tabs-window-item value="onApproval">
+      <v-tabs-window-item value="approval">
         <all-candidates-tab :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
 

@@ -10,7 +10,7 @@ export default defineComponent({
   data() {
     return {
       regions: new Array<Region>(),
-      selectedRegionId: Number(),
+      selectedRegionId: [-1],
     }
   },
 
@@ -54,7 +54,7 @@ export default defineComponent({
     </v-navigation-drawer>
 
     <v-container fluid class="pa-0 ma-0">
-      <all-candidates-main :region-id="selectedRegionId" />
+      <all-candidates-main :region-id="selectedRegionId[0]" />
     </v-container>
   </v-container>
 </template>
