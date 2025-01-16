@@ -2,13 +2,14 @@
 import { defineComponent } from 'vue'
 
 interface CandidateListItem {
+  identificationNumber: string
   lastName: string
   firstName: string
   middleName: string
 }
 
 export default defineComponent({
-  name: 'AllCandidatesTab',
+  name: 'AllCandidatesTable',
 
   props: {
     tabType: {
@@ -37,17 +38,22 @@ export default defineComponent({
       headers: [
         {
           key: 'lastName',
-          title: 'Фамилия'
+          title: 'Фамилия',
         },
         {
           key: 'firstName',
-          title: 'Имя'
+          title: 'Имя',
         },
         {
           key: 'middleName',
-          title: 'Отчество'
-        }
-      ]
+          title: 'Отчество',
+        },
+        {
+          key: 'viewButton',
+          title: '',
+        },
+      ],
+      test: {},
     }
   },
 
@@ -58,6 +64,12 @@ export default defineComponent({
   methods: {
     async goToCreateCandidate() {
       await this.$router.push({ path: '/candidate/create' })
+    },
+
+    async goCandidatePage(id: string) {
+      if (this.tabType === 'new') {
+        await this.$router.push({ path: `/candidate/${id}` })
+      }
     },
 
     async fetchCandidates() {
@@ -81,8 +93,8 @@ export default defineComponent({
   watch: {
     async regionId() {
       await this.fetchCandidates()
-    }
-  }
+    },
+  },
 })
 </script>
 
@@ -101,6 +113,12 @@ export default defineComponent({
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-row>
+    </template>
+
+    <template v-slot:[`item.viewButton`]="{ item }">
+      <v-btn variant="text" class="ma-2" @click="goCandidatePage(item.identificationNumber)">
+        <v-icon>mdi-eye</v-icon>
+      </v-btn>
     </template>
   </v-data-table-server>
 </template>

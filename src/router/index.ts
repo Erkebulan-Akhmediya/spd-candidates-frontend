@@ -1,11 +1,16 @@
-import { createRouter, createWebHistory, type RouteLocationNormalizedGeneric, type Router } from 'vue-router'
+import {
+  createRouter,
+  createWebHistory,
+  type RouteLocationNormalizedGeneric,
+  type Router,
+} from 'vue-router'
 
 const router: Router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
-      component: () => import('@/views/Login.vue')
+      component: () => import('@/views/Login.vue'),
     },
     {
       path: '/',
@@ -13,23 +18,33 @@ const router: Router = createRouter({
       children: [
         {
           path: '',
-          component: () => import('@/views/Home.vue')
+          component: () => import('@/views/Home.vue'),
         },
         {
           path: 'employee/all',
-          component: () => import('@/views/AllEmployees.vue')
+          component: () => import('@/views/AllEmployees.vue'),
         },
         {
           path: 'candidate/all',
-          component: () => import('@/views/AllCandidates.vue')
+          component: () => import('@/views/AllCandidates.vue'),
         },
         {
           path: 'candidate/create',
-          component: () => import('@/views/CreateCandidate.vue')
-        }
-      ]
-    }
-  ]
+          component: () => import('@/views/CreateCandidate.vue'),
+          props: {
+            editMode: false,
+          },
+        },
+        {
+          path: 'candidate/:id',
+          component: () => import('@/views/CreateCandidate.vue'),
+          props: {
+            editMode: true,
+          },
+        },
+      ],
+    },
+  ],
 })
 
 router.beforeEach((to: RouteLocationNormalizedGeneric) => {
@@ -38,8 +53,8 @@ router.beforeEach((to: RouteLocationNormalizedGeneric) => {
   if (to.path !== '/login') {
     if (token === null) return { path: '/login' }
   } else {
-    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('token')
   }
-});
+})
 
 export default router

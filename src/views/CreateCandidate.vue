@@ -23,6 +23,13 @@ export default defineComponent({
     VDateInput,
   },
 
+  props: {
+    editMode: {
+      type: Boolean,
+      required: true,
+    },
+  },
+
   data() {
     return {
       errMsg: String(),
@@ -33,6 +40,11 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useCandidateStore, ['candidate']),
+  },
+
+  async mounted() {
+    this.clear()
+    if (this.editMode) await this.fetchCandidate()
   },
 
   methods: {
@@ -47,6 +59,26 @@ export default defineComponent({
 
     showComment(toShowComment: boolean) {
       this.toShowComment = toShowComment
+    },
+
+    async fetchCandidate() {
+      try {
+        const { data } = await this.axios.get(`/candidate/${this.$route.params.id}`)
+        this.candidate = data
+      } catch (e) {
+        console.log(e)
+        this.showError('Не удалось получить данные канидата')
+      }
+    },
+
+    async sendToSecurityCheck() {
+      try {
+        await this.axios.put('/candidate/to/security', this.candidate)
+        await this.goBack()
+      } catch (e) {
+        console.log(e)
+        this.showError('Ошибка отправки на проверку ВБ')
+      }
     },
 
     validate(): void {
@@ -108,7 +140,6 @@ export default defineComponent({
         this.validate()
         await this.axios.post('/candidate', this.candidate)
         await this.$router.push('/candidate/all')
-        this.clear()
       } catch (e: unknown) {
         this.showError(`Не удалось сохранить кандидата: ${e}`)
         console.log(e)
@@ -135,7 +166,7 @@ export default defineComponent({
           <v-icon>mdi-arrow-left</v-icon>
           <p>Назад</p>
         </v-btn>
-        <p class="ml-5">Новый кандидат</p>
+        <p class="ml-5">{{ editMode ? 'Анкета кандидата' : 'Новый кандидат' }}</p>
       </v-row>
     </v-card-title>
 
@@ -150,7 +181,12 @@ export default defineComponent({
             />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Пароль" variant="outlined" v-model="candidate.password" />
+            <v-text-field
+              label="Пароль"
+              variant="outlined"
+              v-model="candidate.password"
+              v-if="!editMode"
+            />
           </v-col>
         </v-row>
         <v-row>
@@ -188,9 +224,8 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.identificationNumber"
               type="number"
-              :rules="[
-                t => t.length === 12 || 'ИИН должен содержать 12 цифр',
-              ]"
+              :rules="[(t) => t.length === 12 || 'ИИН должен содержать 12 цифр']"
+              :disabled="editMode"
             />
           </v-col>
           <v-col cols="4">
@@ -268,8 +303,11 @@ export default defineComponent({
 
     <v-card-actions>
       <v-row class="pa-5">
-        <v-btn variant="elevated" class="mr-3">Отмена</v-btn>
-        <v-btn variant="elevated" color="primary" @click="save">Сохранить</v-btn>
+        <v-btn variant="elevated" class="mr-3" @click="goBack">Отмена</v-btn>
+        <v-btn variant="elevated" color="primary" @click="save" v-if="!editMode">Сохранить</v-btn>
+        <v-btn variant="elevated" color="primary" @click="sendToSecurityCheck" v-else
+          >Направить на проверку ВБ</v-btn
+        >
       </v-row>
     </v-card-actions>
   </v-card>

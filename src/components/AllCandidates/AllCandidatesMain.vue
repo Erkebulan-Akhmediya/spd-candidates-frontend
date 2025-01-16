@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import AllCandidatesTab from '@/components/AllCandidates/AllCandidatesTab.vue'
+import AllCandidatesTab from '@/components/AllCandidates/AllCandidatesTable.vue'
 
 export default defineComponent({
   name: 'AllCandidatesMain',
