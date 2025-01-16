@@ -8,11 +8,13 @@ import RecruitedMethods from '@/components/CreateCandidate/RecruitedMethods.vue'
 import Experience from '@/components/CreateCandidate/Experience.vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
+import TestingRegion from '@/components/CreateCandidate/TestingRegion.vue'
 
 export default defineComponent({
   name: 'CreateCandidate',
 
   components: {
+    TestingRegion,
     Experience,
     RecruitedMethods,
     DriverLicenses,
@@ -79,11 +81,34 @@ export default defineComponent({
       }
     },
 
+    clear(): void {
+      this.candidate.username = ''
+      this.candidate.password = ''
+      this.candidate.lastName = ''
+      this.candidate.firstName = ''
+      this.candidate.middleName = ''
+      this.candidate.birthDate = new Date()
+      this.candidate.birthPlace = ''
+      this.candidate.identificationNumber = ''
+      this.candidate.phoneNumber = ''
+      this.candidate.nationalityCode = 0
+      this.candidate.languageCodes = []
+      this.candidate.driverLicenseCodes = []
+      this.candidate.education = ''
+      this.candidate.sport = ''
+      this.candidate.recruitedMethodId = 0
+      this.candidate.recruitedMethodComment = ''
+      this.candidate.experiences = []
+      this.candidate.securityCheckResult = ''
+      this.candidate.additionalData = ''
+    },
+
     async save(): Promise<void> {
       try {
         this.validate()
         await this.axios.post('/candidate', this.candidate)
         await this.$router.push('/candidate/all')
+        this.clear()
       } catch (e: unknown) {
         this.showError(`Не удалось сохранить кандидата: ${e}`)
         console.log(e)
@@ -150,6 +175,9 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.birthPlace"
             />
+          </v-col>
+          <v-col cols="4">
+            <testing-region @error="showError" />
           </v-col>
         </v-row>
 

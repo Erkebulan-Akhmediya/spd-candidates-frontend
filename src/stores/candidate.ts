@@ -1,27 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Experience } from '@/components/CreateCandidate/Experience.vue'
-
-interface Candidate {
-  lastName: string,
-  firstName: string,
-  middleName: string,
-  birthDate: Date,
-  birthPlace: string,
-  identificationNumber: string,
-  phoneNumber: string,
-  nationalityCode: number,
-  languageCodes: string[],
-  driverLicenseCodes: string[],
-  education: string,
-  sport: string,
-  recruitedMethodId: number,
-  recruitedMethodComment: string,
-  experiences: Experience[],
-  securityCheckResult: string,
-  additionalData: string,
-  username: string,
-  password: string,
-}
+import type { Candidate } from '@/interfaces/interfaces.ts'
 
 export const useCandidateStore = defineStore('candidate', {
   state() {
@@ -32,6 +11,7 @@ export const useCandidateStore = defineStore('candidate', {
         middleName: String(),
         birthDate: new Date(),
         birthPlace: String(),
+        testingRegionId: Number(),
         identificationNumber: String(),
         phoneNumber: String(),
         nationalityCode: Number(),

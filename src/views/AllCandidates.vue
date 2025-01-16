@@ -1,12 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import AllCandidatesMain from '@/components/AllCandidates/AllCandidatesMain.vue'
-
-interface Region {
-  id: number
-  nameRus: string
-  nameKaz: string
-}
+import type { Region } from '@/interfaces/interfaces.ts'
 
 export default defineComponent({
   name: `Candidate`,
