@@ -46,7 +46,7 @@ export default defineComponent({
 
   async mounted() {
     this.clear()
-    if (this.tab === 'new') await this.fetchCandidate()
+    if (this.tab !== 'create') await this.fetchCandidate()
   },
 
   methods: {

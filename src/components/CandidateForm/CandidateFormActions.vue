@@ -23,13 +23,11 @@ export default defineComponent({
       await this.$router.push('/candidate/all')
     },
 
-    async reject() {},
-
-    validate(): void {
+    validate(creating?: boolean): void {
       const err: string[] = []
 
       if (!this.candidate.username) err.push('имя пользователя')
-      if (!this.candidate.password) err.push('пароль')
+      if (creating && !this.candidate.password) err.push('пароль')
       if (!this.candidate.lastName) err.push('фамилия')
       if (!this.candidate.firstName) err.push('имя')
       if (!this.candidate.birthDate) err.push('дата рождения')
@@ -59,17 +57,29 @@ export default defineComponent({
 
     async save(): Promise<void> {
       try {
-        this.validate()
+        this.validate(true)
         await this.axios.post('/candidate', this.candidate)
         await this.$router.push('/candidate/all')
       } catch (e: unknown) {
-        this.$emit('error',  `Не удалось сохранить кандидата: ${e}`)
+        this.$emit('error', `Не удалось сохранить кандидата: ${e}`)
         console.log(e)
+      }
+    },
+
+    async reject() {
+      try {
+        this.validate()
+        await this.axios.put(`/candidate/reject/${this.candidate.identificationNumber}`)
+        await this.goBack()
+      } catch (e) {
+        console.log(e)
+        this.$emit('error', 'Ошибка отправки на проверку ВБ')
       }
     },
 
     async sendToSecurityCheck() {
       try {
+        this.validate()
         await this.axios.put('/candidate/to/security', this.candidate)
         await this.goBack()
       } catch (e) {
@@ -78,9 +88,18 @@ export default defineComponent({
       }
     },
 
-    async sendToApproval() {},
+    async sendToApproval() {
+      try {
+        this.validate()
+        await this.axios.put('/candidate/to/approval', this.candidate)
+        await this.goBack()
+      } catch (e) {
+        console.log(e)
+        this.$emit('error', 'Ошибка отправки на согласование')
+      }
+    }
 
-  },
+  }
 })
 </script>
 
