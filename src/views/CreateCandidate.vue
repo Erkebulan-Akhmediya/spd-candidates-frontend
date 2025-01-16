@@ -18,19 +18,19 @@ export default defineComponent({
     DriverLicenses,
     Languages,
     Nationalities,
-    VDateInput
+    VDateInput,
   },
 
   data() {
     return {
       errMsg: String(),
       toShowErr: false,
-      toShowComment: false
+      toShowComment: false,
     }
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate'])
+    ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
   methods: {
@@ -47,17 +47,50 @@ export default defineComponent({
       this.toShowComment = toShowComment
     },
 
+    validate(): void {
+      const err: string[] = []
+
+      if (!this.candidate.username) err.push('имя пользователя')
+      if (!this.candidate.password) err.push('пароль')
+      if (!this.candidate.lastName) err.push('фамилия')
+      if (!this.candidate.firstName) err.push('имя')
+      if (!this.candidate.birthDate) err.push('дата рождения')
+      if (!this.candidate.birthPlace) err.push('место рождения')
+      if (!this.candidate.identificationNumber) err.push('ИИН')
+      if (!this.candidate.phoneNumber) err.push('номер телефона')
+      if (!this.candidate.nationalityCode) err.push('национальность')
+      if (!this.candidate.education) err.push('образование')
+      if (!this.candidate.sport) err.push('отношение к спорту')
+      if (!this.candidate.recruitedMethodId) err.push('откуда подобран кандидат')
+      if (this.candidate.experiences.length === 0) err.push('опыт работы')
+      if (!this.candidate.securityCheckResult) err.push('результат проверки ВБ')
+
+      if (err.length > 0) throw `следующие поля обязательны: ${err.join(', ')}`
+
+      if (
+        this.candidate.experiences.some(
+          (experience) =>
+            !experience.startDate ||
+            !experience.endDate ||
+            !experience.companyName ||
+            !experience.position,
+        )
+      ) {
+        throw 'Имеются не заполненные поля в опыте работы'
+      }
+    },
+
     async save(): Promise<void> {
       try {
+        this.validate()
         await this.axios.post('/candidate', this.candidate)
-        this.$router.push('/candidate/all')
+        await this.$router.push('/candidate/all')
       } catch (e: unknown) {
-        this.showError('Не удалось сохранить кандидата')
+        this.showError(`Не удалось сохранить кандидата: ${e}`)
         console.log(e)
       }
-    }
-
-  }
+    },
+  },
 })
 </script>
 
@@ -86,7 +119,11 @@ export default defineComponent({
       <v-container fluid>
         <v-row>
           <v-col cols="4">
-            <v-text-field label="Имя пользователя" variant="outlined" v-model="candidate.username" />
+            <v-text-field
+              label="Имя пользователя"
+              variant="outlined"
+              v-model="candidate.username"
+            />
           </v-col>
           <v-col cols="4">
             <v-text-field label="Пароль" variant="outlined" v-model="candidate.password" />
@@ -109,7 +146,11 @@ export default defineComponent({
             <v-date-input label="Дата рождения" variant="outlined" v-model="candidate.birthDate" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Место рождения" variant="outlined" v-model="candidate.birthPlace" />
+            <v-text-field
+              label="Место рождения"
+              variant="outlined"
+              v-model="candidate.birthPlace"
+            />
           </v-col>
         </v-row>
 
@@ -118,7 +159,11 @@ export default defineComponent({
             <v-text-field label="ИИН" variant="outlined" v-model="candidate.identificationNumber" />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Номер телефона" variant="outlined" v-model="candidate.phoneNumber" />
+            <v-text-field
+              label="Номер телефона"
+              variant="outlined"
+              v-model="candidate.phoneNumber"
+            />
           </v-col>
         </v-row>
 
@@ -165,13 +210,21 @@ export default defineComponent({
 
         <v-row>
           <v-col cols="12">
-            <v-textarea variant="outlined" label="Результат проверки ВБ" v-model="candidate.securityCheckResult" />
+            <v-textarea
+              variant="outlined"
+              label="Результат проверки ВБ"
+              v-model="candidate.securityCheckResult"
+            />
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="12">
-            <v-textarea variant="outlined" label="Дополнительные сведения" v-model="candidate.additionalData" />
+            <v-textarea
+              variant="outlined"
+              label="Дополнительные сведения"
+              v-model="candidate.additionalData"
+            />
           </v-col>
         </v-row>
       </v-container>
