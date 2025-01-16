@@ -1,4 +1,4 @@
-import type { Experience } from '@/components/CreateCandidate/Experience.vue'
+import type { Experience } from '@/components/CandidateForm/Experience.vue'
 
 export interface Region {
   id: number
@@ -28,3 +28,5 @@ export interface Candidate {
   username: string,
   password: string,
 }
+
+export type Tab = 'create' | 'new' | 'security' | 'approval' | 'approved' | 'rejected'

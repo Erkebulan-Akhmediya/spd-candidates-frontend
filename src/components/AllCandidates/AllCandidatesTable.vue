@@ -69,6 +69,8 @@ export default defineComponent({
     async goCandidatePage(id: string) {
       if (this.tabType === 'new') {
         await this.$router.push({ path: `/candidate/${id}` })
+      } else if (this.tabType === 'security') {
+        await this.$router.push({ path: `/candidate/${id}/security` })
       }
     },
 

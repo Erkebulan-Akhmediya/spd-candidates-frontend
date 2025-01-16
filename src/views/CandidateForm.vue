@@ -1,50 +1,52 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
-import Nationalities from '@/components/CreateCandidate/Nationalities.vue'
-import Languages from '@/components/CreateCandidate/Languages.vue'
-import DriverLicenses from '@/components/CreateCandidate/DriverLicenses.vue'
-import RecruitedMethods from '@/components/CreateCandidate/RecruitedMethods.vue'
-import Experience from '@/components/CreateCandidate/Experience.vue'
+import Nationalities from '@/components/CandidateForm/Nationalities.vue'
+import Languages from '@/components/CandidateForm/Languages.vue'
+import DriverLicenses from '@/components/CandidateForm/DriverLicenses.vue'
+import RecruitedMethods from '@/components/CandidateForm/RecruitedMethods.vue'
+import Experience from '@/components/CandidateForm/Experience.vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import TestingRegion from '@/components/CreateCandidate/TestingRegion.vue'
+import TestingRegion from '@/components/CandidateForm/TestingRegion.vue'
+import CandidateFormActions from '@/components/CandidateForm/CandidateFormActions.vue'
 
 export default defineComponent({
-  name: 'CreateCandidate',
+  name: 'CandidateForm',
 
   components: {
+    CandidateFormActions,
     TestingRegion,
     Experience,
     RecruitedMethods,
     DriverLicenses,
     Languages,
     Nationalities,
-    VDateInput,
+    VDateInput
   },
 
   props: {
-    editMode: {
-      type: Boolean,
-      required: true,
-    },
+    tab: {
+      type: String,
+      required: true
+    }
   },
 
   data() {
     return {
       errMsg: String(),
       toShowErr: false,
-      toShowComment: false,
+      toShowComment: false
     }
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate']),
+    ...mapWritableState(useCandidateStore, ['candidate'])
   },
 
   async mounted() {
     this.clear()
-    if (this.editMode) await this.fetchCandidate()
+    if (this.tab === 'new') await this.fetchCandidate()
   },
 
   methods: {
@@ -71,48 +73,6 @@ export default defineComponent({
       }
     },
 
-    async sendToSecurityCheck() {
-      try {
-        await this.axios.put('/candidate/to/security', this.candidate)
-        await this.goBack()
-      } catch (e) {
-        console.log(e)
-        this.showError('Ошибка отправки на проверку ВБ')
-      }
-    },
-
-    validate(): void {
-      const err: string[] = []
-
-      if (!this.candidate.username) err.push('имя пользователя')
-      if (!this.candidate.password) err.push('пароль')
-      if (!this.candidate.lastName) err.push('фамилия')
-      if (!this.candidate.firstName) err.push('имя')
-      if (!this.candidate.birthDate) err.push('дата рождения')
-      if (!this.candidate.birthPlace) err.push('место рождения')
-      if (!this.candidate.identificationNumber) err.push('ИИН')
-      if (!this.candidate.phoneNumber) err.push('номер телефона')
-      if (!this.candidate.nationalityCode) err.push('национальность')
-      if (!this.candidate.education) err.push('образование')
-      if (!this.candidate.sport) err.push('отношение к спорту')
-      if (!this.candidate.recruitedMethodId) err.push('откуда подобран кандидат')
-      if (!this.candidate.securityCheckResult) err.push('результат проверки ВБ')
-
-      if (err.length > 0) throw `следующие поля обязательны: ${err.join(', ')}`
-
-      if (
-        this.candidate.experiences.some(
-          (experience) =>
-            !experience.startDate ||
-            !experience.endDate ||
-            !experience.companyName ||
-            !experience.position,
-        )
-      ) {
-        throw 'Имеются не заполненные поля в опыте работы'
-      }
-    },
-
     clear(): void {
       this.candidate.username = ''
       this.candidate.password = ''
@@ -135,17 +95,13 @@ export default defineComponent({
       this.candidate.additionalData = ''
     },
 
-    async save(): Promise<void> {
-      try {
-        this.validate()
-        await this.axios.post('/candidate', this.candidate)
-        await this.$router.push('/candidate/all')
-      } catch (e: unknown) {
-        this.showError(`Не удалось сохранить кандидата: ${e}`)
-        console.log(e)
-      }
-    },
-  },
+    getTitle(): string {
+      if (this.tab === 'create') return 'Новый кандидат'
+      if (this.tab === 'new') return 'Анкета кандидата'
+      if (this.tab === 'security') return 'Проверка ВБ'
+      return ''
+    }
+  }
 })
 </script>
 
@@ -166,13 +122,13 @@ export default defineComponent({
           <v-icon>mdi-arrow-left</v-icon>
           <p>Назад</p>
         </v-btn>
-        <p class="ml-5">{{ editMode ? 'Анкета кандидата' : 'Новый кандидат' }}</p>
+        <p class="ml-5">{{ getTitle() }}</p>
       </v-row>
     </v-card-title>
 
     <v-card-text>
       <v-container fluid>
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="4">
             <v-text-field
               label="Имя пользователя"
@@ -185,11 +141,12 @@ export default defineComponent({
               label="Пароль"
               variant="outlined"
               v-model="candidate.password"
-              v-if="!editMode"
+              v-if="tab === 'create'"
             />
           </v-col>
         </v-row>
-        <v-row>
+
+        <v-row v-if="tab !== 'security'">
           <v-col cols="4">
             <v-text-field label="Фамилия" variant="outlined" v-model="candidate.lastName" />
           </v-col>
@@ -201,7 +158,7 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="4">
             <v-date-input label="Дата рождения" variant="outlined" v-model="candidate.birthDate" />
           </v-col>
@@ -217,15 +174,15 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="4">
             <v-text-field
               label="ИИН"
               variant="outlined"
               v-model="candidate.identificationNumber"
               type="number"
-              :rules="[(t) => t.length === 12 || 'ИИН должен содержать 12 цифр']"
-              :disabled="editMode"
+              :rules="[(t: string) => t.length === 12 || 'ИИН должен содержать 12 цифр']"
+              :disabled="tab !== 'create'"
             />
           </v-col>
           <v-col cols="4">
@@ -238,7 +195,7 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="4">
             <nationalities @error="showError" />
           </v-col>
@@ -250,7 +207,7 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="4">
             <v-text-field label="Образование" variant="outlined" v-model="candidate.education" />
           </v-col>
@@ -259,7 +216,7 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="4">
             <recruited-methods @error="showError" @show-comment="showComment" />
           </v-col>
@@ -273,7 +230,7 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="12">
             <experience />
           </v-col>
@@ -289,7 +246,7 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row v-if="tab !== 'security'">
           <v-col cols="12">
             <v-textarea
               variant="outlined"
@@ -302,13 +259,7 @@ export default defineComponent({
     </v-card-text>
 
     <v-card-actions>
-      <v-row class="pa-5">
-        <v-btn variant="elevated" class="mr-3" @click="goBack">Отмена</v-btn>
-        <v-btn variant="elevated" color="primary" @click="save" v-if="!editMode">Сохранить</v-btn>
-        <v-btn variant="elevated" color="primary" @click="sendToSecurityCheck" v-else
-          >Направить на проверку ВБ</v-btn
-        >
-      </v-row>
+      <candidate-form-actions :tab="tab" @error="showError" />
     </v-card-actions>
   </v-card>
 </template>

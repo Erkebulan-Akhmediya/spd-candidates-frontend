@@ -30,16 +30,23 @@ const router: Router = createRouter({
         },
         {
           path: 'candidate/create',
-          component: () => import('@/views/CreateCandidate.vue'),
+          component: () => import('@/views/CandidateForm.vue'),
           props: {
-            editMode: false,
+            tab: 'create'
           },
         },
         {
           path: 'candidate/:id',
-          component: () => import('@/views/CreateCandidate.vue'),
+          component: () => import('@/views/CandidateForm.vue'),
           props: {
-            editMode: true,
+            tab: 'new'
+          },
+        },
+        {
+          path: 'candidate/:id/security',
+          component: () => import('@/views/CandidateForm.vue'),
+          props: {
+            tab: 'security'
           },
         },
       ],
