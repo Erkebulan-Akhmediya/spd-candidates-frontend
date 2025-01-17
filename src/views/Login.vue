@@ -11,6 +11,7 @@ export default defineComponent({
     return {
       username: '',
       password: '',
+      isPasswordVisible: false,
     }
   },
 
@@ -45,9 +46,28 @@ export default defineComponent({
 
       <v-card-text>
         <v-col>
-          <v-text-field :label="$t('login.username')" v-model="username"></v-text-field>
-          <v-text-field :label="$t('login.password')" v-model="password"></v-text-field>
-          <v-btn @click="login">{{ $t('login.button') }}</v-btn>
+          <v-text-field
+            :label="$t('login.username')"
+            v-model="username"
+            prepend-inner-icon="mdi-account-circle-outline"
+          />
+          <v-text-field
+            :label="$t('login.password')"
+            v-model="password"
+            prepend-inner-icon="mdi-lock-outline"
+            :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+            :type="isPasswordVisible ? 'text' : 'password'"
+            @click:append-inner="isPasswordVisible = !isPasswordVisible"
+          />
+          <v-btn
+            @click="login"
+            block
+            variant="tonal"
+            color="primary"
+            size="large"
+          >
+            {{ $t('login.button') }}
+          </v-btn>
         </v-col>
       </v-card-text>
     </v-card>
