@@ -47,7 +47,6 @@ export default defineComponent({
   },
 
   methods: {
-
     setSelectedSideBarItem(): void {
       const selectedSideBarItem: SideBarItem | undefined = this.sideBarItems.find(
         (item: SideBarItem): boolean => item.path === this.$route.path,
@@ -60,8 +59,10 @@ export default defineComponent({
       }
     },
 
+    async exit(): Promise<void> {
+      await this.$router.push('/login')
+    },
   },
-
 })
 </script>
 
@@ -90,6 +91,11 @@ export default defineComponent({
         :active="selectedSideBarItem[0] === item.name"
       />
     </v-list>
+    <template v-slot:append>
+      <v-btn block color="primary" variant="tonal" size="large" @click="exit">
+        {{ $t('sideBarItems.exit') }}
+      </v-btn>
+    </template>
   </v-navigation-drawer>
 
   <v-main>

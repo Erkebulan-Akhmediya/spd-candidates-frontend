@@ -11,6 +11,7 @@ export default {
     main: 'Басты бет',
     employees: 'Қызметкерлер',
     candidates: 'Үміткерлер',
+    exit: 'Шығу',
   },
   login: {
     title: 'Кіру',

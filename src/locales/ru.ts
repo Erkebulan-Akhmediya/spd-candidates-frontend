@@ -8,6 +8,7 @@ export default {
     main: 'Главная страница',
     employees: 'Сотрудники',
     candidates: 'Кандидаты',
+    exit: 'Выход',
   },
   login: {
     title: 'Вход',
