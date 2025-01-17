@@ -14,6 +14,7 @@ export default defineComponent({
 
   props: {
     disabled: Boolean,
+    readonly: Boolean,
   },
 
   data() {
@@ -58,6 +59,7 @@ export default defineComponent({
     :item-title="getLanguageName"
     v-model="candidate.languageCodes"
     :disabled="disabled"
+    :readonly="readonly"
     multiple
     chips
     closable-chips

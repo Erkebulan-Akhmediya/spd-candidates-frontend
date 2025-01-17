@@ -56,6 +56,20 @@ const router: Router = createRouter({
             tab: 'approval'
           },
         },
+        {
+          path: 'candidate/:id/approved',
+          component: () => import('@/views/CandidateForm.vue'),
+          props: {
+            tab: 'approved'
+          },
+        },
+        {
+          path: 'candidate/:id/rejected',
+          component: () => import('@/views/CandidateForm.vue'),
+          props: {
+            tab: 'rejected'
+          },
+        },
       ],
     },
   ],

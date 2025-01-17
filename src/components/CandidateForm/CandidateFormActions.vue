@@ -104,7 +104,7 @@ export default defineComponent({
           return this.$emit('error', 'Направление деятельности не выбрано')
         }
         await this.axios.put(
-          `/candidate/approve/${this.candidate.identificationNumber}?areaOfActivity=${this.candidate.areaOfActivity}`
+          `/candidate/approve/${this.candidate.identificationNumber}?areaOfActivity=${this.candidate.areaOfActivity}`,
         )
         await this.goBack()
       } catch (e) {
@@ -119,6 +119,14 @@ export default defineComponent({
 <template>
   <v-row class="pa-5">
     <v-btn variant="elevated" class="mr-3" @click="goBack" v-if="tab === 'create'">Отмена</v-btn>
+    <v-btn
+      variant="elevated"
+      class="mr-3"
+      @click="goBack"
+      v-else-if="['approved', 'rejected'].includes(tab)"
+    >
+      Назад
+    </v-btn>
     <v-btn variant="elevated" class="mr-3" @click="reject" color="error" v-else>Отказать</v-btn>
 
     <v-btn variant="elevated" color="primary" @click="save" v-if="tab === 'create'">

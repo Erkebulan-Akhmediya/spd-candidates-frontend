@@ -67,6 +67,7 @@ export default defineComponent({
       try {
         const { data } = await this.axios.get(`/candidate/${this.$route.params.id}`)
         this.candidate = data
+        this.candidate.birthDate = new Date(data.birthDate)
       } catch (e) {
         console.log(e)
         this.showError('Не удалось получить данные канидата')
@@ -136,6 +137,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.username"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
@@ -155,6 +157,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.lastName"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
@@ -163,6 +166,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.firstName"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
@@ -171,6 +175,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.middleName"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
@@ -182,6 +187,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.birthDate"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
@@ -190,10 +196,15 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.birthPlace"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
-            <testing-region @error="showError" :disabled="['approval', 'security'].includes(tab)" />
+            <testing-region
+              @error="showError"
+              :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
+            />
           </v-col>
         </v-row>
 
@@ -215,21 +226,31 @@ export default defineComponent({
               v-model="candidate.phoneNumber"
               type="number"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="4">
-            <nationalities @error="showError" :disabled="['approval', 'security'].includes(tab)" />
+            <nationalities
+              @error="showError"
+              :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
+            />
           </v-col>
           <v-col cols="4">
-            <languages @error="showError" :disabled="['approval', 'security'].includes(tab)" />
+            <languages
+              @error="showError"
+              :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
+            />
           </v-col>
           <v-col cols="4">
             <driver-licenses
               @error="showError"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
@@ -241,6 +262,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.education"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
@@ -249,6 +271,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.sport"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
@@ -259,6 +282,7 @@ export default defineComponent({
               @error="showError"
               @show-comment="showComment"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4" v-if="toShowComment">
@@ -267,6 +291,7 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.recruitedMethodComment"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
           <v-col cols="4" v-if="tab === 'approval'">
@@ -275,16 +300,18 @@ export default defineComponent({
               variant="outlined"
               :items="['01', '02', '03']"
               v-model="candidate.areaOfActivity"
-              :rules="[
-                (t: string) => !!t || 'Обязательное поле'
-              ]"
+              :rules="[(t: string) => !!t || 'Обязательное поле']"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
 
         <v-row v-if="tab !== 'security'">
           <v-col cols="12">
-            <experience :disabled="['approval', 'security'].includes(tab)" />
+            <experience
+              :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
+            />
           </v-col>
         </v-row>
 
@@ -295,6 +322,7 @@ export default defineComponent({
               label="Результат проверки ВБ"
               v-model="candidate.securityCheckResult"
               :disabled="['approval'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
@@ -306,6 +334,7 @@ export default defineComponent({
               label="Дополнительные сведения"
               v-model="candidate.additionalData"
               :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>

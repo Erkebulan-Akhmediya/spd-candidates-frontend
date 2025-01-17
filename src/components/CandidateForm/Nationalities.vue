@@ -13,7 +13,8 @@ export default defineComponent({
   name: `Nationalities`,
 
   props: {
-    disabled: Boolean
+    disabled: Boolean,
+    readonly: Boolean,
   },
 
   data() {
@@ -58,6 +59,7 @@ export default defineComponent({
     :item-title="getNationalityName"
     v-model="candidate.nationalityCode"
     :disabled="disabled"
+    :readonly="readonly"
   />
 </template>
 

@@ -9,6 +9,7 @@ export default defineComponent({
 
   props: {
     disabled: Boolean,
+    readonly: Boolean,
   },
 
   data() {
@@ -53,6 +54,7 @@ export default defineComponent({
     :item-title="getRegionName"
     v-model="candidate.testingRegionId"
     :disabled="disabled"
+    :readonly="readonly"
   />
 </template>
 

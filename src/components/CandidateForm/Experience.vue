@@ -21,6 +21,7 @@ export default defineComponent({
 
   props: {
     disabled: Boolean,
+    readonly: Boolean,
   },
 
   data() {
@@ -91,7 +92,13 @@ export default defineComponent({
         <template v-slot:top>
           <v-row justify="space-between" align="center" class="pa-3">
             <h2>Опыт работы</h2>
-            <v-btn icon @click="addExperience" color="primary" :disabled="disabled">
+            <v-btn
+              v-if="!readonly"
+              icon
+              @click="addExperience"
+              color="primary"
+              :disabled="disabled"
+            >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </v-row>
@@ -103,6 +110,7 @@ export default defineComponent({
             v-model="item.startDate"
             variant="outlined"
             :disabled="disabled"
+            :readonly="readonly"
           />
         </template>
 
@@ -112,6 +120,7 @@ export default defineComponent({
             v-model="item.endDate"
             variant="outlined"
             :disabled="disabled"
+            :readonly="readonly"
           />
         </template>
 
@@ -121,6 +130,7 @@ export default defineComponent({
             v-model="item.position"
             variant="outlined"
             :disabled="disabled"
+            :readonly="readonly"
           />
         </template>
 
@@ -130,11 +140,18 @@ export default defineComponent({
             v-model="item.companyName"
             variant="outlined"
             :disabled="disabled"
+            :readonly="readonly"
           />
         </template>
 
         <template v-slot:[`item.deleteButton`]="{ item }">
-          <v-btn icon @click="deleteExperience(item)" color="error" :disabled="disabled">
+          <v-btn
+            v-if="!readonly"
+            icon
+            @click="deleteExperience(item)"
+            color="error"
+            :disabled="disabled"
+          >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>

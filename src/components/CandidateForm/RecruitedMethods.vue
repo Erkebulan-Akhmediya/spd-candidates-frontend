@@ -14,6 +14,7 @@ export default defineComponent({
 
   props: {
     disabled: Boolean,
+    readonly: Boolean,
   },
 
   data() {
@@ -65,6 +66,7 @@ export default defineComponent({
     @update:model-value="onMethodUpdate"
     v-model="candidate.recruitedMethodId"
     :disabled="disabled"
+    :readonly="readonly"
   />
 </template>
 

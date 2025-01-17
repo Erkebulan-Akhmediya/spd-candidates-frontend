@@ -8,6 +8,7 @@ export default defineComponent({
 
   props: {
     disabled: Boolean,
+    readonly: Boolean,
   },
 
   data() {
@@ -45,6 +46,7 @@ export default defineComponent({
     :items="driverLicenses"
     v-model="candidate.driverLicenseCodes"
     :disabled="disabled"
+    :readonly="readonly"
     multiple
     chips
     closable-chips

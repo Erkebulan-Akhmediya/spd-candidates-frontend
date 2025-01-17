@@ -73,6 +73,10 @@ export default defineComponent({
         await this.$router.push({ path: `/candidate/${id}/security` })
       } else if (this.tabType === 'approval') {
         await this.$router.push({ path: `/candidate/${id}/approval` })
+      } else if (this.tabType === 'approved') {
+        await this.$router.push({ path: `/candidate/${id}/approved` })
+      } else if (this.tabType === 'rejected') {
+        await this.$router.push({ path: `/candidate/${id}/rejected` })
       }
     },
 
