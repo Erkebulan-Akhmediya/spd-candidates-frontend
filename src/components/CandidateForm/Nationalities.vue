@@ -12,6 +12,10 @@ interface Nationality {
 export default defineComponent({
   name: `Nationalities`,
 
+  props: {
+    disabled: Boolean
+  },
+
   data() {
     return {
       nationalities: new Array<Nationality>()
@@ -53,6 +57,7 @@ export default defineComponent({
     item-value="code"
     :item-title="getNationalityName"
     v-model="candidate.nationalityCode"
+    :disabled="disabled"
   />
 </template>
 

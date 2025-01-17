@@ -9,16 +9,15 @@ export default defineComponent({
   props: {
     tab: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate'])
+    ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
   methods: {
-
     async goBack() {
       await this.$router.push('/candidate/all')
     },
@@ -48,7 +47,7 @@ export default defineComponent({
             !experience.startDate ||
             !experience.endDate ||
             !experience.companyName ||
-            !experience.position
+            !experience.position,
         )
       ) {
         throw 'Имеются не заполненные поля в опыте работы'
@@ -97,9 +96,23 @@ export default defineComponent({
         console.log(e)
         this.$emit('error', 'Ошибка отправки на согласование')
       }
-    }
+    },
 
-  }
+    async approve() {
+      try {
+        if (!this.candidate.areaOfActivity) {
+          return this.$emit('error', 'Направление деятельности не выбрано')
+        }
+        await this.axios.put(
+          `/candidate/approve/${this.candidate.identificationNumber}?areaOfActivity=${this.candidate.areaOfActivity}`
+        )
+        await this.goBack()
+      } catch (e) {
+        console.log(e)
+        this.$emit('error', 'Ошибка отправки на согласование')
+      }
+    },
+  },
 })
 </script>
 
@@ -108,12 +121,7 @@ export default defineComponent({
     <v-btn variant="elevated" class="mr-3" @click="goBack" v-if="tab === 'create'">Отмена</v-btn>
     <v-btn variant="elevated" class="mr-3" @click="reject" color="error" v-else>Отказать</v-btn>
 
-    <v-btn
-      variant="elevated"
-      color="primary"
-      @click="save"
-      v-if="tab === 'create'"
-    >
+    <v-btn variant="elevated" color="primary" @click="save" v-if="tab === 'create'">
       Сохранить
     </v-btn>
 
@@ -134,9 +142,11 @@ export default defineComponent({
     >
       Направить на согласование
     </v-btn>
+
+    <v-btn variant="elevated" color="primary" @click="approve" v-else-if="tab === 'approval'">
+      Согласовать
+    </v-btn>
   </v-row>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -12,6 +12,10 @@ interface Language {
 export default defineComponent({
   name: `Languages`,
 
+  props: {
+    disabled: Boolean,
+  },
+
   data() {
     return {
       languages: new Array<Language>()
@@ -53,6 +57,7 @@ export default defineComponent({
     item-value="code"
     :item-title="getLanguageName"
     v-model="candidate.languageCodes"
+    :disabled="disabled"
     multiple
     chips
     closable-chips

@@ -6,6 +6,10 @@ import { useCandidateStore } from '@/stores/candidate.ts'
 export default defineComponent({
   name: 'DriverLicenses',
 
+  props: {
+    disabled: Boolean,
+  },
+
   data() {
     return {
       driverLicenses: new Array<string>()
@@ -40,6 +44,7 @@ export default defineComponent({
     variant="outlined"
     :items="driverLicenses"
     v-model="candidate.driverLicenseCodes"
+    :disabled="disabled"
     multiple
     chips
     closable-chips

@@ -22,26 +22,26 @@ export default defineComponent({
     DriverLicenses,
     Languages,
     Nationalities,
-    VDateInput
+    VDateInput,
   },
 
   props: {
     tab: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   data() {
     return {
       errMsg: String(),
       toShowErr: false,
-      toShowComment: false
+      toShowComment: false,
     }
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate'])
+    ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
   async mounted() {
@@ -99,9 +99,10 @@ export default defineComponent({
       if (this.tab === 'create') return 'Новый кандидат'
       if (this.tab === 'new') return 'Анкета кандидата'
       if (this.tab === 'security') return 'Проверка ВБ'
+      if (this.tab === 'approval') return 'Согласование'
       return ''
-    }
-  }
+    },
+  },
 })
 </script>
 
@@ -128,12 +129,13 @@ export default defineComponent({
 
     <v-card-text>
       <v-container fluid>
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="4">
             <v-text-field
               label="Имя пользователя"
               variant="outlined"
               v-model="candidate.username"
+              :disabled="['approval', 'security'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
@@ -146,35 +148,56 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="4">
-            <v-text-field label="Фамилия" variant="outlined" v-model="candidate.lastName" />
+            <v-text-field
+              label="Фамилия"
+              variant="outlined"
+              v-model="candidate.lastName"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Имя" variant="outlined" v-model="candidate.firstName" />
+            <v-text-field
+              label="Имя"
+              variant="outlined"
+              v-model="candidate.firstName"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
           </v-col>
           <v-col cols="4">
-            <v-text-field label="Отество" variant="outlined" v-model="candidate.middleName" />
+            <v-text-field
+              label="Отество"
+              variant="outlined"
+              v-model="candidate.middleName"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
           </v-col>
         </v-row>
 
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="4">
-            <v-date-input label="Дата рождения" variant="outlined" v-model="candidate.birthDate" />
+            <v-date-input
+              label="Дата рождения"
+              variant="outlined"
+              v-model="candidate.birthDate"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
           </v-col>
           <v-col cols="4">
             <v-text-field
               label="Место рождения"
               variant="outlined"
               v-model="candidate.birthPlace"
+              :disabled="['approval', 'security'].includes(tab)"
             />
           </v-col>
           <v-col cols="4">
-            <testing-region @error="showError" />
+            <testing-region @error="showError" :disabled="['approval', 'security'].includes(tab)" />
           </v-col>
         </v-row>
 
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="4">
             <v-text-field
               label="ИИН"
@@ -191,48 +214,77 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.phoneNumber"
               type="number"
+              :disabled="['approval', 'security'].includes(tab)"
             />
           </v-col>
         </v-row>
 
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="4">
-            <nationalities @error="showError" />
+            <nationalities @error="showError" :disabled="['approval', 'security'].includes(tab)" />
           </v-col>
           <v-col cols="4">
-            <languages @error="showError" />
+            <languages @error="showError" :disabled="['approval', 'security'].includes(tab)" />
           </v-col>
           <v-col cols="4">
-            <driver-licenses @error="showError" />
-          </v-col>
-        </v-row>
-
-        <v-row v-if="tab !== 'security'">
-          <v-col cols="4">
-            <v-text-field label="Образование" variant="outlined" v-model="candidate.education" />
-          </v-col>
-          <v-col cols="4">
-            <v-text-field label="Отношение к спорту" variant="outlined" v-model="candidate.sport" />
+            <driver-licenses
+              @error="showError"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
           </v-col>
         </v-row>
 
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="4">
-            <recruited-methods @error="showError" @show-comment="showComment" />
+            <v-text-field
+              label="Образование"
+              variant="outlined"
+              v-model="candidate.education"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
           </v-col>
           <v-col cols="4">
             <v-text-field
+              label="Отношение к спорту"
+              variant="outlined"
+              v-model="candidate.sport"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="4">
+            <recruited-methods
+              @error="showError"
+              @show-comment="showComment"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
+          </v-col>
+          <v-col cols="4" v-if="toShowComment">
+            <v-text-field
               label="Коментарий к рекомендации"
               variant="outlined"
-              v-if="toShowComment"
               v-model="candidate.recruitedMethodComment"
+              :disabled="['approval', 'security'].includes(tab)"
+            />
+          </v-col>
+          <v-col cols="4" v-if="tab === 'approval'">
+            <v-select
+              label="Направление деятельности"
+              variant="outlined"
+              :items="['01', '02', '03']"
+              v-model="candidate.areaOfActivity"
+              :rules="[
+                (t: string) => !!t || 'Обязательное поле'
+              ]"
             />
           </v-col>
         </v-row>
 
         <v-row v-if="tab !== 'security'">
           <v-col cols="12">
-            <experience />
+            <experience :disabled="['approval', 'security'].includes(tab)" />
           </v-col>
         </v-row>
 
@@ -242,16 +294,18 @@ export default defineComponent({
               variant="outlined"
               label="Результат проверки ВБ"
               v-model="candidate.securityCheckResult"
+              :disabled="['approval'].includes(tab)"
             />
           </v-col>
         </v-row>
 
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="12">
             <v-textarea
               variant="outlined"
               label="Дополнительные сведения"
               v-model="candidate.additionalData"
+              :disabled="['approval', 'security'].includes(tab)"
             />
           </v-col>
         </v-row>

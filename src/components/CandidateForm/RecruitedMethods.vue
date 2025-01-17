@@ -12,6 +12,10 @@ interface RecruitedMethod {
 export default defineComponent({
   name: 'RecruitedMethods',
 
+  props: {
+    disabled: Boolean,
+  },
+
   data() {
     return {
       recruitedMethods: new Array<RecruitedMethod>(),
@@ -60,6 +64,7 @@ export default defineComponent({
     :item-title="getRecruitedMethodName"
     @update:model-value="onMethodUpdate"
     v-model="candidate.recruitedMethodId"
+    :disabled="disabled"
   />
 </template>
 

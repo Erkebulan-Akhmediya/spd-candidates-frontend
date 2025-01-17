@@ -27,6 +27,7 @@ export interface Candidate {
   additionalData: string,
   username: string,
   password: string,
+  areaOfActivity: string,
 }
 
 export type Tab = 'create' | 'new' | 'security' | 'approval' | 'approved' | 'rejected'

@@ -25,7 +25,8 @@ export const useCandidateStore = defineStore('candidate', {
         securityCheckResult: String(),
         additionalData: String(),
         username: String(),
-        password: String()
+        password: String(),
+        areaOfActivity: String(),
       } as Candidate
     }
   }

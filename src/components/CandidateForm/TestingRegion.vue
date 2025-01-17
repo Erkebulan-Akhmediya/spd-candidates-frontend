@@ -7,6 +7,10 @@ import { useCandidateStore } from '@/stores/candidate.ts'
 export default defineComponent({
   name: 'TestingRegion',
 
+  props: {
+    disabled: Boolean,
+  },
+
   data() {
     return {
       regions: new Array<Region>(),
@@ -48,6 +52,7 @@ export default defineComponent({
     item-value="id"
     :item-title="getRegionName"
     v-model="candidate.testingRegionId"
+    :disabled="disabled"
   />
 </template>
 

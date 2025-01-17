@@ -71,6 +71,8 @@ export default defineComponent({
         await this.$router.push({ path: `/candidate/${id}` })
       } else if (this.tabType === 'security') {
         await this.$router.push({ path: `/candidate/${id}/security` })
+      } else if (this.tabType === 'approval') {
+        await this.$router.push({ path: `/candidate/${id}/approval` })
       }
     },
 

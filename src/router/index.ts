@@ -49,6 +49,13 @@ const router: Router = createRouter({
             tab: 'security'
           },
         },
+        {
+          path: 'candidate/:id/approval',
+          component: () => import('@/views/CandidateForm.vue'),
+          props: {
+            tab: 'approval'
+          },
+        },
       ],
     },
   ],
