@@ -1,6 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Variants from '@/components/AllTests/Variants.vue'
+import Variants from '@/components/TestForm/Variants.vue'
+import { mapWritableState } from 'pinia'
+import { useTestStore } from '@/stores/test.ts'
 
 export default defineComponent({
   name: 'TestForm',
@@ -10,6 +12,10 @@ export default defineComponent({
     return {
       isInfinite: false,
     }
+  },
+
+  computed: {
+    ...mapWritableState(useTestStore, ['test']),
   },
 
   methods: {
@@ -34,7 +40,10 @@ export default defineComponent({
     <v-card-text>
       <v-row>
         <v-col cols="6">
-          <v-text-field label="Название теста" variant="outlined" />
+          <v-text-field label="Название теста (каз)" variant="outlined" v-model="test.nameKaz" />
+        </v-col>
+        <v-col cols="6">
+          <v-text-field label="Название теста (рус)" variant="outlined" v-model="test.nameRus" />
         </v-col>
       </v-row>
       <v-row>
@@ -44,11 +53,12 @@ export default defineComponent({
             variant="outlined"
             type="number"
             suffix="мин"
-            :disabled="isInfinite"
+            v-model="test.duration"
+            :disabled="test.isLimitless"
           />
         </v-col>
         <v-col cols="2">
-          <v-checkbox label="Без ограничений" v-model="isInfinite" />
+          <v-checkbox label="Без ограничений" v-model="test.isLimitless" />
         </v-col>
       </v-row>
 

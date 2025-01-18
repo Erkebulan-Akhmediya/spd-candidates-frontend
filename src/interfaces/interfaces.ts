@@ -31,3 +31,43 @@ export interface Candidate {
 }
 
 export type Tab = 'create' | 'new' | 'security' | 'approval' | 'approved' | 'rejected'
+
+export interface Test {
+  id?: number
+  nameRus: string
+  nameKaz: string
+  isLimitless: boolean
+  duration?: number
+  variants: Variant[]
+}
+
+export interface Variant {
+  questions: Question[],
+}
+
+export enum QuestionType {
+  withoutAnswer = 0,
+  open = 1,
+  mcqWithNoCorrect = 2,
+  mcqWithOneCorrect = 3,
+  mcqWithMultipleCorrect = 4,
+}
+
+export interface Question {
+  id?: number
+  withFile: boolean
+  file?: string
+  nameRus: string
+  nameKaz: string
+  type: QuestionType
+  answer?: string | number
+  options?: Option[]
+}
+
+export interface Option {
+  id?: number
+  withFile: boolean
+  file: string
+  nameRus: string
+  nameKaz: string
+}
