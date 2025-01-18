@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import QuestionComponent from '@/components/TestForm/Question.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import { type Question, QuestionType } from '@/interfaces/interfaces.ts'
+import { QuestionType } from '@/interfaces/interfaces.ts'
 
 export default defineComponent({
   name: `Questions`,
@@ -12,21 +12,21 @@ export default defineComponent({
   props: {
     variantIndex: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
     return {
       toShowConfirmDialog: false,
       confirmDialogData: {
-        index: 0,
-      },
-    };
+        index: 0
+      }
+    }
   },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test']),
+    ...mapWritableState(useTestStore, ['test'])
   },
 
   methods: {
@@ -36,23 +36,23 @@ export default defineComponent({
         withFile: false,
         nameRus: '',
         nameKaz: '',
-        type: QuestionType.mcqWithOneCorrect,
-      });
+        type: QuestionType.mcqWithOneCorrect
+      })
     },
 
     openConfirmDialog(index: number) {
-      this.confirmDialogData.index = index;
-      this.toShowConfirmDialog = true;
+      this.confirmDialogData.index = index
+      this.toShowConfirmDialog = true
     },
 
     deleteQuestion() {
       this.test.variants[this.variantIndex].questions = this.test.variants[this.variantIndex].questions.filter(
         (_, index: number): boolean => index !== this.confirmDialogData.index
       )
-      this.toShowConfirmDialog = false;
-    },
+      this.toShowConfirmDialog = false
+    }
 
-  },
+  }
 })
 </script>
 
