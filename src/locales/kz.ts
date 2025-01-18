@@ -8,7 +8,6 @@ export default {
     }
   },
   sideBarItems: {
-    main: 'Басты бет',
     employees: 'Қызметкерлер',
     candidates: 'Үміткерлер',
     exit: 'Шығу',

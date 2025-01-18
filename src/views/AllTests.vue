@@ -2,12 +2,14 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: `Home`,
+  name: 'AllTests'
 })
 </script>
 
 <template>
-  <p>home</p>
+  <v-card></v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

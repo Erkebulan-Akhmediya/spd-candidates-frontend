@@ -5,7 +5,6 @@ export default {
     ...ru,
   },
   sideBarItems: {
-    main: 'Главная страница',
     employees: 'Сотрудники',
     candidates: 'Кандидаты',
     exit: 'Выход',

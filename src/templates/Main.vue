@@ -18,19 +18,14 @@ export default defineComponent({
       selectedSideBarItem: new Array<string>('sideBarItems.main'),
       sideBarItems: new Array<SideBarItem>(
         {
-          name: 'sideBarItems.main',
-          path: '/',
-          icon: 'mdi-home',
+          name: 'sideBarItems.candidates',
+          path: '/candidate/all',
+          icon: 'mdi-account-school',
         },
         {
           name: 'sideBarItems.employees',
           path: '/employee/all',
           icon: 'mdi-account-tie',
-        },
-        {
-          name: 'sideBarItems.candidates',
-          path: '/candidate/all',
-          icon: 'mdi-account-school',
         },
       ),
     }
