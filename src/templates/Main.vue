@@ -15,7 +15,7 @@ export default defineComponent({
   data() {
     return {
       toHideSideBar: false,
-      selectedSideBarItem: new Array<string>('sideBarItems.main'),
+      selectedSideBarItem: new Array<string>('sideBarItems.candidates'),
       sideBarItems: new Array<SideBarItem>(
         {
           name: 'sideBarItems.candidates',
@@ -26,6 +26,11 @@ export default defineComponent({
           name: 'sideBarItems.employees',
           path: '/employee/all',
           icon: 'mdi-account-tie',
+        },
+        {
+          name: 'sideBarItems.tests',
+          path: '/test/all',
+          icon: 'mdi-book-open-variant-outline',
         },
       ),
     }
@@ -48,7 +53,7 @@ export default defineComponent({
       )
 
       if (selectedSideBarItem === undefined) {
-        this.selectedSideBarItem[0] = 'sideBarItems.main'
+        this.selectedSideBarItem[0] = 'sideBarItems.candidates'
       } else {
         this.selectedSideBarItem[0] = selectedSideBarItem.name
       }
@@ -94,7 +99,7 @@ export default defineComponent({
   </v-navigation-drawer>
 
   <v-main>
-    <router-view></router-view>
+    <router-view />
   </v-main>
 </template>
 

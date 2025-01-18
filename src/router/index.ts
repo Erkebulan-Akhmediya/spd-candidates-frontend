@@ -5,6 +5,7 @@ import {
   type Router,
 } from 'vue-router'
 import candidateRoutes from './candidate.ts'
+import testRoutes from './test.ts'
 
 const router: Router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,7 @@ const router: Router = createRouter({
           component: () => import('@/views/AllEmployees.vue'),
         },
         ...candidateRoutes,
+        ...testRoutes,
       ],
     },
   ],

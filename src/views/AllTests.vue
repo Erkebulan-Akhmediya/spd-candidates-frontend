@@ -2,12 +2,28 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'AllTests'
+  name: 'AllTests',
+
+  methods: {
+
+    async openTestForm(): Promise<void> {
+      await this.$router.push({ path: '/test/create' })
+    },
+
+  },
 })
 </script>
 
 <template>
-  <v-card></v-card>
+  <v-container fluid>
+    <v-data-table>
+      <template v-slot:top>
+        <v-row justify="end">
+          <v-btn icon="mdi-plus" color="primary" @click="openTestForm" />
+        </v-row>
+      </template>
+    </v-data-table>
+  </v-container>
 </template>
 
 <style scoped>
