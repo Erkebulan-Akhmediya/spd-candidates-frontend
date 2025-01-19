@@ -2,9 +2,12 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
+import type { QuestionTypeApi } from '@/interfaces/interfaces.ts'
+import Options from '@/components/TestForm/Options.vue'
 
 export default defineComponent({
   name: `Question`,
+  components: { Options },
 
   props: {
     variantIndex: {
@@ -25,7 +28,14 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test']),
+    ...mapWritableState(useTestStore, ['test', 'questionTypes']),
+  },
+
+  methods: {
+    getQuestionTypeName(type: QuestionTypeApi) {
+      if (this.$i18n.locale === 'ru') return type.nameRus
+      return type.nameKaz
+    },
   },
 
   watch: {
@@ -39,19 +49,18 @@ export default defineComponent({
 
 <template>
   <v-card class="ma-1">
-    <v-card-title>
-      <v-row class="pa-3">
-        <v-col cols="1">
-          <p>{{questionIndex + 1}}.</p>
-        </v-col>
-        <v-col cols="5">
+    <v-card-title class="pa-4">Вопрос {{questionIndex + 1}}</v-card-title>
+
+    <v-card-text>
+      <v-row>
+        <v-col cols="6">
           <v-text-field
             v-model="test.variants[variantIndex].questions[questionIndex].nameKaz"
             label="Вопрос (каз)"
             variant="outlined"
           />
         </v-col>
-        <v-col cols="5">
+        <v-col cols="6">
           <v-text-field
             v-model="test.variants[variantIndex].questions[questionIndex].nameRus"
             label="Вопрос (рус)"
@@ -59,9 +68,7 @@ export default defineComponent({
           />
         </v-col>
       </v-row>
-    </v-card-title>
 
-    <v-card-text>
       <v-row>
         <v-col cols="2">
           <v-checkbox
@@ -76,7 +83,24 @@ export default defineComponent({
 
       <v-row>
         <v-col cols="5">
-          <v-select />
+          <v-select
+            label="Тип вопроса"
+            :items="questionTypes"
+            :item-title="getQuestionTypeName"
+            item-value="id"
+            v-model="test.variants[variantIndex].questions[questionIndex].type"
+            variant="outlined"
+          />
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12">
+          <options
+            :variant-index="variantIndex"
+            :question-index="questionIndex"
+            :question-type-id="test.variants[variantIndex].questions[questionIndex].type"
+          />
         </v-col>
       </v-row>
     </v-card-text>

@@ -1,5 +1,12 @@
 import { defineStore } from 'pinia'
-import { type Option, type Question, QuestionType, type Test, type Variant } from '@/interfaces/interfaces.ts'
+import {
+  type Option,
+  type Question,
+  QuestionType,
+  type QuestionTypeApi,
+  type Test,
+  type Variant
+} from '@/interfaces/interfaces.ts'
 
 export const useTestStore = defineStore('test', {
   state() {
@@ -18,12 +25,20 @@ export const useTestStore = defineStore('test', {
                 nameRus: '',
                 nameKaz: '',
                 type: QuestionType.mcqWithOneCorrect,
-                options: new Array<Option>(),
+                options: new Array<Option>(
+                  {
+                    withFile: false,
+                    file: null,
+                    nameKaz: '',
+                    nameRus: '',
+                  },
+                ),
               }
             ),
           }
         ),
-      } as Test
+      } as Test,
+      questionTypes: new Array<QuestionTypeApi>(),
     };
   },
 })

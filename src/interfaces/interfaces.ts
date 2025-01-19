@@ -53,6 +53,12 @@ export enum QuestionType {
   mcqWithMultipleCorrect = 5,
 }
 
+export interface QuestionTypeApi {
+  id: string
+  nameRus: string
+  nameKaz: string
+}
+
 export interface Question {
   id?: number
   withFile: boolean
@@ -61,13 +67,13 @@ export interface Question {
   nameKaz: string
   type: QuestionType
   answer?: string | number
-  options?: Option[]
+  options: Option[]
 }
 
 export interface Option {
   id?: number
   withFile: boolean
-  file: string
+  file: File | null
   nameRus: string
   nameKaz: string
 }

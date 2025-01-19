@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import QuestionComponent from '@/components/TestForm/Question.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import { QuestionType } from '@/interfaces/interfaces.ts'
+import { type Option, QuestionType } from '@/interfaces/interfaces.ts'
 
 export default defineComponent({
   name: `Questions`,
@@ -37,7 +37,15 @@ export default defineComponent({
         file: null,
         nameRus: '',
         nameKaz: '',
-        type: QuestionType.mcqWithOneCorrect
+        type: QuestionType.mcqWithOneCorrect,
+        options: new Array<Option>(
+          {
+            withFile: false,
+            file: null,
+            nameRus: '',
+            nameKaz: '',
+          },
+        ),
       })
     },
 

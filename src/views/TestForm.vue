@@ -8,19 +8,26 @@ export default defineComponent({
   name: 'TestForm',
   components: { Variants },
 
-  data() {
-    return {
-      isInfinite: false,
-    }
+  computed: {
+    ...mapWritableState(useTestStore, ['test', 'questionTypes']),
   },
 
-  computed: {
-    ...mapWritableState(useTestStore, ['test']),
+  async created() {
+    await this.fetchQuestionTypes()
   },
 
   methods: {
-    async goBack() {
+    async goBack(): Promise<void> {
       await this.$router.push('/test/all')
+    },
+
+    async fetchQuestionTypes(): Promise<void> {
+      try {
+        const {data} = await this.axios.get('/question/type/all')
+        this.questionTypes = data.questionTypes
+      } catch (e) {
+        console.log(e)
+      }
     },
   }
 })
