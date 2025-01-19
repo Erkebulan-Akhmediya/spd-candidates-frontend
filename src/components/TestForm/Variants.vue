@@ -29,6 +29,7 @@ export default defineComponent({
         questions: new Array<Question>(
           {
             withFile: false,
+            file: null,
             nameRus: '',
             nameKaz: '',
             type: QuestionType.mcqWithOneCorrect,

@@ -14,7 +14,7 @@ export const useTestStore = defineStore('test', {
             questions: new Array<Question>(
               {
                 withFile: false,
-                file: '',
+                file: null,
                 nameRus: '',
                 nameKaz: '',
                 type: QuestionType.mcqWithOneCorrect,

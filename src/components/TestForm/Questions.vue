@@ -34,6 +34,7 @@ export default defineComponent({
     addQuestion() {
       this.test.variants[this.variantIndex].questions.push({
         withFile: false,
+        file: null,
         nameRus: '',
         nameKaz: '',
         type: QuestionType.mcqWithOneCorrect

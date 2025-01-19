@@ -46,17 +46,17 @@ export interface Variant {
 }
 
 export enum QuestionType {
-  withoutAnswer = 0,
-  open = 1,
-  mcqWithNoCorrect = 2,
-  mcqWithOneCorrect = 3,
-  mcqWithMultipleCorrect = 4,
+  withoutAnswer = 1,
+  open = 2,
+  mcqWithNoCorrect = 3,
+  mcqWithOneCorrect = 4,
+  mcqWithMultipleCorrect = 5,
 }
 
 export interface Question {
   id?: number
   withFile: boolean
-  file?: string
+  file: File | null
   nameRus: string
   nameKaz: string
   type: QuestionType

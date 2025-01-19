@@ -18,8 +18,20 @@ export default defineComponent({
     }
   },
 
+  data() {
+    return {
+      file: null,
+    };
+  },
+
   computed: {
     ...mapWritableState(useTestStore, ['test']),
+  },
+
+  watch: {
+    file() {
+      console.log('file', this.file)
+    },
   },
 
 })
@@ -48,6 +60,27 @@ export default defineComponent({
         </v-col>
       </v-row>
     </v-card-title>
+
+    <v-card-text>
+      <v-row>
+        <v-col cols="2">
+          <v-checkbox
+            label="С файлом?"
+            v-model="test.variants[variantIndex].questions[questionIndex].withFile"
+          />
+        </v-col>
+        <v-col cols="5" v-if="test.variants[variantIndex].questions[questionIndex].withFile">
+          <v-file-input label="Прикрепите файл" variant="outlined" show-size v-model="file" />
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="5">
+          <v-select />
+        </v-col>
+      </v-row>
+    </v-card-text>
+
     <v-card-actions v-if="test.variants[variantIndex].questions.length > 1">
       <v-row justify="center" >
         <v-btn color="error" @click="$emit('delete', questionIndex)" variant="elevated">

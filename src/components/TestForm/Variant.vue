@@ -3,7 +3,6 @@ import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import Questions from '@/components/TestForm/Questions.vue'
-import { QuestionType } from '@/interfaces/interfaces.ts'
 
 export default defineComponent({
   name: `Variant`,
@@ -18,19 +17,6 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useTestStore, ['test']),
-  },
-
-  methods: {
-
-    addQuestion() {
-      this.test.variants[this.index].questions.push({
-        withFile: false,
-        nameRus: '',
-        nameKaz: '',
-        type: QuestionType.mcqWithOneCorrect,
-      });
-    },
-
   },
 
 })
