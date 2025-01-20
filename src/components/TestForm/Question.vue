@@ -96,6 +96,7 @@ export default defineComponent({
 
       <v-row>
         <v-col cols="12">
+          <v-divider />
           <options
             :variant-index="variantIndex"
             :question-index="questionIndex"

@@ -44,6 +44,7 @@ export default defineComponent({
             file: null,
             nameRus: '',
             nameKaz: '',
+            isCorrect: null,
           },
         ),
       })

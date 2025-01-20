@@ -76,4 +76,5 @@ export interface Option {
   file: File | null
   nameRus: string
   nameKaz: string
+  isCorrect: boolean | null
 }

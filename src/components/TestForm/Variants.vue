@@ -39,6 +39,7 @@ export default defineComponent({
                 file: null,
                 nameKaz: '',
                 nameRus: '',
+                isCorrect: null,
               }
             )
           }
@@ -69,7 +70,7 @@ export default defineComponent({
       v-for="(_, index) in test.variants"
       :key="index"
       :index="index"
-      @delete="openConfirmDeleteDialog"
+      @delete="openConfirmDeleteDialog(index)"
     />
   </v-expansion-panels>
 
