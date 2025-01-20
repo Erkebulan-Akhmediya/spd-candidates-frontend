@@ -38,12 +38,6 @@ export default defineComponent({
     },
   },
 
-  watch: {
-    file() {
-      console.log('file', this.file)
-    },
-  },
-
 })
 </script>
 
