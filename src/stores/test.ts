@@ -31,6 +31,7 @@ export const useTestStore = defineStore('test', {
                     file: null,
                     nameKaz: '',
                     nameRus: '',
+                    isCorrect: null,
                   },
                 ),
               }

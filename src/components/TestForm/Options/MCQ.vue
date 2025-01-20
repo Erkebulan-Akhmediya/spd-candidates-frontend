@@ -27,6 +27,12 @@ export default defineComponent({
     ...mapWritableState(useTestStore, ['test']),
   },
 
+  mounted() {
+    if (this.test.variants[this.variantIndex].questions[this.questionIndex].options.length === 0) {
+      this.addOption()
+    }
+  },
+
   methods: {
     addOption() {
       this.test.variants[this.variantIndex].questions[this.questionIndex].options.push({

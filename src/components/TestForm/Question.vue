@@ -12,19 +12,13 @@ export default defineComponent({
   props: {
     variantIndex: {
       type: Number,
-      required: true
+      required: true,
     },
 
     questionIndex: {
       type: Number,
-      required: true
-    }
-  },
-
-  data() {
-    return {
-      file: null,
-    };
+      required: true,
+    },
   },
 
   computed: {
@@ -37,13 +31,12 @@ export default defineComponent({
       return type.nameKaz
     },
   },
-
 })
 </script>
 
 <template>
   <v-card class="ma-1">
-    <v-card-title class="pa-4">Вопрос {{questionIndex + 1}}</v-card-title>
+    <v-card-title class="pa-4">Вопрос {{ questionIndex + 1 }}</v-card-title>
 
     <v-card-text>
       <v-row>
@@ -71,7 +64,12 @@ export default defineComponent({
           />
         </v-col>
         <v-col cols="5" v-if="test.variants[variantIndex].questions[questionIndex].withFile">
-          <v-file-input label="Прикрепите файл" variant="outlined" show-size v-model="file" />
+          <v-file-input
+            label="Прикрепите файл"
+            variant="outlined"
+            show-size
+            v-model="test.variants[variantIndex].questions[questionIndex].file"
+          />
         </v-col>
       </v-row>
 
@@ -101,7 +99,7 @@ export default defineComponent({
     </v-card-text>
 
     <v-card-actions v-if="test.variants[variantIndex].questions.length > 1">
-      <v-row justify="center" >
+      <v-row justify="center">
         <v-btn color="error" @click="$emit('delete', questionIndex)" variant="elevated">
           удалить вопрос
         </v-btn>
@@ -110,6 +108,4 @@ export default defineComponent({
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

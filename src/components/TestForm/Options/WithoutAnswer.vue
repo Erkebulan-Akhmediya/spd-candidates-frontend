@@ -8,7 +8,7 @@ export default defineComponent({
 
 <template>
 <v-row justify="center">
-  <div class="text-grey">Вопрос без ответа</div>
+  <div class="text-grey pa-2">Вопрос без ответа</div>
 </v-row>
 </template>
 
