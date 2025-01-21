@@ -187,14 +187,11 @@ export default defineComponent({
       try {
         this.validateData()
         const test: FormData = this.testToFormData()
-
-        for (const [key, value] of test.entries()) {
-          console.log(key, value);
-        }
+        await this.axios.post('/test', test)
+        await this.$router.push('/test/all')
       } catch (e) {
-        console.log(e)
-      } finally {
         this.isConfirmSaveDialogOpen = false
+        console.log(e)
       }
     },
   },

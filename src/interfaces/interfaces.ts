@@ -37,7 +37,7 @@ export interface Test {
   nameRus: string
   nameKaz: string
   isLimitless: boolean
-  duration?: number
+  duration: number
   variants: Variant[]
 }
 
