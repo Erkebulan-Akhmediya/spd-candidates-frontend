@@ -19,6 +19,8 @@ export default defineComponent({
       emptyFields: new Array<string>(),
       errors: new Array<string>(),
       isConfirmSaveDialogOpen: false,
+      errMsg: String(),
+      toShowErr: false,
     }
   },
 
@@ -200,13 +202,28 @@ export default defineComponent({
       } catch (e) {
         this.isConfirmSaveDialogOpen = false
         console.log(e)
+        await this.showErr(`${e}`)
       }
+    },
+
+    async showErr(msg: string): Promise<void> {
+      this.errMsg = msg
+      this.toShowErr = true
     },
   },
 })
 </script>
 
 <template>
+  <v-alert
+    title="Ошибка"
+    :text="errMsg"
+    type="error"
+    closable
+    class="ma-2"
+    v-model="toShowErr"
+    width="600"
+  />
   <v-card>
     <v-card-title>
       <v-row class="pa-5">
@@ -241,7 +258,7 @@ export default defineComponent({
           <v-checkbox label="Без ограничений" v-model="test.isLimitless" />
         </v-col>
         <v-col cols="3">
-          <test-area-of-activity />
+          <test-area-of-activity @error="showErr" />
         </v-col>
       </v-row>
 
