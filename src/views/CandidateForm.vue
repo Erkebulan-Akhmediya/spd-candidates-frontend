@@ -10,11 +10,13 @@ import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
 import TestingRegion from '@/components/CandidateForm/TestingRegion.vue'
 import CandidateFormActions from '@/components/CandidateForm/CandidateFormActions.vue'
+import AreaOfActivity from '@/components/CandidateForm/AreaOfActivity.vue'
 
 export default defineComponent({
   name: 'CandidateForm',
 
   components: {
+    AreaOfActivity,
     CandidateFormActions,
     TestingRegion,
     Experience,
@@ -68,6 +70,7 @@ export default defineComponent({
         const { data } = await this.axios.get(`/candidate/${this.$route.params.id}`)
         this.candidate = data
         this.candidate.birthDate = new Date(data.birthDate)
+        console.log(this.candidate)
       } catch (e) {
         console.log(e)
         this.showError('Не удалось получить данные канидата')
@@ -285,7 +288,10 @@ export default defineComponent({
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
-          <v-col cols="4" v-if="toShowComment">
+          <v-col
+            cols="4"
+            v-if="toShowComment || ['approval', 'security', 'approved', 'rejected'].includes(tab)"
+          >
             <v-text-field
               label="Коментарий к рекомендации"
               variant="outlined"
@@ -294,13 +300,9 @@ export default defineComponent({
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
-          <v-col cols="4" v-if="tab === 'approval'">
-            <v-select
-              label="Направление деятельности"
-              variant="outlined"
-              :items="['01', '02', '03']"
-              v-model="candidate.areaOfActivity"
-              :rules="[(t: string) => !!t || 'Обязательное поле']"
+          <v-col cols="4" v-if="['approval', 'approved', 'rejected'].includes(tab)">
+            <area-of-activity
+              @error="showError"
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
