@@ -1,11 +1,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import AllCandidatesTab from '@/components/AllCandidates/AllCandidatesTable.vue'
+import AllCandidatesTable from '@/components/AllCandidates/AllCandidatesTable.vue'
 
 export default defineComponent({
   name: 'AllCandidatesMain',
 
-  components: { AllCandidatesTab },
+  components: { AllCandidatesTable },
 
   props: {
     regionId: {
@@ -34,23 +34,23 @@ export default defineComponent({
 
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="new">
-        <all-candidates-tab :tab-type="tab" :regionId="regionId" />
+        <all-candidates-table :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
 
       <v-tabs-window-item value="security">
-        <all-candidates-tab :tab-type="tab" :regionId="regionId" />
+        <all-candidates-table :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
 
       <v-tabs-window-item value="approval">
-        <all-candidates-tab :tab-type="tab" :regionId="regionId" />
+        <all-candidates-table :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
 
       <v-tabs-window-item value="approved">
-        <all-candidates-tab :tab-type="tab" :regionId="regionId" />
+        <all-candidates-table :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
 
       <v-tabs-window-item value="rejected">
-        <all-candidates-tab :tab-type="tab" :regionId="regionId" />
+        <all-candidates-table :tab-type="tab" :regionId="regionId" />
       </v-tabs-window-item>
     </v-tabs-window>
   </v-col>
