@@ -16,6 +16,7 @@ export const useTestStore = defineStore('test', {
         nameKaz: '',
         isLimitless: false,
         duration: 0,
+        areasOfActivities: new Array<string>(),
         variants: new Array<Variant>(
           {
             questions: new Array<Question>(

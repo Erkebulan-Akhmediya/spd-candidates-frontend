@@ -38,6 +38,7 @@ export interface Test {
   nameKaz: string
   isLimitless: boolean
   duration: number
+  areasOfActivities: string[]
   variants: Variant[]
 }
 

@@ -4,10 +4,11 @@ import Variants from '@/components/TestForm/Variants.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import type { Option, Question, Variant } from '@/interfaces/interfaces.ts'
+import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
 
 export default defineComponent({
   name: 'TestForm',
-  components: { Variants },
+  components: { TestAreaOfActivity, Variants },
 
   computed: {
     ...mapWritableState(useTestStore, ['test', 'questionTypes']),
@@ -126,6 +127,9 @@ export default defineComponent({
       if (!this.test.nameRus) this.emptyFields.push('название теста (рус)')
       if (!this.test.nameKaz) this.emptyFields.push('название теста (каз)')
       if (!this.test.isLimitless && !this.test.duration) this.emptyFields.push('длительность')
+      if (this.test.areasOfActivities.length === 0) {
+        this.emptyFields.push('направления деятельности')
+      }
 
       this.test.variants.forEach((variant: Variant, variantIndex: number): void => {
         this.validateVariant(variant, variantIndex)
@@ -152,6 +156,10 @@ export default defineComponent({
       test.append('nameKaz', this.test.nameKaz)
       test.append('isLimitless', String(this.test.isLimitless))
       test.append('duration', String(this.test.duration))
+
+      this.test.areasOfActivities.forEach((area: string, index: number): void => {
+        test.append(`areasOfActivities[${index}]`, area)
+      })
 
       this.test.variants.forEach((variant: Variant, variantIndex: number): void => {
         const variantPrefix: string = `variants[${variantIndex}]`
@@ -231,6 +239,9 @@ export default defineComponent({
         </v-col>
         <v-col cols="2">
           <v-checkbox label="Без ограничений" v-model="test.isLimitless" />
+        </v-col>
+        <v-col cols="3">
+          <test-area-of-activity />
         </v-col>
       </v-row>
 
