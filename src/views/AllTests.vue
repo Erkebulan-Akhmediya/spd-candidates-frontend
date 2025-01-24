@@ -14,7 +14,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useTestStore, ['testSession']),
+    ...mapWritableState(useTestStore, ['passingTest']),
   },
 
   async mounted() {
@@ -41,7 +41,6 @@ export default defineComponent({
     },
 
     async startTest(test: TestListItem): Promise<void> {
-      this.testSession.testId = test.id
       const {data} = await this.axios.post(
         '/test/session',
         {},
@@ -51,7 +50,13 @@ export default defineComponent({
           },
         },
       )
-      this.testSession.id = data
+      this.passingTest = {
+        ...test,
+        id: test.id,
+        questionCount: data.questionCount,
+        testSessionId: data.testSessionId,
+        selectedQuestion: 0
+      }
       await this.$router.push({ path: `/test/${test.id}` })
     },
   },

@@ -1,4 +1,5 @@
 import type { Experience } from '@/components/CandidateForm/Experience.vue'
+import PassingQuestion from '@/components/TestPassing/PassingQuestion.vue'
 
 export interface Region {
   id: number
@@ -33,21 +34,26 @@ export interface Candidate {
 export type Tab = 'create' | 'new' | 'security' | 'approval' | 'approved' | 'rejected'
 
 export interface Test {
-  id?: number
   nameRus: string
   nameKaz: string
   isLimitless: boolean
   duration: number
+}
+
+export interface TestToCreate extends Test {
   areasOfActivities: string[]
   variants: Variant[]
 }
 
-export interface TestListItem {
+export interface PassingTest extends Test {
   id: number
-  nameRus: string
-  nameKaz: string
-  isLimitless: boolean
-  duration: number
+  questionCount: number
+  selectedQuestion: number
+  testSessionId: number
+}
+
+export interface TestListItem extends Test {
+  id: number
   areasOfActivities: string[]
 }
 
@@ -70,14 +76,20 @@ export interface QuestionTypeApi {
 }
 
 export interface Question {
-  id?: number
   withFile: boolean
   file: File | null
   nameRus: string
   nameKaz: string
   type: QuestionType
-  answer?: string | number
   options: Option[]
+}
+
+export interface PassingQuestion extends Question {
+  id: number
+  /**
+   * if the question is mcq it's option id or their array, otherwise it's user-typed answer
+   */
+  answer: string | number | number[]
 }
 
 export interface Option {

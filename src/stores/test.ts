@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import {
-  type Option,
+  type Option, type PassingTest,
   type Question,
   QuestionType,
   type QuestionTypeApi,
-  type Test,
+  type TestToCreate,
   type Variant
 } from '@/interfaces/interfaces.ts'
 
@@ -39,13 +39,9 @@ export const useTestStore = defineStore('test', {
             ),
           }
         ),
-      } as Test,
+      } as TestToCreate,
       questionTypes: new Array<QuestionTypeApi>(),
-      testSession: {
-        testId: -1,
-        id: -1,
-        questions: [],
-      },
+      passingTest: {} as PassingTest,
     };
   },
 })
