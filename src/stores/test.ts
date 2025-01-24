@@ -41,6 +41,11 @@ export const useTestStore = defineStore('test', {
         ),
       } as Test,
       questionTypes: new Array<QuestionTypeApi>(),
+      testSession: {
+        testId: -1,
+        id: -1,
+        questions: [],
+      },
     };
   },
 })
