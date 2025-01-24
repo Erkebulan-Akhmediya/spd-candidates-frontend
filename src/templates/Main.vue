@@ -28,6 +28,11 @@ export default defineComponent({
           icon: 'mdi-account-tie',
         },
         {
+          name: 'sideBarItems.testsConstructor',
+          path: '/test/constructor/all',
+          icon: 'mdi-book-plus',
+        },
+        {
           name: 'sideBarItems.tests',
           path: '/test/all',
           icon: 'mdi-book-open-variant-outline',

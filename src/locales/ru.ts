@@ -7,6 +7,7 @@ export default {
   sideBarItems: {
     employees: 'Сотрудники',
     candidates: 'Кандидаты',
+    testsConstructor: 'Конструктор тестов',
     tests: 'Тесты',
     exit: 'Выход',
   },

@@ -23,6 +23,7 @@ export default defineComponent({
           password: this.password,
         })
         sessionStorage.setItem('token', data.token)
+        sessionStorage.setItem('areaOfActivity', data.areaOfActivity)
         await this.$router.push('/candidate/all')
       } catch (e: unknown) {
         console.log(e)

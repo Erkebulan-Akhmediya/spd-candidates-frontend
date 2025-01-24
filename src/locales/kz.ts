@@ -10,7 +10,8 @@ export default {
   sideBarItems: {
     employees: 'Қызметкерлер',
     candidates: 'Үміткерлер',
-    tests: 'Тесттер',
+    testsConstructor: 'Тесттер конструкторы',
+    tests: 'Тесты',
     exit: 'Шығу',
   },
   login: {

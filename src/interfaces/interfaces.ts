@@ -42,6 +42,15 @@ export interface Test {
   variants: Variant[]
 }
 
+export interface TestListItem {
+  id: number
+  nameRus: string
+  nameKaz: string
+  isLimitless: boolean
+  duration: number
+  areasOfActivities: string[]
+}
+
 export interface Variant {
   questions: Question[],
 }
