@@ -29,6 +29,6 @@ export interface PassingQuestion extends Question {
    * if the question is mcq it's option id or their array, otherwise it's user-typed answer
    */
   answer: string | number | number[] | null
-  file: string | null
+  fileUrl: string | null
   options: PassingOption[]
 }

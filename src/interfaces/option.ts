@@ -11,5 +11,5 @@ export interface OptionToCreate extends Option {
 
 export interface PassingOption extends Option {
   id: number
-  file: string | null
+  fileUrl: string | null
 }

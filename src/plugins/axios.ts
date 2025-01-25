@@ -7,6 +7,8 @@ export default {
 
     const axiosInstance: AxiosInstance = axios.create({
       baseURL: 'http://localhost:2109',
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
     });
 
     axiosInstance.interceptors.request.use(

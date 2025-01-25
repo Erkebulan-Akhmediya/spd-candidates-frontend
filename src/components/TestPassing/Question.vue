@@ -4,9 +4,11 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
+import QuestionFile from '@/components/TestPassing/QuestionFile.vue'
 
 export default defineComponent({
   name: `Question`,
+  components: { QuestionFile },
 
   data() {
     return {
@@ -29,8 +31,9 @@ export default defineComponent({
   methods: {
     getTranslatedName,
     async updateSelectedQuestion(): Promise<void> {
-      const selectedQuestion: PassingQuestion | undefined =
-        this.passingTest.questions.get(this.selectedQuestionId)
+      const selectedQuestion: PassingQuestion | undefined = this.passingTest.questions.get(
+        this.selectedQuestionId,
+      )
 
       if (selectedQuestion !== undefined) {
         this.selectedQuestion = selectedQuestion
@@ -41,7 +44,10 @@ export default defineComponent({
 
     async fetchQuestion(): Promise<void> {
       try {
-        const {data} = await this.axios.get<PassingQuestion>(`/test/question/${this.selectedQuestionId}`)
+        const { data } = await this.axios.get<PassingQuestion>(
+          `/test/question/${this.selectedQuestionId}`,
+        )
+        this.passingTest.questions.set(this.selectedQuestionId, data)
         this.selectedQuestion = data
       } catch (e) {
         console.log(e)
@@ -52,7 +58,7 @@ export default defineComponent({
   watch: {
     async selectedQuestionId(): Promise<void> {
       await this.updateSelectedQuestion()
-    }
+    },
   },
 })
 </script>
@@ -60,7 +66,7 @@ export default defineComponent({
 <template>
   <v-card :title="getTranslatedName(selectedQuestion)">
     <v-card-text>
-
+      <question-file v-if="selectedQuestion.withFile" :url="selectedQuestion.fileUrl!" />
     </v-card-text>
   </v-card>
 </template>

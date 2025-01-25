@@ -199,7 +199,15 @@ export default defineComponent({
       try {
         this.validateData()
         const test: FormData = this.testToFormData()
-        await this.axios.post('/test', test)
+        for (const key of test.keys()) {
+          console.log(key, test.get(key))
+        }
+        await this.axios.post('/test', test, {
+          timeout: 30000,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        })
         await this.$router.push('/test/all')
       } catch (e) {
         this.isConfirmSaveDialogOpen = false
