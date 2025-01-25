@@ -4,8 +4,8 @@ import {
   type TestToCreate,
 } from '@/interfaces/test.ts'
 import type { Variant } from '@/interfaces/variant.ts'
-import { type Question, QuestionType, type QuestionTypeApi } from '@/interfaces/question.ts'
-import type { Option } from '@/interfaces/option.ts'
+import { type QuestionToCreate, QuestionType, type QuestionTypeApi } from '@/interfaces/question.ts'
+import type { OptionToCreate } from '@/interfaces/option.ts'
 
 export const useTestStore = defineStore('test', {
   state() {
@@ -17,13 +17,13 @@ export const useTestStore = defineStore('test', {
         duration: 0,
         areasOfActivities: new Array<string>(),
         variants: new Array<Variant>({
-          questions: new Array<Question>({
+          questions: new Array<QuestionToCreate>({
             withFile: false,
             file: null,
             nameRus: '',
             nameKaz: '',
             type: QuestionType.mcqWithOneCorrect,
-            options: new Array<Option>({
+            options: new Array<OptionToCreate>({
               withFile: false,
               file: null,
               nameKaz: '',

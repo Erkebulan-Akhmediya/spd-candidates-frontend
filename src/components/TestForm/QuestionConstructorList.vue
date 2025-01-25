@@ -4,7 +4,7 @@ import QuestionConstructor from '@/components/TestForm/QuestionConstructor.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import { QuestionType } from '@/interfaces/question.ts'
-import type { Option } from '@/interfaces/option.ts'
+import type { OptionToCreate } from '@/interfaces/option.ts'
 
 export default defineComponent({
   name: `QuestionConstructorList`,
@@ -39,7 +39,7 @@ export default defineComponent({
         nameRus: '',
         nameKaz: '',
         type: QuestionType.mcqWithOneCorrect,
-        options: new Array<Option>(
+        options: new Array<OptionToCreate>(
           {
             withFile: false,
             file: null,

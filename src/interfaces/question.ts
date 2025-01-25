@@ -1,5 +1,5 @@
 import type { Translatable } from '@/interfaces/global.ts'
-import type { Option } from '@/interfaces/option.ts'
+import type { OptionToCreate, PassingOption } from '@/interfaces/option.ts'
 
 export enum QuestionType {
   withoutAnswer = 1,
@@ -15,9 +15,12 @@ export interface QuestionTypeApi extends Translatable {
 
 export interface Question extends Translatable {
   withFile: boolean
-  file: File | null
   type: QuestionType
-  options: Option[]
+}
+
+export interface QuestionToCreate extends Question {
+  file: File | null
+  options: OptionToCreate[]
 }
 
 export interface PassingQuestion extends Question {
@@ -25,5 +28,7 @@ export interface PassingQuestion extends Question {
   /**
    * if the question is mcq it's option id or their array, otherwise it's user-typed answer
    */
-  answer: string | number | number[]
+  answer: string | number | number[] | null
+  file: string | null
+  options: PassingOption[]
 }

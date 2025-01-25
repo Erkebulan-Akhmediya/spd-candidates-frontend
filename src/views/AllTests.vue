@@ -4,6 +4,7 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import type { TestListItem } from '@/interfaces/test.ts'
+import type { PassingQuestion } from '@/interfaces/question.ts'
 
 export default defineComponent({
   name: 'AllTests',
@@ -51,9 +52,10 @@ export default defineComponent({
       this.passingTest = {
         ...test,
         id: test.id,
-        questionCount: data.questionCount,
+        questionIds: data.questionIds,
+        questions: new Map<number, PassingQuestion>(),
         testSessionId: data.testSessionId,
-        selectedQuestion: 0,
+        selectedQuestionIndex: 0,
       }
       await this.$router.push({ path: `/test/${test.id}` })
     },

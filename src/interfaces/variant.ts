@@ -1,5 +1,5 @@
-import type { Question } from '@/interfaces/question.ts'
+import type { QuestionToCreate } from '@/interfaces/question.ts'
 
 export interface Variant {
-  questions: Question[]
+  questions: QuestionToCreate[]
 }

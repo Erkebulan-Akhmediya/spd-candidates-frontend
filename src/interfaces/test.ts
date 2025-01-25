@@ -1,5 +1,6 @@
 import type { Translatable } from '@/interfaces/global.ts'
 import type { Variant } from '@/interfaces/variant.ts'
+import type { PassingQuestion } from '@/interfaces/question.ts'
 
 export interface Test extends Translatable {
   isLimitless: boolean
@@ -13,8 +14,9 @@ export interface TestToCreate extends Test {
 
 export interface PassingTest extends Test {
   id: number
-  questionCount: number
-  selectedQuestion: number
+  questionIds: number[]
+  questions: Map<number, PassingQuestion>
+  selectedQuestionIndex: number
   testSessionId: number
 }
 

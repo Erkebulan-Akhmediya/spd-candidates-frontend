@@ -1,8 +1,15 @@
 import type { Translatable } from '@/interfaces/global.ts'
 
 export interface Option extends Translatable {
-  id?: number
   withFile: boolean
-  file: File | null
   isCorrect: boolean | null
+}
+
+export interface OptionToCreate extends Option {
+  file: File | null
+}
+
+export interface PassingOption extends Option {
+  id: number
+  file: string | null
 }

@@ -15,8 +15,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-chip-group filter mandatory v-model="passingTest.selectedQuestion">
-    <v-chip v-for="(_, index) in new Array(passingTest.questionCount)" :key="index">
+  <v-chip-group filter mandatory v-model="passingTest.selectedQuestionIndex">
+    <v-chip v-for="(_, index) in new Array(passingTest.questionIds.length)" :key="index">
       {{index + 1}}
     </v-chip>
   </v-chip-group>

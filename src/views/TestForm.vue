@@ -5,8 +5,8 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
 import type { Variant } from '@/interfaces/variant.ts'
-import type { Question } from '@/interfaces/question.ts'
-import type { Option } from '@/interfaces/option.ts'
+import type { QuestionToCreate } from '@/interfaces/question.ts'
+import type { OptionToCreate } from '@/interfaces/option.ts'
 
 export default defineComponent({
   name: 'TestForm',
@@ -45,7 +45,7 @@ export default defineComponent({
     },
 
     validateOption(
-      option: Option,
+      option: OptionToCreate,
       variantIndex: number,
       questionIndex: number,
       optionIndex: number,
@@ -67,9 +67,9 @@ export default defineComponent({
       }
     },
 
-    validateQuestionByType(question: Question, variantIndex: number, questionIndex: number): void {
+    validateQuestionByType(question: QuestionToCreate, variantIndex: number, questionIndex: number): void {
       const correctCount: number = question.options.filter(
-        (option: Option): boolean => option.isCorrect ?? false,
+        (option: OptionToCreate): boolean => option.isCorrect ?? false,
       ).length
 
       if (question.type === 1 || question.type === 2) {
@@ -106,7 +106,7 @@ export default defineComponent({
       }
     },
 
-    validateQuestion(question: Question, variantIndex: number, questionIndex: number): void {
+    validateQuestion(question: QuestionToCreate, variantIndex: number, questionIndex: number): void {
       if (question.withFile && question.file === null) {
         this.emptyFields.push(`файл в вопросе ${questionIndex + 1} в варианте ${variantIndex + 1}`)
       }
@@ -116,13 +116,13 @@ export default defineComponent({
 
       this.validateQuestionByType(question, variantIndex, questionIndex)
 
-      question.options.forEach((option: Option, optionIndex: number): void => {
+      question.options.forEach((option: OptionToCreate, optionIndex: number): void => {
         this.validateOption(option, variantIndex, questionIndex, optionIndex)
       })
     },
 
     validateVariant(variant: Variant, variantIndex: number): void {
-      variant.questions.forEach((question: Question, questionIndex: number): void => {
+      variant.questions.forEach((question: QuestionToCreate, questionIndex: number): void => {
         this.validateQuestion(question, variantIndex, questionIndex)
       })
     },
@@ -167,7 +167,7 @@ export default defineComponent({
 
       this.test.variants.forEach((variant: Variant, variantIndex: number): void => {
         const variantPrefix: string = `variants[${variantIndex}]`
-        variant.questions.forEach((question: Question, questionIndex: number): void => {
+        variant.questions.forEach((question: QuestionToCreate, questionIndex: number): void => {
           const questionPrefix: string = `${variantPrefix}.questions[${questionIndex}]`
           test.append(`${questionPrefix}.withFile`, String(question.withFile))
           if (question.withFile) {
@@ -177,7 +177,7 @@ export default defineComponent({
           test.append(`${questionPrefix}.nameKaz`, question.nameKaz)
           test.append(`${questionPrefix}.type`, String(question.type))
 
-          question.options.forEach((option: Option, optionIndex: number): void => {
+          question.options.forEach((option: OptionToCreate, optionIndex: number): void => {
             const optionPrefix: string = `${questionPrefix}.options[${optionIndex}]`
             test.append(`${optionPrefix}.withFile`, String(option.withFile))
             if (option.withFile) {
