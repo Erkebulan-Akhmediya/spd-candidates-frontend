@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Experience } from '@/components/CandidateForm/Experience.vue'
-import type { Candidate } from '@/interfaces/interfaces.ts'
+import type { Candidate, Experience } from '@/interfaces/candidate.ts'
 
 export const useCandidateStore = defineStore('candidate', {
   state() {

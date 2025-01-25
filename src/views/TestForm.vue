@@ -3,8 +3,10 @@ import { defineComponent } from 'vue'
 import Variants from '@/components/TestForm/Variants.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import type { Option, Question, Variant } from '@/interfaces/interfaces.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
+import type { Variant } from '@/interfaces/variant.ts'
+import type { Question } from '@/interfaces/question.ts'
+import type { Option } from '@/interfaces/option.ts'
 
 export default defineComponent({
   name: 'TestForm',

@@ -2,8 +2,8 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import type { QuestionTypeApi } from '@/interfaces/interfaces.ts'
 import Options from '@/components/TestForm/Options.vue'
+import { getTranslatedName } from '@/utils/Translate.ts'
 
 export default defineComponent({
   name: `Question`,
@@ -26,10 +26,7 @@ export default defineComponent({
   },
 
   methods: {
-    getQuestionTypeName(type: QuestionTypeApi) {
-      if (this.$i18n.locale === 'ru') return type.nameRus
-      return type.nameKaz
-    },
+    getTranslatedName,
   },
 })
 </script>
@@ -78,7 +75,7 @@ export default defineComponent({
           <v-select
             label="Тип вопроса"
             :items="questionTypes"
-            :item-title="getQuestionTypeName"
+            :item-title="getTranslatedName"
             item-value="id"
             v-model="test.variants[variantIndex].questions[questionIndex].type"
             variant="outlined"

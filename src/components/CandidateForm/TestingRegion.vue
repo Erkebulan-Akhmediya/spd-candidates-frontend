@@ -1,8 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import type { Region } from '@/interfaces/interfaces.ts'
+import type { Region } from '@/interfaces/global.ts'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
 
 export default defineComponent({
   name: 'TestingRegion',
@@ -27,6 +28,7 @@ export default defineComponent({
   },
 
   methods: {
+    getTranslatedName,
     async fetchRegions() {
       try {
         const { data } = await this.axios.get('/region/all')
@@ -35,11 +37,6 @@ export default defineComponent({
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по регоинам тестирования')
       }
-    },
-
-    getRegionName(region: Region): string {
-      if (this.$i18n.locale === 'ru') return region.nameRus
-      return region.nameKaz
     },
   },
 })
@@ -51,7 +48,7 @@ export default defineComponent({
     variant="outlined"
     :items="regions"
     item-value="id"
-    :item-title="getRegionName"
+    :item-title="getTranslatedName"
     v-model="candidate.testingRegionId"
     :disabled="disabled"
     :readonly="readonly"

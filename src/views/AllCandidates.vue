@@ -1,7 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import AllCandidatesMain from '@/components/AllCandidates/AllCandidatesMain.vue'
-import type { Region } from '@/interfaces/interfaces.ts'
+import type { Region } from '@/interfaces/global.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
 
 export default defineComponent({
   name: `Candidate`,
@@ -19,6 +20,8 @@ export default defineComponent({
   },
 
   methods: {
+    getTranslatedName,
+
     async getAllRegions(): Promise<void> {
       try {
         const { data } = await this.axios.get('/region/all')
@@ -32,10 +35,6 @@ export default defineComponent({
         console.log(e)
       }
     },
-
-    getRegionName(region: Region): string {
-      return this.$i18n.locale === 'ru' ? region.nameRus : region.nameKaz
-    },
   },
 })
 </script>
@@ -47,7 +46,7 @@ export default defineComponent({
         <v-list-item
           v-for="region in regions"
           :key="region.id"
-          :title="getRegionName(region)"
+          :title="getTranslatedName(region)"
           :value="region.id"
         />
       </v-list>

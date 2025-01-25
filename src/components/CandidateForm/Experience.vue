@@ -3,14 +3,7 @@ import { defineComponent } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-
-export interface Experience {
-  index: number
-  startDate: Date
-  endDate: Date
-  position: string
-  companyName: string
-}
+import type { Experience } from '@/interfaces/candidate.ts'
 
 export default defineComponent({
   name: `Experience`,

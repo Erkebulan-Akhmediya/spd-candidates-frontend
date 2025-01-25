@@ -3,7 +3,8 @@ import { defineComponent } from 'vue'
 import QuestionComponent from '@/components/TestForm/Question.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import { type Option, QuestionType } from '@/interfaces/interfaces.ts'
+import { QuestionType } from '@/interfaces/question.ts'
+import type { Option } from '@/interfaces/option.ts'
 
 export default defineComponent({
   name: `Questions`,

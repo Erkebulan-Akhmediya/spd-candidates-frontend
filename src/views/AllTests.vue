@@ -1,8 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import type { TestListItem } from '@/interfaces/interfaces.ts'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
+import type { TestListItem } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: 'AllTests',
@@ -22,6 +23,8 @@ export default defineComponent({
   },
 
   methods: {
+    getTranslatedName,
+
     async fetchTests() {
       try {
         const { data } = await this.axios.get('/test/all', {
@@ -35,18 +38,13 @@ export default defineComponent({
       }
     },
 
-    getTestName(test: TestListItem): string {
-      if (this.$i18n.locale === 'ru') return test.nameRus
-      return test.nameKaz
-    },
-
     async startTest(test: TestListItem): Promise<void> {
-      const {data} = await this.axios.post(
+      const { data } = await this.axios.post(
         '/test/session',
         {},
         {
           params: {
-            testId: test.id
+            testId: test.id,
           },
         },
       )
@@ -55,7 +53,7 @@ export default defineComponent({
         id: test.id,
         questionCount: data.questionCount,
         testSessionId: data.testSessionId,
-        selectedQuestion: 0
+        selectedQuestion: 0,
       }
       await this.$router.push({ path: `/test/${test.id}` })
     },
@@ -66,7 +64,11 @@ export default defineComponent({
 <template>
   <v-container fluid>
     <v-expansion-panels>
-      <v-expansion-panel v-for="(test, index) in tests" :key="index" :title="getTestName(test)">
+      <v-expansion-panel
+        v-for="(test, index) in tests"
+        :key="index"
+        :title="getTranslatedName(test)"
+      >
         <v-expansion-panel-text>
           <p>Длительность: {{ test.isLimitless ? 'Без ограничений' : `${test.duration} мин` }}</p>
           <v-row justify="end">

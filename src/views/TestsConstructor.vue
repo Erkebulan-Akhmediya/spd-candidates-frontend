@@ -1,9 +1,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import type { TestListItem } from '@/interfaces/interfaces.ts'
+import { getTranslatedName } from '../utils/Translate.ts'
+import type { TestListItem } from '@/interfaces/test.ts'
 
 export default defineComponent({
-  name: 'AllTests',
+  name: 'TestsConstructor',
 
   data() {
     return {
@@ -33,6 +34,8 @@ export default defineComponent({
   },
 
   methods: {
+    getTranslatedName,
+
     async openTestForm(): Promise<void> {
       await this.$router.push({ path: '/test/create' })
     },
@@ -43,18 +46,13 @@ export default defineComponent({
           params: {
             pageSize: this.pageSize,
             pageNumber: this.pageNumber - 1,
-          }
+          },
         })
         this.tests = data.tests
         this.count = data.count
       } catch (e) {
         console.log(e)
       }
-    },
-
-    getTestName(test: TestListItem): string {
-      if (this.$i18n.locale === 'ru') return test.nameRus
-      return test.nameKaz
     },
   },
 })
@@ -78,11 +76,11 @@ export default defineComponent({
       </template>
 
       <template v-slot:[`item.name`]="{ item }">
-        <p>{{ getTestName(item) }}</p>
+        <p>{{ getTranslatedName(item) }}</p>
       </template>
 
       <template v-slot:[`item.duration`]="{ item }">
-        <p>{{ item.duration }} мин</p>
+        <p>{{ item.isLimitless ? 'Без ограничений' : `${item.duration} мин` }}</p>
       </template>
 
       <template v-slot:[`item.areasOfActivities`]="{ item }">
