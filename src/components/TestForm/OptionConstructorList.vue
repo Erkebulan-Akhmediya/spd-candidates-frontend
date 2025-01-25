@@ -5,7 +5,7 @@ import Open from '@/components/TestForm/Options/Open.vue'
 import Mcq from '@/components/TestForm/Options/MCQ.vue'
 
 export default defineComponent({
-  name: `Options`,
+  name: `OptionConstructorList`,
   components: { Mcq, Open, WithoutAnswer },
 
   props: {

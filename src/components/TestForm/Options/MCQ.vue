@@ -2,11 +2,11 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import QuestionOption from '@/components/TestForm/Option.vue'
+import OptionConstructor from '@/components/TestForm/OptionConstructor.vue'
 
 export default defineComponent({
   name: `mcq`,
-  components: { QuestionOption },
+  components: { OptionConstructor },
 
   props: {
     variantIndex: {
@@ -56,7 +56,7 @@ export default defineComponent({
 
 <template>
   <v-list>
-    <question-option
+    <option-constructor
       v-for="(_, index) in test.variants[variantIndex].questions[questionIndex].options"
       :key="index"
       :option-index="index"

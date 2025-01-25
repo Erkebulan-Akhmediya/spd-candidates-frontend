@@ -2,12 +2,12 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import Options from '@/components/TestForm/Options.vue'
+import OptionConstructorList from '@/components/TestForm/OptionConstructorList.vue'
 import { getTranslatedName } from '@/utils/Translate.ts'
 
 export default defineComponent({
-  name: `Question`,
-  components: { Options },
+  name: `QuestionConstructor`,
+  components: { OptionConstructorList },
 
   props: {
     variantIndex: {
@@ -86,7 +86,7 @@ export default defineComponent({
       <v-row>
         <v-col cols="12">
           <v-divider />
-          <options
+          <option-constructor-list
             :variant-index="variantIndex"
             :question-index="questionIndex"
             :question-type-id="test.variants[variantIndex].questions[questionIndex].type"

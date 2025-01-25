@@ -1,14 +1,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import QuestionComponent from '@/components/TestForm/Question.vue'
+import QuestionConstructor from '@/components/TestForm/QuestionConstructor.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import { QuestionType } from '@/interfaces/question.ts'
 import type { Option } from '@/interfaces/option.ts'
 
 export default defineComponent({
-  name: `Questions`,
-  components: { QuestionComponent },
+  name: `QuestionConstructorList`,
+  components: { QuestionConstructor },
 
   props: {
     variantIndex: {
@@ -68,7 +68,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <question-component
+  <question-constructor
     v-for="(_, questionIndex) in test.variants[variantIndex].questions"
     :key="questionIndex"
     :variant-index="variantIndex"

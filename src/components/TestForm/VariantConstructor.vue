@@ -2,11 +2,11 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import Questions from '@/components/TestForm/Questions.vue'
+import QuestionConstructorList from '@/components/TestForm/QuestionConstructorList.vue'
 
 export default defineComponent({
-  name: `Variant`,
-  components: { Questions },
+  name: `VariantConstructor`,
+  components: { QuestionConstructorList },
 
   props: {
     index: {
@@ -29,7 +29,7 @@ export default defineComponent({
     </v-expansion-panel-title>
     <v-expansion-panel-text>
       <v-col cols="12">
-        <questions :variant-index="index" />
+        <question-constructor-list :variant-index="index" />
         <v-row justify="center" class="ma-3" v-if="test.variants.length > 1">
           <v-btn @click="$emit('delete', index)" color="error ">
             удалить вариант

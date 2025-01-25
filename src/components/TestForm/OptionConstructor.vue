@@ -4,7 +4,7 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 
 export default defineComponent({
-  name: `QuestionOption`,
+  name: `OptionConstructor`,
 
   props: {
     variantIndex: {

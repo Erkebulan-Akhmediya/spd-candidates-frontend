@@ -2,13 +2,13 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import VariantComponent from '@/components/TestForm/Variant.vue'
+import VariantConstructor from '@/components/TestForm/VariantConstructor.vue'
 import { type Question, QuestionType } from '@/interfaces/question.ts'
 import type { Option } from '@/interfaces/option.ts'
 
 export default defineComponent({
-  name: `Variants`,
-  components: { VariantComponent },
+  name: `VariantConstructorList`,
+  components: { VariantConstructor },
 
   data() {
     return {
@@ -67,7 +67,7 @@ export default defineComponent({
 
 <template>
   <v-expansion-panels variant="popout">
-    <variant-component
+    <variant-constructor
       v-for="(_, index) in test.variants"
       :key="index"
       :index="index"

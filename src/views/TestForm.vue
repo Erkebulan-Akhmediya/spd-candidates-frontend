@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Variants from '@/components/TestForm/Variants.vue'
+import VariantConstructorList from '@/components/TestForm/VariantConstructorList.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
@@ -10,7 +10,7 @@ import type { Option } from '@/interfaces/option.ts'
 
 export default defineComponent({
   name: 'TestForm',
-  components: { TestAreaOfActivity, Variants },
+  components: { TestAreaOfActivity, VariantConstructorList },
 
   computed: {
     ...mapWritableState(useTestStore, ['test', 'questionTypes']),
@@ -266,7 +266,7 @@ export default defineComponent({
 
       <v-row>
         <v-col cols="12">
-          <variants />
+          <variant-constructor-list />
         </v-col>
       </v-row>
 
