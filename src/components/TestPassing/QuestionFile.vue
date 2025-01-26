@@ -44,7 +44,9 @@ export default defineComponent({
 
   <audio v-else-if="isAudio" :src="url" controls />
 
-  <video v-else-if="isVideo" :src="url"  width="500" controls />
+  <video v-else-if="isVideo"  width="500" controls >
+    <source type="video/mp4" :src="url" />
+  </video>
 
   <iframe v-else-if="isPdf" :src="url" />
 
