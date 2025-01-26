@@ -4,9 +4,10 @@ import VariantConstructorList from '@/components/TestForm/VariantConstructorList
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
-import type { Variant } from '@/interfaces/variant.ts'
-import type { QuestionToCreate } from '@/interfaces/question.ts'
-import type { OptionToCreate } from '@/interfaces/option.ts'
+import type { VariantToCreate, VariantToSend } from '@/interfaces/variant.ts'
+import type { QuestionToCreate, QuestionToSend } from '@/interfaces/question.ts'
+import type { OptionToCreate, OptionToSend } from '@/interfaces/option.ts'
+import type { TestToCreate, TestToSend } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: 'TestForm',
@@ -67,7 +68,11 @@ export default defineComponent({
       }
     },
 
-    validateQuestionByType(question: QuestionToCreate, variantIndex: number, questionIndex: number): void {
+    validateQuestionByType(
+      question: QuestionToCreate,
+      variantIndex: number,
+      questionIndex: number,
+    ): void {
       const correctCount: number = question.options.filter(
         (option: OptionToCreate): boolean => option.isCorrect ?? false,
       ).length
@@ -106,7 +111,11 @@ export default defineComponent({
       }
     },
 
-    validateQuestion(question: QuestionToCreate, variantIndex: number, questionIndex: number): void {
+    validateQuestion(
+      question: QuestionToCreate,
+      variantIndex: number,
+      questionIndex: number,
+    ): void {
       if (question.withFile && question.file === null) {
         this.emptyFields.push(`файл в вопросе ${questionIndex + 1} в варианте ${variantIndex + 1}`)
       }
@@ -121,7 +130,7 @@ export default defineComponent({
       })
     },
 
-    validateVariant(variant: Variant, variantIndex: number): void {
+    validateVariant(variant: VariantToCreate, variantIndex: number): void {
       variant.questions.forEach((question: QuestionToCreate, questionIndex: number): void => {
         this.validateQuestion(question, variantIndex, questionIndex)
       })
@@ -135,7 +144,7 @@ export default defineComponent({
         this.emptyFields.push('направления деятельности')
       }
 
-      this.test.variants.forEach((variant: Variant, variantIndex: number): void => {
+      this.test.variants.forEach((variant: VariantToCreate, variantIndex: number): void => {
         this.validateVariant(variant, variantIndex)
       })
     },
@@ -165,7 +174,7 @@ export default defineComponent({
         test.append(`areasOfActivities[${index}]`, area)
       })
 
-      this.test.variants.forEach((variant: Variant, variantIndex: number): void => {
+      this.test.variants.forEach((variant: VariantToCreate, variantIndex: number): void => {
         const variantPrefix: string = `variants[${variantIndex}]`
         variant.questions.forEach((question: QuestionToCreate, questionIndex: number): void => {
           const questionPrefix: string = `${variantPrefix}.questions[${questionIndex}]`
@@ -195,19 +204,43 @@ export default defineComponent({
       return test
     },
 
+    async convertOptionToSend(option: OptionToCreate): Promise<OptionToSend> {
+      return {
+        ...option,
+        fileName: option.withFile ? await this.$file.upload(option.file!) : null,
+      }
+    },
+
+    async convertQuestionToSend(question: QuestionToCreate): Promise<QuestionToSend> {
+      return {
+        ...question,
+        fileName: question.withFile ? await this.$file.upload(question.file!) : null,
+        options: await Promise.all(question.options.map(this.convertOptionToSend))
+      }
+    },
+
+    async convertVariantToSend(variant: VariantToCreate): Promise<VariantToSend> {
+      return {
+        ...variant,
+        questions: await Promise.all(variant.questions.map(this.convertQuestionToSend)),
+      }
+    },
+
+    async convertTestToSend(test: TestToCreate): Promise<TestToSend> {
+      return {
+        ...test,
+        variants: await Promise.all(test.variants.map(this.convertVariantToSend)),
+      }
+    },
+
     async saveTest(): Promise<void> {
       try {
         this.validateData()
-        const test: FormData = this.testToFormData()
-        for (const key of test.keys()) {
-          console.log(key, test.get(key))
-        }
-        await this.axios.post('/test', test, {
-          timeout: 30000,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        })
+
+        const test: TestToSend = await this.convertTestToSend(this.test)
+
+        await this.axios.post('/test', test)
+
         await this.$router.push('/test/all')
       } catch (e) {
         this.isConfirmSaveDialogOpen = false

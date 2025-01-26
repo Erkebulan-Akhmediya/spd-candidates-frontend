@@ -3,7 +3,7 @@ import {
   type PassingTest,
   type TestToCreate,
 } from '@/interfaces/test.ts'
-import type { Variant } from '@/interfaces/variant.ts'
+import type { VariantToCreate } from '@/interfaces/variant.ts'
 import { type QuestionToCreate, QuestionType, type QuestionTypeApi } from '@/interfaces/question.ts'
 import type { OptionToCreate } from '@/interfaces/option.ts'
 
@@ -16,7 +16,7 @@ export const useTestStore = defineStore('test', {
         isLimitless: false,
         duration: 0,
         areasOfActivities: new Array<string>(),
-        variants: new Array<Variant>({
+        variants: new Array<VariantToCreate>({
           questions: new Array<QuestionToCreate>({
             withFile: false,
             file: null,

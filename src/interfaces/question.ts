@@ -1,5 +1,5 @@
 import type { Translatable } from '@/interfaces/global.ts'
-import type { OptionToCreate, PassingOption } from '@/interfaces/option.ts'
+import type { OptionToCreate, OptionToSend, PassingOption } from '@/interfaces/option.ts'
 
 export enum QuestionType {
   withoutAnswer = 1,
@@ -21,6 +21,11 @@ export interface Question extends Translatable {
 export interface QuestionToCreate extends Question {
   file: File | null
   options: OptionToCreate[]
+}
+
+export interface QuestionToSend extends Question {
+  fileName: string | null
+  options: OptionToSend[]
 }
 
 export interface PassingQuestion extends Question {

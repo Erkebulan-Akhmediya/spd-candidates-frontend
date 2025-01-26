@@ -1,5 +1,5 @@
 import type { Translatable } from '@/interfaces/global.ts'
-import type { Variant } from '@/interfaces/variant.ts'
+import type { VariantToCreate, VariantToSend } from '@/interfaces/variant.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
 
 export interface Test extends Translatable {
@@ -9,7 +9,12 @@ export interface Test extends Translatable {
 
 export interface TestToCreate extends Test {
   areasOfActivities: string[]
-  variants: Variant[]
+  variants: VariantToCreate[]
+}
+
+export interface TestToSend {
+  areasOfActivities: string[]
+  variants: VariantToSend[]
 }
 
 export interface PassingTest extends Test {
