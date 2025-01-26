@@ -163,47 +163,6 @@ export default defineComponent({
       }
     },
 
-    testToFormData(): FormData {
-      const test: FormData = new FormData()
-      test.append('nameRus', this.test.nameRus)
-      test.append('nameKaz', this.test.nameKaz)
-      test.append('isLimitless', String(this.test.isLimitless))
-      test.append('duration', String(this.test.duration))
-
-      this.test.areasOfActivities.forEach((area: string, index: number): void => {
-        test.append(`areasOfActivities[${index}]`, area)
-      })
-
-      this.test.variants.forEach((variant: VariantToCreate, variantIndex: number): void => {
-        const variantPrefix: string = `variants[${variantIndex}]`
-        variant.questions.forEach((question: QuestionToCreate, questionIndex: number): void => {
-          const questionPrefix: string = `${variantPrefix}.questions[${questionIndex}]`
-          test.append(`${questionPrefix}.withFile`, String(question.withFile))
-          if (question.withFile) {
-            test.append(`${questionPrefix}.file`, question.file!, question.file!.name)
-          }
-          test.append(`${questionPrefix}.nameRus`, question.nameRus)
-          test.append(`${questionPrefix}.nameKaz`, question.nameKaz)
-          test.append(`${questionPrefix}.type`, String(question.type))
-
-          question.options.forEach((option: OptionToCreate, optionIndex: number): void => {
-            const optionPrefix: string = `${questionPrefix}.options[${optionIndex}]`
-            test.append(`${optionPrefix}.withFile`, String(option.withFile))
-            if (option.withFile) {
-              test.append(`${optionPrefix}.file`, option.file!, option.file!.name)
-            }
-            test.append(`${optionPrefix}.nameRus`, option.nameRus)
-            test.append(`${optionPrefix}.nameKaz`, option.nameKaz)
-            if (option.isCorrect !== null) {
-              test.append(`${optionPrefix}.isCorrect`, String(option.isCorrect))
-            }
-          })
-        })
-      })
-
-      return test
-    },
-
     async convertOptionToSend(option: OptionToCreate): Promise<OptionToSend> {
       return {
         ...option,
