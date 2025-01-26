@@ -5,10 +5,12 @@ import { useTestStore } from '@/stores/test.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import QuestionFile from '@/components/TestPassing/QuestionFile.vue'
+import Answer from '@/components/TestPassing/Answer.vue'
+import QuestionChanger from '@/components/TestPassing/QuestionChanger.vue'
 
 export default defineComponent({
   name: `Question`,
-  components: { QuestionFile },
+  components: { QuestionChanger, Answer, QuestionFile },
 
   data() {
     return {
@@ -67,6 +69,8 @@ export default defineComponent({
   <v-card :title="getTranslatedName(selectedQuestion)">
     <v-card-text>
       <question-file v-if="selectedQuestion.withFile" :url="selectedQuestion.fileUrl!" />
+      <answer :selected-question-type="selectedQuestion.type" />
+      <question-changer />
     </v-card-text>
   </v-card>
 </template>
