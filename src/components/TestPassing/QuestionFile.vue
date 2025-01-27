@@ -11,6 +11,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    small: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -40,15 +44,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <img v-if="isImage" :src="url" alt="Preview" width="500" />
+  <img v-if="isImage" :src="url" alt="Preview" :width="small ? 300 : 500" />
 
   <audio v-else-if="isAudio" :src="url" controls />
 
-  <video v-else-if="isVideo"  width="500" controls >
+  <video v-else-if="isVideo"  :width="small ? 300 : 500" controls >
     <source type="video/mp4" :src="url" />
   </video>
 
-  <iframe v-else-if="isPdf" :src="url" />
+  <iframe v-else-if="isPdf" :src="url" :width="small ? 300 : 500" />
 
   <p v-else>Не поддерживаемый формат файла</p>
 </template>

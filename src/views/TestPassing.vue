@@ -45,6 +45,10 @@ export default defineComponent({
         console.log(e)
       }
     },
+
+    async endTest(): Promise<void> {
+      await this.$router.push('/test/all')
+    }
   },
 
   watch: {
@@ -65,6 +69,11 @@ export default defineComponent({
         <question-selector />
       </v-card-text>
     </v-card>
+    <v-card-actions>
+      <v-row class="pa-3" justify="end">
+        <v-btn color="error" variant="elevated" @click="endTest">Завершить тест</v-btn>
+      </v-row>
+    </v-card-actions>
   </v-container>
 </template>
 

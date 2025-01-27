@@ -12,7 +12,7 @@ export interface TestToCreate extends Test {
   variants: VariantToCreate[]
 }
 
-export interface TestToSend {
+export interface TestToSend extends Test {
   areasOfActivities: string[]
   variants: VariantToSend[]
 }

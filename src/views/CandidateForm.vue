@@ -70,7 +70,6 @@ export default defineComponent({
         const { data } = await this.axios.get(`/candidate/${this.$route.params.id}`)
         this.candidate = data
         this.candidate.birthDate = new Date(data.birthDate)
-        console.log(this.candidate)
       } catch (e) {
         console.log(e)
         this.showError('Не удалось получить данные канидата')

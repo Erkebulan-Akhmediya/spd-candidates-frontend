@@ -68,7 +68,7 @@ export default defineComponent({
       </template>
 
       <v-list-item-subtitle>
-        <question-file v-if="option.withFile" :url="option.fileUrl!" />
+        <question-file v-if="option.withFile" :url="option.fileUrl!" small />
       </v-list-item-subtitle>
     </v-list-item>
   </v-list>
