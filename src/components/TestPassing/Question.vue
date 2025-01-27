@@ -69,7 +69,7 @@ export default defineComponent({
   <v-card :title="getTranslatedName(selectedQuestion)">
     <v-card-text>
       <question-file v-if="selectedQuestion.withFile" :url="selectedQuestion.fileUrl!" />
-      <answer :selected-question-type="selectedQuestion.type" />
+      <answer :selected-question="selectedQuestion" />
       <question-changer />
     </v-card-text>
   </v-card>
