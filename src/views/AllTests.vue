@@ -56,6 +56,7 @@ export default defineComponent({
         questions: new Map<number, PassingQuestion>(),
         testSessionId: data.testSessionId,
         selectedQuestionIndex: 0,
+        selectedQuestion: null,
       }
       await this.$router.push({ path: `/test/${test.id}` })
     },

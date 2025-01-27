@@ -23,6 +23,7 @@ export interface PassingTest extends Test {
   questions: Map<number, PassingQuestion>
   selectedQuestionIndex: number
   testSessionId: number
+  selectedQuestion: PassingQuestion | null
 }
 
 export interface TestListItem extends Test {

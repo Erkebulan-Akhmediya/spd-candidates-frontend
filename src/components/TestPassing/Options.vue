@@ -1,22 +1,14 @@
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import type { PassingQuestion } from '@/interfaces/question.ts'
-import type { PassingOption } from '@/interfaces/option.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import QuestionFile from '@/components/TestPassing/QuestionFile.vue'
+import type { PassingQuestion } from '@/interfaces/question.ts'
 
 export default defineComponent({
   name: `Options`,
   components: { QuestionFile },
-
-  props: {
-    selectedQuestion: {
-      type: Object as PropType<PassingQuestion>,
-      required: true,
-    },
-  },
 
   emits: ['answered'],
 
@@ -28,9 +20,8 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
-
-    options(): PassingOption[] {
-      return this.selectedQuestion.options ?? []
+    selectedQuestion(): PassingQuestion | null {
+      return this.passingTest.selectedQuestion
     },
   },
 
@@ -42,20 +33,30 @@ export default defineComponent({
     answer() {
       this.$emit('answered', this.answer)
     },
-  }
+    selectedQuestion() {
+      const existingAnswer: number | number[] | string | null | undefined =
+        this.selectedQuestion?.answer
+
+      if (this.selectedQuestion?.type === 5) {
+        this.answer = existingAnswer ? (existingAnswer as number[]) : []
+      } else {
+        this.answer = existingAnswer ? (existingAnswer as number) : null
+      }
+    },
+  },
 })
 </script>
 
 <template>
   <v-list
-    v-if="selectedQuestion.type === 5"
+    v-if="passingTest.selectedQuestion?.type === 5"
     density="compact"
     :lines="false"
     select-strategy="leaf"
     v-model:selected="answer"
   >
     <v-list-item
-      v-for="option in options"
+      v-for="option in passingTest.selectedQuestion?.options"
       :key="option.id"
       :title="getTranslatedName(option)"
       :value="option.id"
@@ -73,7 +74,12 @@ export default defineComponent({
   </v-list>
 
   <v-radio-group v-else label="Ответ" v-model="answer">
-    <v-row v-for="option in options" :key="option.id" justify="space-between" class="pa-1">
+    <v-row
+      v-for="option in passingTest.selectedQuestion?.options ?? []"
+      :key="option.id"
+      justify="space-between"
+      class="pa-1"
+    >
       <v-radio :label="getTranslatedName(option)" :value="option.id" />
       <question-file v-if="option.withFile" :url="option.fileUrl!" />
     </v-row>

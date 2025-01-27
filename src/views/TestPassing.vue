@@ -4,6 +4,7 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import QuestionSelector from '@/components/TestPassing/QuestionSelector.vue'
 import Question from '@/components/TestPassing/Question.vue'
+import type { PassingQuestion } from '@/interfaces/question.ts'
 
 export default defineComponent({
   name: 'TestPassing',
@@ -11,7 +12,46 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
+    selectedQuestionId(): number {
+      return this.passingTest.questionIds[this.passingTest.selectedQuestionIndex]
+    },
   },
+
+  async created() {
+    await this.updateSelectedQuestion()
+  },
+
+  methods: {
+    async updateSelectedQuestion(): Promise<void> {
+      const selectedQuestion: PassingQuestion | undefined = this.passingTest.questions.get(
+        this.selectedQuestionId,
+      )
+
+      if (selectedQuestion !== undefined) {
+        this.passingTest.selectedQuestion = selectedQuestion
+      } else {
+        await this.fetchQuestion()
+      }
+    },
+
+    async fetchQuestion(): Promise<void> {
+      try {
+        const { data } = await this.axios.get<PassingQuestion>(
+          `/test/question/${this.selectedQuestionId}`,
+        )
+        this.passingTest.questions.set(this.selectedQuestionId, data)
+        this.passingTest.selectedQuestion = data
+      } catch (e) {
+        console.log(e)
+      }
+    },
+  },
+
+  watch: {
+    async selectedQuestionId() {
+      await this.updateSelectedQuestion()
+    }
+  }
 
 })
 </script>
@@ -20,7 +60,8 @@ export default defineComponent({
   <v-container fluid>
     <v-card :title="passingTest.nameRus">
       <v-card-text>
-        <question />
+        <!-- create question component after selected question is fetched -->
+        <question v-if="passingTest.selectedQuestion" />
         <question-selector />
       </v-card-text>
     </v-card>
