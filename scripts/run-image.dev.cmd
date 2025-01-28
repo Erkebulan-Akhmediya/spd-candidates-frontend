@@ -1,0 +1,1 @@
+docker run --name spd-front -p 80:80 spd-front
