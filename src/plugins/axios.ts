@@ -6,7 +6,7 @@ export default {
   install(app: App): void {
 
     const axiosInstance: AxiosInstance = axios.create({
-      baseURL: 'http://localhost:2109',
+      baseURL: `http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`,
       maxContentLength: Infinity,
       maxBodyLength: Infinity,
     });
