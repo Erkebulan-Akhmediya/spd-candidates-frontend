@@ -8,6 +8,7 @@ import vuetify from '@/plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 import filePlugin from '@/plugins/file.ts'
+import httpPlugin from '@/plugins/http.ts'
 
 const app = createApp(App)
 
@@ -17,5 +18,6 @@ app.use(i18n)
 app.use(vuetify)
 app.use(axiosPlugin)
 app.use(filePlugin)
+app.use(httpPlugin)
 
 app.mount('#app')

@@ -8,6 +8,11 @@ interface CandidateListItem {
   middleName: string
 }
 
+interface AllCandidatesResponse {
+  count: number
+  candidates: CandidateListItem[]
+}
+
 export default defineComponent({
   name: 'AllCandidatesTable',
 
@@ -82,7 +87,7 @@ export default defineComponent({
 
     async fetchCandidates() {
       try {
-        const { data } = await this.axios.get('/candidate/all', {
+        const data: AllCandidatesResponse = await this.$http.get('/candidate/all', {
           params: {
             regionId: this.regionId,
             statusId: this.tabToStatusId.get(this.tabType),

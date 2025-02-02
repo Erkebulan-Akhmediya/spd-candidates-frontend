@@ -11,6 +11,7 @@ import { useCandidateStore } from '@/stores/candidate.ts'
 import TestingRegion from '@/components/CandidateForm/TestingRegion.vue'
 import CandidateFormActions from '@/components/CandidateForm/CandidateFormActions.vue'
 import AreaOfActivity from '@/components/CandidateForm/AreaOfActivity.vue'
+import type { Candidate } from '@/interfaces/candidate.ts'
 
 export default defineComponent({
   name: 'CandidateForm',
@@ -67,7 +68,7 @@ export default defineComponent({
 
     async fetchCandidate() {
       try {
-        const { data } = await this.axios.get(`/candidate/${this.$route.params.id}`)
+        const data = await this.$http.get<Candidate>(`/candidate/${this.$route.params.id}`)
         this.candidate = data
         this.candidate.birthDate = new Date(data.birthDate)
       } catch (e) {

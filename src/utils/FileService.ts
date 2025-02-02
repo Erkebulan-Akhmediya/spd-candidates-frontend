@@ -1,23 +1,20 @@
-import {v5 } from 'uuid'
-import type { AxiosInstance } from 'axios'
+import { v5 } from 'uuid'
+import type { HttpService } from '@/utils/HttpService.ts'
 
 export default class FileService {
 
-  private readonly axios: AxiosInstance
-
-  public constructor(axios: AxiosInstance) {
-    this.axios = axios
+  public constructor(private readonly http: HttpService) {
   }
 
   public async upload(file: File): Promise<string> {
     const formData: FormData = new FormData()
     const fileName: string = await this.generateUniqueName(file)
     formData.append('file', file, fileName)
-    await this.axios.post('/file', formData,{
+    await this.http.post('/file', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
-      },
-    });
+      }
+    })
     return fileName
   }
 
@@ -26,7 +23,7 @@ export default class FileService {
     const byteArray: Uint8Array = new Uint8Array(arrayBuffer)
     const uuid: string = v5(byteArray, v5.URL)
     const fileExtension: string | undefined = file.name.split('.').pop()
-    if (fileExtension === undefined) throw 'Отсутствует расширение файла';
+    if (fileExtension === undefined) throw 'Отсутствует расширение файла'
     return `${uuid}.${fileExtension}`
   }
 

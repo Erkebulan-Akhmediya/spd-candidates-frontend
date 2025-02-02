@@ -57,7 +57,7 @@ export default defineComponent({
     async save(): Promise<void> {
       try {
         this.validate(true)
-        await this.axios.post('/candidate', this.candidate)
+        await this.$http.post('/candidate', this.candidate)
         await this.$router.push('/candidate/all')
       } catch (e: unknown) {
         this.$emit('error', `Не удалось сохранить кандидата: ${e}`)
@@ -68,7 +68,7 @@ export default defineComponent({
     async reject() {
       try {
         this.validate()
-        await this.axios.put(`/candidate/reject/${this.candidate.identificationNumber}`)
+        await this.$http.put(`/candidate/reject/${this.candidate.identificationNumber}`)
         await this.goBack()
       } catch (e) {
         console.log(e)
@@ -79,7 +79,7 @@ export default defineComponent({
     async sendToSecurityCheck() {
       try {
         this.validate()
-        await this.axios.put('/candidate/to/security', this.candidate)
+        await this.$http.put('/candidate/to/security', this.candidate)
         await this.goBack()
       } catch (e) {
         console.log(e)
@@ -90,7 +90,7 @@ export default defineComponent({
     async sendToApproval() {
       try {
         this.validate()
-        await this.axios.put('/candidate/to/approval', this.candidate)
+        await this.$http.put('/candidate/to/approval', this.candidate)
         await this.goBack()
       } catch (e) {
         console.log(e)
@@ -103,7 +103,7 @@ export default defineComponent({
         if (!this.candidate.areaOfActivity) {
           return this.$emit('error', 'Направление деятельности не выбрано')
         }
-        await this.axios.put(
+        await this.$http.put(
           `/candidate/approve/${this.candidate.identificationNumber}?areaOfActivity=${this.candidate.areaOfActivity}`,
         )
         await this.goBack()

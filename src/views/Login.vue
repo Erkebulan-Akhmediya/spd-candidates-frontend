@@ -2,6 +2,11 @@
 import { defineComponent } from 'vue'
 import LocaleChanger from '@/components/LocaleChanger.vue'
 
+interface LoginResponse {
+  token: string,
+  areaOfActivity: string,
+}
+
 export default defineComponent({
   name: `Login`,
 
@@ -18,7 +23,7 @@ export default defineComponent({
   methods: {
     async login(): Promise<void> {
       try {
-        const { data } = await this.axios.post('/auth/login', {
+        const data: LoginResponse = await this.$http.post<LoginResponse>('/auth/login', {
           username: this.username,
           password: this.password,
         })

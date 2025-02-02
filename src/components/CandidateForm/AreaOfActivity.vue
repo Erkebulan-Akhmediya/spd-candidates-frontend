@@ -30,8 +30,7 @@ export default defineComponent({
   methods: {
     async fetchAreasOfActivity() {
       try {
-        const {data} = await this.axios.get('/area_of_activity/all')
-        this.areasOfActivity = data
+        this.areasOfActivity = await this.$http.get<string[]>('/area_of_activity/all')
       } catch (e) {
         console.log(e)
         this.$emit('error', 'Не удалось загрузаить справочные данные по направлениям деятельности')

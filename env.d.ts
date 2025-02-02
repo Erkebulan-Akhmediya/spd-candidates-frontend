@@ -3,6 +3,7 @@ import { AxiosInstance } from 'axios'
 import { VueI18n, TranslateFunction } from 'vue-i18n'
 import { RouteLocationNormalized, Router } from 'vue-router'
 import type FileService from '@/utils/FileService.ts'
+import type { HttpService } from '@/utils/HttpService.ts'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -12,5 +13,6 @@ declare module '@vue/runtime-core' {
     $i18n: VueI18n
     $t: TranslateFunction
     $file: FileService
+    $http: HttpService
   }
 }
