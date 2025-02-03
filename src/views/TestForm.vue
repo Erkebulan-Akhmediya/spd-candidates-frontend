@@ -197,7 +197,7 @@ export default defineComponent({
 
         const test: TestToSend = await this.convertTestToSend(this.test)
 
-        await this.axios.post('/test', test)
+        await this.$http.post('/test', test)
 
         await this.$router.push('/test/all')
       } catch (e) {

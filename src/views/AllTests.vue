@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
-import type { TestListItem } from '@/interfaces/test.ts'
+import type { GetAllTestsResponse, TestListItem } from '@/interfaces/test.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
 
 export default defineComponent({
@@ -28,7 +28,7 @@ export default defineComponent({
 
     async fetchTests() {
       try {
-        const { data } = await this.axios.get('/test/all', {
+        const data = await this.$http.get<GetAllTestsResponse>('/test/all', {
           params: {
             areaOfActivity: sessionStorage.getItem('areaOfActivity'),
           },

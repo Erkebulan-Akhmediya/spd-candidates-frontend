@@ -30,3 +30,8 @@ export interface TestListItem extends Test {
   id: number
   areasOfActivities: string[]
 }
+
+export interface GetAllTestsResponse {
+  tests: TestListItem[]
+  count: number
+}

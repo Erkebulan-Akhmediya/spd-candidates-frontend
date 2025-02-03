@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { getTranslatedName } from '../utils/Translate.ts'
-import type { TestListItem } from '@/interfaces/test.ts'
+import type { GetAllTestsResponse, TestListItem } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: 'TestsConstructor',
@@ -42,7 +42,7 @@ export default defineComponent({
 
     async fetchTests(): Promise<void> {
       try {
-        const { data } = await this.axios.get('/test/all', {
+        const data = await this.$http.get<GetAllTestsResponse>('/test/all', {
           params: {
             pageSize: this.pageSize,
             pageNumber: this.pageNumber - 1,
