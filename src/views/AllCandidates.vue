@@ -24,8 +24,7 @@ export default defineComponent({
 
     async getAllRegions(): Promise<void> {
       try {
-        const { data } = await this.axios.get('/region/all')
-        this.regions = data
+        this.regions = await this.$http.get<Region[]>('/region/all')
         this.regions.unshift({
           id: -1,
           nameRus: 'Все регионы',

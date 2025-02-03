@@ -2,11 +2,11 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
+import type { Translatable } from '@/interfaces/global.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
 
-interface Language {
+interface Language extends Translatable {
   code: string
-  nameRus: string
-  nameKaz: string
 }
 
 export default defineComponent({
@@ -19,7 +19,7 @@ export default defineComponent({
 
   data() {
     return {
-      languages: new Array<Language>()
+      languages: new Array<Language>(),
     }
   },
 
@@ -28,25 +28,20 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate'])
+    ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
   methods: {
+    getTranslatedName,
     async fetchLanguages() {
       try {
-        const { data } = await this.axios.get('/language/all')
-        this.languages = data.languages
+        this.languages = await this.$http.get<Language[]>('/language/all')
       } catch (e: unknown) {
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по языкам')
       }
     },
-
-    getLanguageName(language: Language) {
-      if (this.$i18n.locale === 'ru') return language.nameRus
-      return language.nameKaz
-    }
-  }
+  },
 })
 </script>
 
@@ -56,7 +51,7 @@ export default defineComponent({
     variant="outlined"
     :items="languages"
     item-value="code"
-    :item-title="getLanguageName"
+    :item-title="getTranslatedName"
     v-model="candidate.languageCodes"
     :disabled="disabled"
     :readonly="readonly"

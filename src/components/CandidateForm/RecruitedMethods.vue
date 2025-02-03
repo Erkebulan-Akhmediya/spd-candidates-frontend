@@ -2,11 +2,11 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
+import type { Translatable } from '@/interfaces/global.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
 
-interface RecruitedMethod {
+interface RecruitedMethod extends Translatable {
   id: number
-  nameRus: string
-  nameKaz: string
 }
 
 export default defineComponent({
@@ -20,7 +20,7 @@ export default defineComponent({
   data() {
     return {
       recruitedMethods: new Array<RecruitedMethod>(),
-      selectedMethodId: Number()
+      selectedMethodId: Number(),
     }
   },
 
@@ -29,30 +29,24 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate'])
+    ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
   methods: {
+    getTranslatedName,
     async fetchRecruitedMethods() {
       try {
-        const { data } = await this.axios.get('/recruited_method/all')
-        this.recruitedMethods = data.recruitedMethods
+        this.recruitedMethods = await this.$http.get<RecruitedMethod[]>('/recruited_method/all')
       } catch (e) {
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по откуда нашли кандидата')
       }
     },
 
-    getRecruitedMethodName(method: RecruitedMethod) {
-      if (this.$i18n.locale === 'ru') return method.nameRus
-      return method.nameKaz
-    },
-
     onMethodUpdate(methodId: number) {
       this.$emit('show-comment', methodId === 4)
-    }
-
-  }
+    },
+  },
 })
 </script>
 
@@ -62,7 +56,7 @@ export default defineComponent({
     variant="outlined"
     :items="recruitedMethods"
     item-value="id"
-    :item-title="getRecruitedMethodName"
+    :item-title="getTranslatedName"
     @update:model-value="onMethodUpdate"
     v-model="candidate.recruitedMethodId"
     :disabled="disabled"

@@ -5,7 +5,7 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
 import type { VariantToCreate, VariantToSend } from '@/interfaces/variant.ts'
-import type { QuestionToCreate, QuestionToSend } from '@/interfaces/question.ts'
+import type { QuestionToCreate, QuestionToSend, QuestionTypeApi } from '@/interfaces/question.ts'
 import type { OptionToCreate, OptionToSend } from '@/interfaces/option.ts'
 import type { TestToCreate, TestToSend } from '@/interfaces/test.ts'
 
@@ -38,8 +38,7 @@ export default defineComponent({
 
     async fetchQuestionTypes(): Promise<void> {
       try {
-        const { data } = await this.axios.get('/question/type/all')
-        this.questionTypes = data.questionTypes
+        this.questionTypes = await this.$http.get<QuestionTypeApi[]>('/question/type/all')
       } catch (e) {
         console.log(e)
       }

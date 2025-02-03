@@ -2,11 +2,11 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
+import type { Translatable } from '@/interfaces/global.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
 
-interface Nationality {
+interface Nationality extends Translatable {
   code: number
-  nameKaz: string
-  nameRus: string
 }
 
 export default defineComponent({
@@ -19,7 +19,7 @@ export default defineComponent({
 
   data() {
     return {
-      nationalities: new Array<Nationality>()
+      nationalities: new Array<Nationality>(),
     }
   },
 
@@ -28,25 +28,20 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate'])
+    ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
   methods: {
+    getTranslatedName,
     async fetchNationalities() {
       try {
-        const { data } = await this.axios.get('/nationality/all')
-        this.nationalities = data.nationalities
+        this.nationalities = await this.$http.get<Nationality[]>('/nationality/all')
       } catch (e: unknown) {
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по национальностям')
       }
     },
-
-    getNationalityName(nationality: Nationality): string {
-      if (this.$i18n.locale === 'ru') return nationality.nameRus
-      return nationality.nameKaz
-    }
-  }
+  },
 })
 </script>
 
@@ -56,7 +51,7 @@ export default defineComponent({
     variant="outlined"
     :items="nationalities"
     item-value="code"
-    :item-title="getNationalityName"
+    :item-title="getTranslatedName"
     v-model="candidate.nationalityCode"
     :disabled="disabled"
     :readonly="readonly"

@@ -31,8 +31,7 @@ export default defineComponent({
     getTranslatedName,
     async fetchRegions() {
       try {
-        const { data } = await this.axios.get('/region/all')
-        this.regions = data
+        this.regions = await this.$http.get<Region[]>('/region/all')
       } catch (e: unknown) {
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по регоинам тестирования')

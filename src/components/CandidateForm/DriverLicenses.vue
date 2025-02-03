@@ -13,7 +13,7 @@ export default defineComponent({
 
   data() {
     return {
-      driverLicenses: new Array<string>()
+      driverLicenses: new Array<string>(),
     }
   },
 
@@ -22,20 +22,19 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate'])
+    ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
   methods: {
     async fetchDriverLicenses() {
       try {
-        const { data } = await this.axios.get('/driver_license/all')
-        this.driverLicenses = data.driverLicenses
+        this.driverLicenses = await this.$http.get<string[]>('/driver_license/all')
       } catch (e) {
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по водительским правам')
       }
-    }
-  }
+    },
+  },
 })
 </script>
 
