@@ -6,6 +6,11 @@ import { getTranslatedName } from '@/utils/Translate.ts'
 import type { GetAllTestsResponse, TestListItem } from '@/interfaces/test.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
 
+interface CreateTestSessionResponse {
+  questionIds: number[],
+  testSessionId: number,
+}
+
 export default defineComponent({
   name: 'AllTests',
 
@@ -40,7 +45,7 @@ export default defineComponent({
     },
 
     async startTest(test: TestListItem): Promise<void> {
-      const { data } = await this.axios.post(
+      const data = await this.$http.post<CreateTestSessionResponse>(
         '/test/session',
         {},
         {

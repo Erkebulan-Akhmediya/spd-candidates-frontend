@@ -36,7 +36,7 @@ export default defineComponent({
 
     async fetchQuestion(): Promise<void> {
       try {
-        const { data } = await this.axios.get<PassingQuestion>(
+        const data = await this.$http.get<PassingQuestion>(
           `/test/question/${this.selectedQuestionId}`,
         )
         this.passingTest.questions.set(this.selectedQuestionId, data)
