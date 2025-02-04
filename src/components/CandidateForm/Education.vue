@@ -1,12 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { VDateInput } from 'vuetify/labs/VDateInput'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import type { Experience } from '@/interfaces/candidate.ts'
+import type { Education, EducationType } from '@/interfaces/candidate.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 
 export default defineComponent({
-  name: `Experience`,
+  name: `Education`,
 
   components: {
     VDateInput,
@@ -25,6 +26,7 @@ export default defineComponent({
 
   data() {
     return {
+      educationTypes: new Array<EducationType>(),
       headers: [
         {
           key: 'startDate',
@@ -35,12 +37,16 @@ export default defineComponent({
           title: 'Дата окончания',
         },
         {
-          key: 'position',
-          title: 'Должность',
+          key: 'type',
+          title: 'Тип',
         },
         {
-          key: 'companyName',
-          title: 'Компания',
+          key: 'organization',
+          title: 'Заведение',
+        },
+        {
+          key: 'major',
+          title: 'Специальность',
         },
         {
           key: 'deleteButton',
@@ -50,30 +56,53 @@ export default defineComponent({
     }
   },
 
+  async created() {
+    await this.fetchEducationTypes()
+  },
+
   computed: {
     ...mapWritableState(useCandidateStore, ['candidate']),
+
+    nextEducationIndex(): number {
+      if (this.candidate.education.length === 0) return 0
+      return this.lastEducationIndex + 1
+    },
+
+    lastEducationIndex(): number {
+      return this.lastEducation.index
+    },
+
+    lastEducation(): Education {
+      return this.candidate.education[this.candidate.education.length - 1]
+    },
   },
 
   methods: {
-    addExperience() {
-      this.candidate.experiences.push({
-        index: this.getNextExperienceIndex(),
+    getTranslatedName,
+    addEducation(): void {
+      this.candidate.education.push({
+        index: this.nextEducationIndex,
         startDate: new Date(),
         endDate: new Date(),
-        position: '',
-        companyName: '',
+        type: 1,
+        organization: '',
+        major: '',
       })
     },
 
-    deleteExperience(experienceToDelete: Experience) {
-      this.candidate.experiences = this.candidate.experiences.filter(
-        (experience: Experience): boolean => experience.index !== experienceToDelete.index,
+    deleteEducation(educationToDelete: Education): void {
+      this.candidate.education = this.candidate.education.filter(
+        (education: Education): boolean => education.index !== educationToDelete.index,
       )
     },
 
-    getNextExperienceIndex(): number {
-      if (this.candidate.experiences.length === 0) return 0
-      return this.candidate.experiences[this.candidate.experiences.length - 1].index + 1
+    async fetchEducationTypes() {
+      try {
+        this.educationTypes = await this.$http.get<EducationType[]>('/education/type/all')
+      } catch (e: unknown) {
+        console.log(e)
+        this.$emit('error', 'Не удалось вывести справочные данные по типам образования')
+      }
     },
   },
 })
@@ -84,20 +113,14 @@ export default defineComponent({
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="candidate.experiences"
+        :items="candidate.education"
         hide-default-footer
         disable-sort
       >
         <template v-slot:top>
           <v-row justify="space-between" align="center" class="pa-3">
-            <h2>Опыт работы</h2>
-            <v-btn
-              v-if="!readonly"
-              icon
-              @click="addExperience"
-              color="primary"
-              :disabled="disabled"
-            >
+            <h2>Образование</h2>
+            <v-btn v-if="!readonly" icon @click="addEducation" color="primary" :disabled="disabled">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </v-row>
@@ -123,20 +146,31 @@ export default defineComponent({
           />
         </template>
 
-        <template v-slot:[`item.position`]="{ item }">
+        <template v-slot:[`item.type`]="{ item }">
+          <v-select
+            class="mt-5"
+            :items="educationTypes"
+            item-value="id"
+            :item-title="getTranslatedName"
+            v-model="item.type"
+            variant="outlined"
+          />
+        </template>
+
+        <template v-slot:[`item.organization`]="{ item }">
           <v-text-field
             class="mt-5"
-            v-model="item.position"
+            v-model="item.organization"
             variant="outlined"
             :disabled="disabled"
             :readonly="readonly"
           />
         </template>
 
-        <template v-slot:[`item.companyName`]="{ item }">
+        <template v-slot:[`item.major`]="{ item }">
           <v-text-field
             class="mt-5"
-            v-model="item.companyName"
+            v-model="item.major"
             variant="outlined"
             :disabled="disabled"
             :readonly="readonly"
@@ -147,7 +181,7 @@ export default defineComponent({
           <v-btn
             v-if="!readonly"
             icon
-            @click="deleteExperience(item)"
+            @click="deleteEducation(item)"
             color="error"
             :disabled="disabled"
           >

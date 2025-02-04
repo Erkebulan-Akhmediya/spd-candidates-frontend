@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
+import type { Education } from '@/interfaces/candidate.ts'
 
 export default defineComponent({
   name: 'CandidateFormActions',
@@ -34,7 +35,6 @@ export default defineComponent({
       if (!this.candidate.identificationNumber) err.push('ИИН')
       if (!this.candidate.phoneNumber) err.push('номер телефона')
       if (!this.candidate.nationalityCode) err.push('национальность')
-      if (!this.candidate.education) err.push('образование')
       if (!this.candidate.sport) err.push('отношение к спорту')
       if (!this.candidate.recruitedMethodId) err.push('откуда подобран кандидат')
       if (!this.candidate.securityCheckResult) err.push('результат проверки ВБ')
@@ -51,6 +51,19 @@ export default defineComponent({
         )
       ) {
         throw 'Имеются не заполненные поля в опыте работы'
+      }
+
+      if (
+        this.candidate.education.some(
+          (education: Education): boolean =>
+            !education.startDate ||
+            !education.endDate ||
+            !education.type ||
+            !education.organization ||
+            !education.major
+        )
+      ) {
+        throw 'Имеются не заполненные поля в образовании'
       }
     },
 

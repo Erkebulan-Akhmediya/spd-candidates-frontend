@@ -12,11 +12,13 @@ import TestingRegion from '@/components/CandidateForm/TestingRegion.vue'
 import CandidateFormActions from '@/components/CandidateForm/CandidateFormActions.vue'
 import AreaOfActivity from '@/components/CandidateForm/AreaOfActivity.vue'
 import type { Candidate } from '@/interfaces/candidate.ts'
+import Education from '@/components/CandidateForm/Education.vue'
 
 export default defineComponent({
   name: 'CandidateForm',
 
   components: {
+    Education,
     AreaOfActivity,
     CandidateFormActions,
     TestingRegion,
@@ -90,7 +92,7 @@ export default defineComponent({
       this.candidate.nationalityCode = 0
       this.candidate.languageCodes = []
       this.candidate.driverLicenseCodes = []
-      this.candidate.education = ''
+      this.candidate.education = []
       this.candidate.sport = ''
       this.candidate.recruitedMethodId = 0
       this.candidate.recruitedMethodComment = ''
@@ -261,15 +263,6 @@ export default defineComponent({
         <v-row>
           <v-col cols="4">
             <v-text-field
-              label="Образование"
-              variant="outlined"
-              v-model="candidate.education"
-              :disabled="['approval', 'security'].includes(tab)"
-              :readonly="['approved', 'rejected'].includes(tab)"
-            />
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
               label="Отношение к спорту"
               variant="outlined"
               v-model="candidate.sport"
@@ -303,6 +296,16 @@ export default defineComponent({
           <v-col cols="4" v-if="['approval', 'approved', 'rejected'].includes(tab)">
             <area-of-activity
               @error="showError"
+              :readonly="['approved', 'rejected'].includes(tab)"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12">
+            <education
+              @error="showError"
+              :disabled="['approval', 'security'].includes(tab)"
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>

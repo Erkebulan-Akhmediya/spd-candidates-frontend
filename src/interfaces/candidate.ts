@@ -1,9 +1,24 @@
+import type { Translatable } from '@/interfaces/global.ts'
+
 export interface Experience {
   index: number
   startDate: Date
   endDate: Date
   position: string
   companyName: string
+}
+
+export interface Education {
+  index: number
+  startDate: Date
+  endDate: Date
+  type: number
+  organization: string
+  major: string
+}
+
+export interface EducationType extends Translatable {
+  id: number
 }
 
 export interface Candidate {
@@ -18,7 +33,7 @@ export interface Candidate {
   nationalityCode: number
   languageCodes: string[]
   driverLicenseCodes: string[]
-  education: string
+  education: Education[]
   sport: string
   recruitedMethodId: number
   recruitedMethodComment: string
