@@ -10,49 +10,31 @@ export default defineComponent({
   name: `Education`,
 
   components: {
-    VDateInput,
+    VDateInput
   },
 
   props: {
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     readonly: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
 
   data() {
     return {
       educationTypes: new Array<EducationType>(),
       headers: [
-        {
-          key: 'startDate',
-          title: 'Дата начала',
-        },
-        {
-          key: 'endDate',
-          title: 'Дата окончания',
-        },
-        {
-          key: 'type',
-          title: 'Тип',
-        },
-        {
-          key: 'organization',
-          title: 'Заведение',
-        },
-        {
-          key: 'major',
-          title: 'Специальность',
-        },
-        {
-          key: 'deleteButton',
-          title: '',
-        },
-      ],
+        { key: 'startDate', title: 'Дата начала' },
+        { key: 'endDate', title: 'Дата окончания' },
+        { key: 'type', title: 'Тип' },
+        { key: 'organization', title: 'Заведение' },
+        { key: 'major', title: 'Специальность' },
+        { key: 'deleteButton', title: '' }
+      ]
     }
   },
 
@@ -74,7 +56,7 @@ export default defineComponent({
 
     lastEducation(): Education {
       return this.candidate.education[this.candidate.education.length - 1]
-    },
+    }
   },
 
   methods: {
@@ -86,13 +68,13 @@ export default defineComponent({
         endDate: new Date(),
         type: 1,
         organization: '',
-        major: '',
+        major: ''
       })
     },
 
     deleteEducation(educationToDelete: Education): void {
       this.candidate.education = this.candidate.education.filter(
-        (education: Education): boolean => education.index !== educationToDelete.index,
+        (education: Education): boolean => education.index !== educationToDelete.index
       )
     },
 
@@ -103,8 +85,8 @@ export default defineComponent({
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по типам образования')
       }
-    },
-  },
+    }
+  }
 })
 </script>
 

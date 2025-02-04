@@ -24,6 +24,12 @@ export default defineComponent({
     },
 
     validate(creating?: boolean): void {
+      this.validateFields(creating)
+      this.validateExperiences()
+      this.validateEducation()
+    },
+
+    validateFields(creating?: boolean): void {
       const err: string[] = []
 
       if (!this.candidate.username) err.push('имя пользователя')
@@ -40,7 +46,9 @@ export default defineComponent({
       if (!this.candidate.securityCheckResult) err.push('результат проверки ВБ')
 
       if (err.length > 0) throw `следующие поля обязательны: ${err.join(', ')}`
+    },
 
+    validateExperiences(): void {
       if (
         this.candidate.experiences.some(
           (experience) =>
@@ -52,7 +60,9 @@ export default defineComponent({
       ) {
         throw 'Имеются не заполненные поля в опыте работы'
       }
+    },
 
+    validateEducation(): void {
       if (
         this.candidate.education.some(
           (education: Education): boolean =>
@@ -71,7 +81,7 @@ export default defineComponent({
       try {
         this.validate(true)
         await this.$http.post('/candidate', this.candidate)
-        await this.$router.push('/candidate/all')
+        await this.goBack()
       } catch (e: unknown) {
         this.$emit('error', `Не удалось сохранить кандидата: ${e}`)
         console.log(e)
@@ -117,7 +127,13 @@ export default defineComponent({
           return this.$emit('error', 'Направление деятельности не выбрано')
         }
         await this.$http.put(
-          `/candidate/approve/${this.candidate.identificationNumber}?areaOfActivity=${this.candidate.areaOfActivity}`,
+          `/candidate/approve/${this.candidate.identificationNumber}`,
+          {},
+          {
+            params: {
+              areaOfActivity: this.candidate.areaOfActivity,
+            },
+          }
         )
         await this.goBack()
       } catch (e) {
