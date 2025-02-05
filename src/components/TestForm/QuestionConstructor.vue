@@ -32,7 +32,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-card class="ma-1">
+  <v-card class="my-10" elevation="12">
     <v-card-title class="pa-4">Вопрос {{ questionIndex + 1 }}</v-card-title>
 
     <v-card-text>
@@ -54,23 +54,6 @@ export default defineComponent({
       </v-row>
 
       <v-row>
-        <v-col cols="2">
-          <v-checkbox
-            label="С файлом?"
-            v-model="test.variants[variantIndex].questions[questionIndex].withFile"
-          />
-        </v-col>
-        <v-col cols="5" v-if="test.variants[variantIndex].questions[questionIndex].withFile">
-          <v-file-input
-            label="Прикрепите файл"
-            variant="outlined"
-            show-size
-            v-model="test.variants[variantIndex].questions[questionIndex].file"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row>
         <v-col cols="5">
           <v-select
             label="Тип вопроса"
@@ -81,11 +64,30 @@ export default defineComponent({
             variant="outlined"
           />
         </v-col>
+        <v-col cols="2">
+          <v-checkbox
+            label="С файлом?"
+            v-model="test.variants[variantIndex].questions[questionIndex].withFile"
+          />
+        </v-col>
+        <v-col cols="3">
+          <v-file-input
+            v-if="test.variants[variantIndex].questions[questionIndex].withFile"
+            label="Прикрепите файл"
+            variant="outlined"
+            show-size
+            v-model="test.variants[variantIndex].questions[questionIndex].file"
+          />
+        </v-col>
+        <v-col cols="2" v-if="test.variants[variantIndex].questions.length > 1">
+          <v-btn color="error" @click="$emit('delete', questionIndex)" variant="elevated">
+            удалить вопрос
+          </v-btn>
+        </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12">
-          <v-divider />
           <option-constructor-list
             :variant-index="variantIndex"
             :question-index="questionIndex"
@@ -94,14 +96,6 @@ export default defineComponent({
         </v-col>
       </v-row>
     </v-card-text>
-
-    <v-card-actions v-if="test.variants[variantIndex].questions.length > 1">
-      <v-row justify="center">
-        <v-btn color="error" @click="$emit('delete', questionIndex)" variant="elevated">
-          удалить вопрос
-        </v-btn>
-      </v-row>
-    </v-card-actions>
   </v-card>
 </template>
 

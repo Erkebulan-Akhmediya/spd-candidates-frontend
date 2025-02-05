@@ -1,12 +1,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import WithoutAnswer from '@/components/TestForm/Options/WithoutAnswer.vue'
-import Open from '@/components/TestForm/Options/Open.vue'
 import Mcq from '@/components/TestForm/Options/MCQ.vue'
 
 export default defineComponent({
   name: `OptionConstructorList`,
-  components: { Mcq, Open, WithoutAnswer },
+  components: { Mcq },
 
   props: {
     variantIndex: {
@@ -26,20 +24,13 @@ export default defineComponent({
 </script>
 
 <template>
-  <without-answer v-if="questionTypeId === 1" />
-  <open v-else-if="questionTypeId === 2" />
+  <v-divider v-if="[3, 4, 5].includes(questionTypeId)" />
   <mcq
-    v-else-if="questionTypeId === 3"
+    v-if="[3, 4, 5].includes(questionTypeId)"
     :variant-index="variantIndex"
     :question-index="questionIndex"
+    :checkbox="questionTypeId === 4 || questionTypeId === 5"
   />
-  <mcq
-    v-else-if="questionTypeId === 4 || questionTypeId === 5"
-    :variant-index="variantIndex"
-    :question-index="questionIndex"
-    checkbox
-  />
-  <p v-else>Не поддерживаемый тип вопроса</p>
 </template>
 
 <style scoped>

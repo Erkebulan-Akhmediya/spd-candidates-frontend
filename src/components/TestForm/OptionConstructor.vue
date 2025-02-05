@@ -33,7 +33,7 @@ export default defineComponent({
 
 <template>
   <v-list-item>
-    <v-list-item-title>
+    <v-list-item-title class="my-5">
       <v-row>
         <v-col cols="12">
           <p>Ответ {{ optionIndex + 1 }}</p>
@@ -77,22 +77,24 @@ export default defineComponent({
           />
         </v-col>
         <v-col
-          cols="5"
-          v-if="test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile"
+          cols="6"
         >
           <v-file-input
             label="Прикрепите файл"
             v-model="test.variants[variantIndex].questions[questionIndex].options[optionIndex].file"
             variant="outlined"
+            v-if="test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile"
           />
         </v-col>
-      </v-row>
-      <v-row
-        justify="center"
-        v-if="test.variants[variantIndex].questions[questionIndex].options.length > 1"
-        class="ma-2"
-      >
-        <v-btn color="error" @click="$emit('delete', optionIndex)">удалить ответ</v-btn>
+        <v-col cols="2">
+          <v-btn
+            color="error"
+            @click="$emit('delete', optionIndex)"
+            v-if="test.variants[variantIndex].questions[questionIndex].options.length > 1"
+          >
+            удалить ответ
+          </v-btn>
+        </v-col>
       </v-row>
       <v-divider />
     </v-list-item-title>

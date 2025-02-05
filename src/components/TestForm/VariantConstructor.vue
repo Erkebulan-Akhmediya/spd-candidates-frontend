@@ -25,16 +25,16 @@ export default defineComponent({
 <template>
   <v-expansion-panel>
     <v-expansion-panel-title>
-      Вариант {{ index + 1 }}
+      <h2>Вариант {{ index + 1 }}</h2>
     </v-expansion-panel-title>
     <v-expansion-panel-text>
       <v-col cols="12">
-        <question-constructor-list :variant-index="index" />
-        <v-row justify="center" class="ma-3" v-if="test.variants.length > 1">
+        <v-row justify="end" class="ma-3" v-if="test.variants.length > 1">
           <v-btn @click="$emit('delete', index)" color="error ">
             удалить вариант
           </v-btn>
         </v-row>
+        <question-constructor-list :variant-index="index" />
       </v-col>
     </v-expansion-panel-text>
   </v-expansion-panel>

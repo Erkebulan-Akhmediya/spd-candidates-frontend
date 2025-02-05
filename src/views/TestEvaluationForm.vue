@@ -7,7 +7,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <p>test evaluation form</p>
+  <v-expansion-panels></v-expansion-panels>
 </template>
 
 <style scoped></style>

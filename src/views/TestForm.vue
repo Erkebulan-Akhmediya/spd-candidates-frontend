@@ -8,6 +8,7 @@ import type { QuestionTypeApi } from '@/interfaces/question.ts'
 import type { TestToSend } from '@/interfaces/test.ts'
 import TestConverterService from '@/utils/TestConverterService.ts'
 import TestValidatorService from '@/utils/TestValidatorService.ts'
+import { getTranslatedName } from '@/utils/Translate.ts'
 
 export default defineComponent({
   name: 'TestForm',
@@ -17,12 +18,12 @@ export default defineComponent({
     ...mapWritableState(useTestStore, ['test', 'questionTypes']),
 
     testConverter(): TestConverterService {
-      return new TestConverterService(this.$file);
+      return new TestConverterService(this.$file)
     },
 
     testValidator(): TestValidatorService {
-      return new TestValidatorService();
-    }
+      return new TestValidatorService()
+    },
   },
 
   data() {
@@ -40,6 +41,7 @@ export default defineComponent({
   },
 
   methods: {
+    getTranslatedName,
     async goBack(): Promise<void> {
       await this.$router.push('/test/all')
     },
@@ -121,6 +123,15 @@ export default defineComponent({
         </v-col>
         <v-col cols="3">
           <test-area-of-activity @error="showErr" />
+        </v-col>
+        <v-col cols="5">
+          <v-select
+            label="Тип вопросов в тесте"
+            :items="questionTypes"
+            :item-title="getTranslatedName"
+            item-value="id"
+            variant="outlined"
+          />
         </v-col>
       </v-row>
 
