@@ -23,17 +23,16 @@ export default defineComponent({
       await this.$router.push('/candidate/all')
     },
 
-    validate(creating?: boolean): void {
-      this.validateFields(creating)
+    validate(): void {
+      this.validateFields()
       this.validateExperiences()
       this.validateEducation()
     },
 
-    validateFields(creating?: boolean): void {
+    validateFields(): void {
       const err: string[] = []
 
       if (!this.candidate.username) err.push('имя пользователя')
-      if (creating && !this.candidate.password) err.push('пароль')
       if (!this.candidate.lastName) err.push('фамилия')
       if (!this.candidate.firstName) err.push('имя')
       if (!this.candidate.birthDate) err.push('дата рождения')
@@ -77,9 +76,14 @@ export default defineComponent({
       }
     },
 
+    validatePassword() {
+      if (!this.candidate.password) throw 'Пароль обязателен'
+    },
+
     async save(): Promise<void> {
       try {
-        this.validate(true)
+        this.validatePassword()
+        this.validate()
         await this.$http.post('/candidate', this.candidate)
         await this.goBack()
       } catch (e: unknown) {
