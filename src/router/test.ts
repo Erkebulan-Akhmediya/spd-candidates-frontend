@@ -17,4 +17,8 @@ export default new Array<RouteRecordRaw>(
     path: 'test/:id',
     component: () => import('@/views/TestPassing.vue'),
   },
+  {
+    path: 'test/:id/evaluation',
+    component: () => import('@/views/TestEvaluationForm.vue')
+  },
 );

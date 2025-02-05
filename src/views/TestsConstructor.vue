@@ -25,6 +25,10 @@ export default defineComponent({
           key: 'areasOfActivities',
           title: 'Направления',
         },
+        {
+          key: 'menu',
+          title: '',
+        },
       ],
     }
   },
@@ -38,6 +42,10 @@ export default defineComponent({
 
     async openTestForm(): Promise<void> {
       await this.$router.push({ path: '/test/create' })
+    },
+
+    async openTestEvaluationForm(testId: number): Promise<void> {
+      await this.$router.push({ path: `/test/${testId}/evaluation` })
     },
 
     async fetchTests(): Promise<void> {
@@ -89,6 +97,20 @@ export default defineComponent({
             {{ area }}
           </v-chip>
         </v-row>
+      </template>
+
+      <template v-slot:[`item.menu`]="{item}">
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props" />
+          </template>
+
+          <v-list hover="hover">
+            <v-list-item title="Методика оценивания" @click="openTestEvaluationForm(item.id)" />
+            <v-list-item title="Вопросы"></v-list-item>
+            <v-list-item title="Удалить"></v-list-item>
+          </v-list>
+        </v-menu>
       </template>
     </v-data-table-server>
   </v-container>
