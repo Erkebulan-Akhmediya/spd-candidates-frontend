@@ -3,6 +3,7 @@ import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import Options from '@/components/TestPassing/Options.vue'
+import { TestType } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: `Answer`,
@@ -16,6 +17,15 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
+    TestType: () => TestType,
+    isMcq(): boolean {
+      const mcqTypes: number[] = [
+        TestType.withMcqHavingNoCorrect,
+        TestType.withMcqHavingOneCorrect,
+        TestType.withMcqHavingMultipleCorrect
+      ]
+      return mcqTypes.includes(this.passingTest.testTypeId)
+    }
   },
 
   methods: {
@@ -37,16 +47,15 @@ export default defineComponent({
 
 <template>
   <v-textarea
-    v-if="passingTest.selectedQuestion!.type === 2"
+    v-if="passingTest.testTypeId === TestType.withOpenQuestions"
     variant="outlined"
     label="Ответ"
     v-model="answer"
   />
   <options
-    v-else-if="[3, 4, 5].includes(passingTest.selectedQuestion!.type)"
+    v-else-if="isMcq"
     @answered="updateQuestionAnswer"
   />
-  <p v-else>Ответ не требуется</p>
 </template>
 
 <style scoped></style>

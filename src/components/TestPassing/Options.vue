@@ -4,7 +4,13 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import QuestionFile from '@/components/TestPassing/QuestionFile.vue'
-import type { PassingQuestion } from '@/interfaces/question.ts'
+import type {
+  Answer, AnswerForMcqWithMultipleCorrect,
+  AnswerForMcqWithOneOrNoCorrect,
+  AnswerForOpenQuestion, AnswerForPointDistribution,
+  PassingQuestion
+} from '@/interfaces/question.ts'
+import { TestType } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: `Options`,
@@ -14,12 +20,13 @@ export default defineComponent({
 
   data() {
     return {
-      answer: null as number | number[] | null,
+      answer: null as Answer | null,
     }
   },
 
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
+    TestType: () => TestType,
     selectedQuestion(): PassingQuestion | null {
       return this.passingTest.selectedQuestion
     },
@@ -34,13 +41,24 @@ export default defineComponent({
       this.$emit('answered', this.answer)
     },
     selectedQuestion() {
-      const existingAnswer: number | number[] | string | null | undefined =
+      const existingAnswer: Answer | null | undefined =
         this.selectedQuestion?.answer
 
-      if (this.selectedQuestion?.type === 5) {
-        this.answer = existingAnswer ? (existingAnswer as number[]) : []
+      const mcqWithOneOrNoCorrect: boolean = [
+        TestType.withMcqHavingNoCorrect,
+        TestType.withMcqHavingOneCorrect
+      ].includes(this.passingTest.testTypeId)
+
+      if (this.passingTest.testTypeId === TestType.withOpenQuestions) {
+        this.answer = existingAnswer ? (existingAnswer as AnswerForOpenQuestion) : null
+      } else if (mcqWithOneOrNoCorrect) {
+        this.answer = existingAnswer ? (existingAnswer as AnswerForMcqWithOneOrNoCorrect) : null
+      } else if (this.passingTest.testTypeId === TestType.withMcqHavingMultipleCorrect) {
+        this.answer = existingAnswer ? (existingAnswer as AnswerForMcqWithMultipleCorrect) : null
+      } else if (this.passingTest.testTypeId === TestType.pointDistribution) {
+        this.answer = existingAnswer ? (existingAnswer as AnswerForPointDistribution) : null
       } else {
-        this.answer = existingAnswer ? (existingAnswer as number) : null
+        this.answer = null
       }
     },
   },
@@ -49,7 +67,7 @@ export default defineComponent({
 
 <template>
   <v-list
-    v-if="passingTest.selectedQuestion?.type === 5"
+    v-if="passingTest.testTypeId === TestType.withMcqHavingMultipleCorrect"
     density="compact"
     :lines="false"
     select-strategy="leaf"

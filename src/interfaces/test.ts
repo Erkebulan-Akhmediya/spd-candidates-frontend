@@ -25,6 +25,7 @@ export interface PassingTest extends Test {
   selectedQuestionIndex: number
   testSessionId: number
   selectedQuestion: PassingQuestion | null
+  testTypeId: number
 }
 
 export interface TestListItem extends Test {

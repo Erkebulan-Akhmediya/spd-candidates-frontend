@@ -30,10 +30,18 @@ export interface QuestionToSend extends Question {
 
 export interface PassingQuestion extends Question {
   id: number
-  /**
-   * if the question is mcq it's option id or their array, otherwise it's user-typed answer
-   */
-  answer: string | number | number[] | null
+  answer: Answer | null
   fileUrl: string | null
   options: PassingOption[]
 }
+
+export type Answer =
+  | AnswerForOpenQuestion
+  | AnswerForMcqWithOneOrNoCorrect
+  | AnswerForMcqWithMultipleCorrect
+  | AnswerForPointDistribution
+
+export type AnswerForOpenQuestion = string
+export type AnswerForMcqWithOneOrNoCorrect = number
+export type AnswerForMcqWithMultipleCorrect = number[]
+export type AnswerForPointDistribution = { optionId: number; point: number }

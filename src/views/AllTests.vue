@@ -9,6 +9,7 @@ import type { PassingQuestion } from '@/interfaces/question.ts'
 interface CreateTestSessionResponse {
   questionIds: number[],
   testSessionId: number,
+  testTypeId: number,
 }
 
 export default defineComponent({
@@ -62,6 +63,7 @@ export default defineComponent({
         testSessionId: data.testSessionId,
         selectedQuestionIndex: 0,
         selectedQuestion: null,
+        testTypeId: data.testTypeId,
       }
       await this.$router.push({ path: `/test/${test.id}` })
     },
