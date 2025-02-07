@@ -4,6 +4,8 @@ import { type TestToCreate, TestType } from '@/interfaces/test.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
 
 export default class TestValidatorService {
+  private static instance: TestValidatorService;
+
   private emptyFields: string[]
   private errors: string[]
   private test: TestToCreate;
@@ -11,12 +13,19 @@ export default class TestValidatorService {
   private questionIndex: number;
   private optionIndex: number;
 
-  constructor() {
+  private constructor() {
     this.emptyFields = []
     this.errors = []
     this.variantIndex = 0
     this.questionIndex = 0
     this.optionIndex = 0
+  }
+
+  public static getInstance(): TestValidatorService {
+    if (!TestValidatorService.instance) {
+      TestValidatorService.instance = new TestValidatorService()
+    }
+    return TestValidatorService.instance
   }
 
   public validate(test: TestToCreate): void {

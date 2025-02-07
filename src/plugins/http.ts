@@ -21,7 +21,7 @@ export default {
       (error) => Promise.reject(error),
     );
 
-    app.config.globalProperties.$http = new HttpService(axiosInstance)
+    app.config.globalProperties.$http = HttpService.getInstance(axiosInstance)
   }
 
 }

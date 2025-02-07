@@ -5,7 +5,17 @@ import type { TestToCreate, TestToSend } from '@/interfaces/test.ts'
 import type FileService from '@/utils/FileService.ts'
 
 export default class TestConverterService {
-  constructor(private readonly file: FileService) {}
+
+  private static instance: TestConverterService;
+
+  private constructor(private readonly file: FileService) {}
+
+  public static getInstance(file: FileService): TestConverterService {
+    if (!TestConverterService.instance) {
+      TestConverterService.instance = new TestConverterService(file)
+    }
+    return TestConverterService.instance
+  }
 
   public async convertTestToSend(test: TestToCreate): Promise<TestToSend> {
     return {

@@ -7,7 +7,16 @@ interface Response<Type> {
 
 export class HttpService {
 
-  constructor(private readonly axios: AxiosInstance) {
+  private static instance: HttpService;
+
+  private constructor(private readonly axios: AxiosInstance) {
+  }
+
+  public static getInstance(axios: AxiosInstance): HttpService {
+    if (!HttpService.instance) {
+      HttpService.instance = new HttpService(axios)
+    }
+    return HttpService.instance;
   }
 
   public async get<Type>(url: string, config?: AxiosRequestConfig): Promise<Type> {

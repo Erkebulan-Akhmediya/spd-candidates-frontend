@@ -21,11 +21,11 @@ export default defineComponent({
     TestType: () => TestType,
 
     testConverter(): TestConverterService {
-      return new TestConverterService(this.$file)
+      return TestConverterService.getInstance(this.$file)
     },
 
     testValidator(): TestValidatorService {
-      return new TestValidatorService()
+      return TestValidatorService.getInstance()
     },
   },
 

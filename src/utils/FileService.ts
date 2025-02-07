@@ -3,7 +3,16 @@ import type { HttpService } from '@/utils/HttpService.ts'
 
 export default class FileService {
 
-  public constructor(private readonly http: HttpService) {
+  private static instance: FileService
+
+  private constructor(private readonly http: HttpService) {
+  }
+
+  public static getInstance(http: HttpService): FileService {
+    if (!FileService.instance) {
+      FileService.instance = new FileService(http)
+    }
+    return FileService.instance
   }
 
   public async upload(file: File): Promise<string> {
