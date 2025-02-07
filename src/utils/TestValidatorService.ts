@@ -8,7 +8,7 @@ export default class TestValidatorService {
 
   private emptyFields: string[]
   private errors: string[]
-  private test: TestToCreate;
+  private test: TestToCreate | null;
   private variantIndex: number;
   private questionIndex: number;
   private optionIndex: number;
@@ -16,6 +16,7 @@ export default class TestValidatorService {
   private constructor() {
     this.emptyFields = []
     this.errors = []
+    this.test = null
     this.variantIndex = 0
     this.questionIndex = 0
     this.optionIndex = 0
@@ -68,6 +69,7 @@ export default class TestValidatorService {
   }
 
   private getVariantByIndex(): VariantToCreate {
+    if (this.test === null) throw 'Test is required for validation'
     return this.test.variants[this.variantIndex];
   }
 
@@ -82,7 +84,7 @@ export default class TestValidatorService {
     if (!question.nameKaz) this.emptyFields.push(`вопрос (каз) в вопросе ${this.questionIndex + 1}`)
     if (!question.type) this.emptyFields.push(`тип в вопросе ${this.questionIndex + 1}`)
 
-    if (this.test.type === TestType.withOpenQuestions) return
+    if (this.test.type === TestType.withOpenQuestions.valueOf()) return
     this.validateQuestionByType()
 
     question.options.forEach((option: OptionToCreate, optionIndex: number): void => {
@@ -137,10 +139,10 @@ export default class TestValidatorService {
   ): boolean {
     if (this.test === null) throw 'Test is required for validation';
 
-    if (this.test.type === TestType.withMcqHavingOneCorrect) {
+    if (this.test.type === TestType.withMcqHavingOneCorrect.valueOf()) {
       return correctOptionCount === 1
     }
-    if (this.test.type === TestType.withMcqHavingMultipleCorrect) {
+    if (this.test.type === TestType.withMcqHavingMultipleCorrect.valueOf()) {
       return correctOptionCount > 1
     }
 
