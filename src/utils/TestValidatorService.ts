@@ -1,11 +1,12 @@
 import type { OptionToCreate } from '@/interfaces/option.ts'
-import { type QuestionToCreate, QuestionType } from '@/interfaces/question.ts'
+import { type QuestionToCreate } from '@/interfaces/question.ts'
+import { type TestToCreate, TestType } from '@/interfaces/test.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
-import type { TestToCreate } from '@/interfaces/test.ts'
 
 export default class TestValidatorService {
   private emptyFields: string[]
   private errors: string[]
+  private test: TestToCreate;
   private variantIndex: number;
   private questionIndex: number;
   private optionIndex: number;
@@ -21,7 +22,9 @@ export default class TestValidatorService {
   public validate(test: TestToCreate): void {
     this.emptyFields = []
     this.errors = []
-    this.validateTest(test)
+
+    this.test = test
+    this.validateTest()
 
     if (this.emptyFields.length > 0) {
       throw `следующие поля не заполнены: ${this.emptyFields.join(', ')}`
@@ -31,30 +34,38 @@ export default class TestValidatorService {
     }
   }
 
-  private validateTest(test: TestToCreate): void {
-    if (!test.nameRus) this.emptyFields.push('название теста (рус)')
-    if (!test.nameKaz) this.emptyFields.push('название теста (каз)')
-    if (!test.isLimitless && !test.duration) this.emptyFields.push('длительность')
-    if (test.areasOfActivities.length === 0) {
+  private validateTest(): void {
+    if (this.test === null) throw 'Test is required for validation';
+
+    if (!this.test.nameRus) this.emptyFields.push('название теста (рус)')
+    if (!this.test.nameKaz) this.emptyFields.push('название теста (каз)')
+    if (!this.test.isLimitless && !this.test.duration) this.emptyFields.push('длительность')
+    if (this.test.areasOfActivities.length === 0) {
       this.emptyFields.push('направления деятельности')
     }
 
-    test.variants.forEach((variant: VariantToCreate, variantIndex: number): void => {
+    this.test.variants.forEach((_, variantIndex: number): void => {
       this.variantIndex = variantIndex
-      this.validateVariant(variant)
+      this.validateVariant()
     })
   }
 
-  private validateVariant(variant: VariantToCreate): void {
-    variant.questions.forEach((question: QuestionToCreate, questionIndex: number): void => {
+  private validateVariant(): void {
+    if (this.test === null) throw 'Test is required for validation'
+    this.getVariantByIndex().questions.forEach((_, questionIndex: number): void => {
       this.questionIndex = questionIndex
-      this.validateQuestion(question)
+      this.validateQuestion()
     })
   }
 
-  private validateQuestion(
-    question: QuestionToCreate,
-  ): void {
+  private getVariantByIndex(): VariantToCreate {
+    return this.test.variants[this.variantIndex];
+  }
+
+  private validateQuestion(): void {
+    if (this.test === null) throw 'Test is required for validation'
+    const question: QuestionToCreate = this.getQuestionByIndex();
+
     if (question.withFile && question.file === null) {
       this.emptyFields.push(`файл в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`)
     }
@@ -62,7 +73,8 @@ export default class TestValidatorService {
     if (!question.nameKaz) this.emptyFields.push(`вопрос (каз) в вопросе ${this.questionIndex + 1}`)
     if (!question.type) this.emptyFields.push(`тип в вопросе ${this.questionIndex + 1}`)
 
-    this.validateQuestionByType(question)
+    if (this.test.type === TestType.withOpenQuestions) return
+    this.validateQuestionByType()
 
     question.options.forEach((option: OptionToCreate, optionIndex: number): void => {
       this.optionIndex = optionIndex
@@ -70,23 +82,15 @@ export default class TestValidatorService {
     })
   }
 
-  private validateQuestionByType(
-    question: QuestionToCreate
-  ): void {
-    if (question.type === QuestionType.withoutAnswer || question.type === QuestionType.open) {
-      question.options = []
-      return
-    }
+  private validateQuestionByType(): void {
+    if (this.test === null) throw 'Test is required for validation';
+    const question: QuestionToCreate = this.getQuestionByIndex();
 
     this.validateOptionCount(question)
-    const correctOptionCount: number = this.countCorrectOptions(question)
-    const invalidCorrectOptionCount: boolean = this.isCorrectOptionCountValid(question, correctOptionCount)
 
-    if (invalidCorrectOptionCount) {
-      this.errors.push(
-        `в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1} должен быть один правильный вариант ответа`,
-      )
-    }
+    if (this.test.type === TestType.withMcqHavingNoCorrect) return
+
+    this.validateCorrectOptionCount()
   }
 
   private validateOptionCount(
@@ -98,17 +102,39 @@ export default class TestValidatorService {
     )
   }
 
-  private countCorrectOptions(question: QuestionToCreate): number {
+  private validateCorrectOptionCount(): void {
+    const correctOptionCount: number = this.countCorrectOptions()
+    const validCorrectOptionCount: boolean = this.isCorrectOptionCountValid(correctOptionCount)
+
+    if (validCorrectOptionCount) return;
+    this.errors.push(
+      `в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1} должен быть один правильный вариант ответа`,
+    )
+  }
+
+  private countCorrectOptions(): number {
+    if (this.test === null) throw 'Test is required for validation'
+    const question: QuestionToCreate = this.getQuestionByIndex();
     return question.options.filter((option: OptionToCreate): boolean => option.isCorrect ?? false)
       .length
   }
 
+  private getQuestionByIndex(): QuestionToCreate {
+    return this.getVariantByIndex().questions[this.questionIndex]
+  }
+
   private isCorrectOptionCountValid(
-    question: QuestionToCreate,
     correctOptionCount: number
   ): boolean {
-    if (question.type === 4) return correctOptionCount !== 1
-    if (question.type === 5) return correctOptionCount < 2
+    if (this.test === null) throw 'Test is required for validation';
+
+    if (this.test.type === TestType.withMcqHavingOneCorrect) {
+      return correctOptionCount === 1
+    }
+    if (this.test.type === TestType.withMcqHavingMultipleCorrect) {
+      return correctOptionCount > 1
+    }
+
     return false
   }
 

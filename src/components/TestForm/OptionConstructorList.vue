@@ -1,38 +1,64 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Mcq from '@/components/TestForm/Options/MCQ.vue'
+import OptionConstructor from '@/components/TestForm/OptionConstructor.vue'
+import { mapWritableState } from 'pinia'
+import { useTestStore } from '@/stores/test.ts'
+import TestCreatorService from '@/utils/TestCreatorService.ts'
+import type { QuestionToCreate } from '@/interfaces/question.ts'
+import type { VariantToCreate } from '@/interfaces/variant.ts'
 
 export default defineComponent({
   name: `OptionConstructorList`,
-  components: { Mcq },
+  components: { OptionConstructor },
 
   props: {
     variantIndex: {
       type: Number,
-      required: true
+      required: true,
     },
     questionIndex: {
       type: Number,
-      required: true
+      required: true,
     },
-    questionTypeId: {
-      type: Number,
-      required: true
+  },
+
+  computed: {
+    ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
+    testCreator() {
+      return new TestCreatorService(this.optionsPerQuestion)
+    },
+  },
+
+  mounted() {
+    this.correctOptionCount()
+  },
+
+  methods: {
+    correctOptionCount(): void {
+      const variant: VariantToCreate = this.test.variants[this.variantIndex]
+      const question: QuestionToCreate = variant.questions[this.questionIndex]
+      const optionCount: number = question.options.length
+
+      if (optionCount === this.optionsPerQuestion) return
+      this.test.variants[this.variantIndex].questions[this.questionIndex].options =
+        this.testCreator.newOptionToCreateList()
     }
-  }
+  },
+
 })
 </script>
 
 <template>
-  <v-divider v-if="[3, 4, 5].includes(questionTypeId)" />
-  <mcq
-    v-if="[3, 4, 5].includes(questionTypeId)"
-    :variant-index="variantIndex"
-    :question-index="questionIndex"
-    :checkbox="questionTypeId === 4 || questionTypeId === 5"
-  />
+  <v-divider />
+  <v-list>
+    <option-constructor
+      v-for="(_, optionIndex) in test.variants[variantIndex].questions[questionIndex].options"
+      :key="optionIndex"
+      :variant-index="variantIndex"
+      :question-index="questionIndex"
+      :option-index="optionIndex"
+    />
+  </v-list>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

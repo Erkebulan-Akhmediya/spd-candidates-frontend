@@ -3,8 +3,7 @@ import { defineComponent } from 'vue'
 import QuestionConstructor from '@/components/TestForm/QuestionConstructor.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import { QuestionType } from '@/interfaces/question.ts'
-import type { OptionToCreate } from '@/interfaces/option.ts'
+import TestCreatorService from '@/utils/TestCreatorService.ts'
 
 export default defineComponent({
   name: `QuestionConstructorList`,
@@ -13,42 +12,29 @@ export default defineComponent({
   props: {
     variantIndex: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
 
   data() {
     return {
       toShowConfirmDialog: false,
       confirmDialogData: {
-        index: 0
-      }
+        index: 0,
+      },
     }
   },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test'])
+    ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
+    testCreator(): TestCreatorService {
+      return new TestCreatorService(this.optionsPerQuestion)
+    },
   },
 
   methods: {
-
     addQuestion() {
-      this.test.variants[this.variantIndex].questions.push({
-        withFile: false,
-        file: null,
-        nameRus: '',
-        nameKaz: '',
-        type: QuestionType.mcqWithOneCorrect,
-        options: new Array<OptionToCreate>(
-          {
-            withFile: false,
-            file: null,
-            nameRus: '',
-            nameKaz: '',
-            isCorrect: null,
-          },
-        ),
-      })
+      this.test.variants[this.variantIndex].questions.push(this.testCreator.newQuestionToCreate())
     },
 
     openConfirmDialog(index: number) {
@@ -57,13 +43,11 @@ export default defineComponent({
     },
 
     deleteQuestion() {
-      this.test.variants[this.variantIndex].questions = this.test.variants[this.variantIndex].questions.filter(
-        (_, index: number): boolean => index !== this.confirmDialogData.index
-      )
+      this.test.variants[this.variantIndex].questions = this.test.variants[this.variantIndex]
+        .questions.filter((_, index: number): boolean => index !== this.confirmDialogData.index)
       this.toShowConfirmDialog = false
-    }
-
-  }
+    },
+  },
 })
 </script>
 
@@ -76,16 +60,12 @@ export default defineComponent({
     @delete="openConfirmDialog"
   />
   <v-row justify="center" class="ma-3">
-    <v-btn color="primary" @click="addQuestion">
-      добавить вопрос
-    </v-btn>
+    <v-btn color="primary" @click="addQuestion">добавить вопрос</v-btn>
   </v-row>
 
   <v-dialog v-model="toShowConfirmDialog" max-width="300">
     <v-card>
-      <v-card-title>
-        Удалить вопрос?
-      </v-card-title>
+      <v-card-title>Удалить вопрос?</v-card-title>
       <v-card-actions>
         <v-btn @click="toShowConfirmDialog = false" class="mr-2" variant="tonal">Отмена</v-btn>
         <v-btn color="error" variant="elevated" @click="deleteQuestion">Удплить</v-btn>
@@ -94,6 +74,4 @@ export default defineComponent({
   </v-dialog>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

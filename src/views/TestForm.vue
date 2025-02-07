@@ -5,17 +5,20 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
 import type { QuestionTypeApi } from '@/interfaces/question.ts'
-import type { TestToSend } from '@/interfaces/test.ts'
+import { type TestToSend, TestType, type TestTypeApi } from '@/interfaces/test.ts'
 import TestConverterService from '@/utils/TestConverterService.ts'
 import TestValidatorService from '@/utils/TestValidatorService.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
+import OptionsPerQuestion from '@/components/TestForm/OptionsPerQuestion.vue'
 
 export default defineComponent({
   name: 'TestForm',
-  components: { TestAreaOfActivity, VariantConstructorList },
+  components: { OptionsPerQuestion, TestAreaOfActivity, VariantConstructorList },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test', 'questionTypes']),
+    ...mapWritableState(useTestStore, ['test', 'questionTypes', 'testTypes']),
+
+    TestType: () => TestType,
 
     testConverter(): TestConverterService {
       return new TestConverterService(this.$file)
@@ -38,6 +41,7 @@ export default defineComponent({
 
   async created() {
     await this.fetchQuestionTypes()
+    await this.fetchTestTypes()
   },
 
   methods: {
@@ -49,6 +53,14 @@ export default defineComponent({
     async fetchQuestionTypes(): Promise<void> {
       try {
         this.questionTypes = await this.$http.get<QuestionTypeApi[]>('/question/type/all')
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    async fetchTestTypes(): Promise<void> {
+      try {
+        this.testTypes = await this.$http.get<TestTypeApi[]>('/test/type/all')
       } catch (e) {
         console.log(e)
       }
@@ -124,14 +136,21 @@ export default defineComponent({
         <v-col cols="3">
           <test-area-of-activity @error="showErr" />
         </v-col>
-        <v-col cols="5">
+      </v-row>
+
+      <v-row>
+        <v-col cols="4">
           <v-select
             label="Тип вопросов в тесте"
-            :items="questionTypes"
+            :items="testTypes"
             :item-title="getTranslatedName"
             item-value="id"
+            v-model="test.type"
             variant="outlined"
           />
+        </v-col>
+        <v-col cols="3">
+          <options-per-question />
         </v-col>
       </v-row>
 

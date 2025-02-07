@@ -9,6 +9,7 @@ export interface Test extends Translatable {
 
 export interface TestToCreate extends Test {
   areasOfActivities: string[]
+  type: TestType.withMcqHavingNoCorrect
   variants: VariantToCreate[]
 }
 
@@ -34,4 +35,16 @@ export interface TestListItem extends Test {
 export interface GetAllTestsResponse {
   tests: TestListItem[]
   count: number
+}
+
+export interface TestTypeApi extends Translatable {
+  id: number
+}
+
+export enum TestType {
+  withOpenQuestions = 1,
+  withMcqHavingNoCorrect = 2,
+  withMcqHavingOneCorrect = 3,
+  withMcqHavingMultipleCorrect = 4,
+  pointDistribution = 5,
 }

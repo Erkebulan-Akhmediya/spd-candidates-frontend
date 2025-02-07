@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
+import { TestType } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: `OptionConstructor`,
@@ -19,14 +20,17 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    checkbox: {
-      type: Boolean,
-      default: false,
-    },
   },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test']),
+    ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
+    toShowIsCorrectCheckbox() {
+      const typesRequiringCheckbox: number[] = [
+        TestType.withMcqHavingOneCorrect,
+        TestType.withMcqHavingMultipleCorrect
+      ];
+      return typesRequiringCheckbox.includes(this.test.type)
+    },
   },
 })
 </script>
@@ -34,13 +38,11 @@ export default defineComponent({
 <template>
   <v-list-item>
     <v-list-item-title class="my-5">
-      <v-row>
-        <v-col cols="12">
-          <p>Ответ {{ optionIndex + 1 }}</p>
+      <v-row class="py-3">
+        <v-col cols="2">
+          <h3>Ответ {{ optionIndex + 1 }}</h3>
         </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="6">
+        <v-col cols="5">
           <v-text-field
             label="Ответ (каз)"
             variant="outlined"
@@ -49,7 +51,7 @@ export default defineComponent({
             "
           />
         </v-col>
-        <v-col cols="6">
+        <v-col cols="5">
           <v-text-field
             label="Ответ (рус)"
             variant="outlined"
@@ -60,7 +62,7 @@ export default defineComponent({
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="2" v-if="checkbox">
+        <v-col cols="2" v-if="toShowIsCorrectCheckbox">
           <v-checkbox
             label="Правильный ответ"
             v-model="
@@ -76,24 +78,15 @@ export default defineComponent({
             "
           />
         </v-col>
-        <v-col
-          cols="6"
-        >
+        <v-col cols="5">
           <v-file-input
             label="Прикрепите файл"
             v-model="test.variants[variantIndex].questions[questionIndex].options[optionIndex].file"
             variant="outlined"
-            v-if="test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile"
+            v-if="
+              test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile
+            "
           />
-        </v-col>
-        <v-col cols="2">
-          <v-btn
-            color="error"
-            @click="$emit('delete', optionIndex)"
-            v-if="test.variants[variantIndex].questions[questionIndex].options.length > 1"
-          >
-            удалить ответ
-          </v-btn>
         </v-col>
       </v-row>
       <v-divider />

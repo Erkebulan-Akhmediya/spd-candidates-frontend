@@ -4,6 +4,7 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import OptionConstructorList from '@/components/TestForm/OptionConstructorList.vue'
 import { getTranslatedName } from '@/utils/Translate.ts'
+import { TestType } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: `QuestionConstructor`,
@@ -22,7 +23,17 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test', 'questionTypes']),
+    ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
+
+    isMcq(): boolean {
+      const mcqTypes: number [] = [
+        TestType.withMcqHavingNoCorrect,
+        TestType.withMcqHavingOneCorrect,
+        TestType.withMcqHavingMultipleCorrect
+      ];
+      return mcqTypes.includes(this.test.type)
+    },
+
   },
 
   methods: {
@@ -54,16 +65,6 @@ export default defineComponent({
       </v-row>
 
       <v-row>
-        <v-col cols="5">
-          <v-select
-            label="Тип вопроса"
-            :items="questionTypes"
-            :item-title="getTranslatedName"
-            item-value="id"
-            v-model="test.variants[variantIndex].questions[questionIndex].type"
-            variant="outlined"
-          />
-        </v-col>
         <v-col cols="2">
           <v-checkbox
             label="С файлом?"
@@ -89,9 +90,9 @@ export default defineComponent({
       <v-row>
         <v-col cols="12">
           <option-constructor-list
+            v-if="isMcq"
             :variant-index="variantIndex"
             :question-index="questionIndex"
-            :question-type-id="test.variants[variantIndex].questions[questionIndex].type"
           />
         </v-col>
       </v-row>
