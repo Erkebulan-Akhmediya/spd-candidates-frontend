@@ -4,14 +4,14 @@ import { type TestToCreate, TestType } from '@/interfaces/test.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
 
 export default class TestValidatorService {
-  private static instance: TestValidatorService;
+  private static instance: TestValidatorService
 
   private emptyFields: string[]
   private errors: string[]
-  private test: TestToCreate | null;
-  private variantIndex: number;
-  private questionIndex: number;
-  private optionIndex: number;
+  private test: TestToCreate | null
+  private variantIndex: number
+  private questionIndex: number
+  private optionIndex: number
 
   private constructor() {
     this.emptyFields = []
@@ -45,7 +45,7 @@ export default class TestValidatorService {
   }
 
   private validateTest(): void {
-    if (this.test === null) throw 'Test is required for validation';
+    if (this.test === null) throw 'Test is required for validation'
 
     if (!this.test.nameRus) this.emptyFields.push('название теста (рус)')
     if (!this.test.nameKaz) this.emptyFields.push('название теста (каз)')
@@ -70,15 +70,17 @@ export default class TestValidatorService {
 
   private getVariantByIndex(): VariantToCreate {
     if (this.test === null) throw 'Test is required for validation'
-    return this.test.variants[this.variantIndex];
+    return this.test.variants[this.variantIndex]
   }
 
   private validateQuestion(): void {
     if (this.test === null) throw 'Test is required for validation'
-    const question: QuestionToCreate = this.getQuestionByIndex();
+    const question: QuestionToCreate = this.getQuestionByIndex()
 
     if (question.withFile && question.file === null) {
-      this.emptyFields.push(`файл в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`)
+      this.emptyFields.push(
+        `файл в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`,
+      )
     }
     if (!question.nameRus) this.emptyFields.push(`вопрос (рус) в вопросе ${this.questionIndex + 1}`)
     if (!question.nameKaz) this.emptyFields.push(`вопрос (каз) в вопросе ${this.questionIndex + 1}`)
@@ -87,26 +89,24 @@ export default class TestValidatorService {
     if (this.test.type === TestType.withOpenQuestions.valueOf()) return
     this.validateQuestionByType()
 
-    question.options.forEach((option: OptionToCreate, optionIndex: number): void => {
+    question.options.forEach((_, optionIndex: number): void => {
       this.optionIndex = optionIndex
-      this.validateOption(option)
+      this.validateOption()
     })
   }
 
   private validateQuestionByType(): void {
-    if (this.test === null) throw 'Test is required for validation';
-    const question: QuestionToCreate = this.getQuestionByIndex();
+    if (this.test === null) throw 'Test is required for validation'
 
-    this.validateOptionCount(question)
+    this.validateOptionCount()
 
     if (this.test.type === TestType.withMcqHavingNoCorrect) return
 
     this.validateCorrectOptionCount()
   }
 
-  private validateOptionCount(
-    question: QuestionToCreate,
-  ): void {
+  private validateOptionCount(): void {
+    const question: QuestionToCreate = this.getQuestionByIndex()
     if (question.options.length > 1) return
     this.errors.push(
       `не достаточное количество вариантов ответа в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`,
@@ -117,7 +117,7 @@ export default class TestValidatorService {
     const correctOptionCount: number = this.countCorrectOptions()
     const validCorrectOptionCount: boolean = this.isCorrectOptionCountValid(correctOptionCount)
 
-    if (validCorrectOptionCount) return;
+    if (validCorrectOptionCount) return
     this.errors.push(
       `в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1} должен быть один правильный вариант ответа`,
     )
@@ -125,7 +125,7 @@ export default class TestValidatorService {
 
   private countCorrectOptions(): number {
     if (this.test === null) throw 'Test is required for validation'
-    const question: QuestionToCreate = this.getQuestionByIndex();
+    const question: QuestionToCreate = this.getQuestionByIndex()
     return question.options.filter((option: OptionToCreate): boolean => option.isCorrect ?? false)
       .length
   }
@@ -134,10 +134,8 @@ export default class TestValidatorService {
     return this.getVariantByIndex().questions[this.questionIndex]
   }
 
-  private isCorrectOptionCountValid(
-    correctOptionCount: number
-  ): boolean {
-    if (this.test === null) throw 'Test is required for validation';
+  private isCorrectOptionCountValid(correctOptionCount: number): boolean {
+    if (this.test === null) throw 'Test is required for validation'
 
     if (this.test.type === TestType.withMcqHavingOneCorrect.valueOf()) {
       return correctOptionCount === 1
@@ -149,9 +147,8 @@ export default class TestValidatorService {
     return false
   }
 
-  private validateOption(
-    option: OptionToCreate,
-  ): void {
+  private validateOption(): void {
+    const option: OptionToCreate = this.getOptionByIndex()
     if (option.withFile && option.file === null) {
       this.emptyFields.push(
         `файл в варианте ответа ${this.optionIndex + 1} в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`,
@@ -168,4 +165,9 @@ export default class TestValidatorService {
       )
     }
   }
+
+  private getOptionByIndex(): OptionToCreate {
+    return this.getQuestionByIndex().options[this.optionIndex]
+  }
+
 }
