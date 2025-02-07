@@ -1,5 +1,5 @@
 import { v5 } from 'uuid'
-import type { HttpService } from '@/utils/HttpService.ts'
+import type { HttpService } from '@/services/HttpService.ts'
 
 export default class FileService {
 

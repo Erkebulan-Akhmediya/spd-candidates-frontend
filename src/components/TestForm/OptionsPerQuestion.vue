@@ -6,7 +6,7 @@ import { useTestStore } from '@/stores/test.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
 import type { QuestionToCreate } from '@/interfaces/question.ts'
 import type { OptionToCreate } from '@/interfaces/option.ts'
-import TestCreatorService from '@/utils/TestCreatorService.ts'
+import TestCreatorService from '@/services/TestCreatorService.ts'
 
 export default defineComponent({
   name: 'OptionsPerQuestion',

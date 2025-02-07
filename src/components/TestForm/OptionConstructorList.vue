@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import OptionConstructor from '@/components/TestForm/OptionConstructor.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import TestCreatorService from '@/utils/TestCreatorService.ts'
+import TestCreatorService from '@/services/TestCreatorService.ts'
 import type { QuestionToCreate } from '@/interfaces/question.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
 

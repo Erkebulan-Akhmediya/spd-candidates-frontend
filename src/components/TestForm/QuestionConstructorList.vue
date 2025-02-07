@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import QuestionConstructor from '@/components/TestForm/QuestionConstructor.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import TestCreatorService from '@/utils/TestCreatorService.ts'
+import TestCreatorService from '@/services/TestCreatorService.ts'
 
 export default defineComponent({
   name: `QuestionConstructorList`,

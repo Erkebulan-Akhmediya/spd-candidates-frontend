@@ -2,7 +2,7 @@ import type { OptionToCreate, OptionToSend } from '@/interfaces/option.ts'
 import type { QuestionToCreate, QuestionToSend } from '@/interfaces/question.ts'
 import type { VariantToCreate, VariantToSend } from '@/interfaces/variant.ts'
 import type { TestToCreate, TestToSend } from '@/interfaces/test.ts'
-import type FileService from '@/utils/FileService.ts'
+import type FileService from '@/services/FileService.ts'
 
 export default class TestConverterService {
 

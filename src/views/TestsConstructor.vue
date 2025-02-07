@@ -9,7 +9,7 @@ export default defineComponent({
   data() {
     return {
       count: 0,
-      pageSize: 5,
+      pageSize: 10,
       pageNumber: 1,
       tests: new Array<TestListItem>(),
       headers: [

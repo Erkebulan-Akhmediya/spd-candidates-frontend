@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import FileService from '@/utils/FileService.ts'
+import FileService from '@/services/FileService.ts'
 
 export default {
 

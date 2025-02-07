@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import { HttpService } from '@/utils/HttpService.ts'
+import { HttpService } from '@/services/HttpService.ts'
 import type { AxiosInstance } from 'axios'
 import axios from 'axios'
 

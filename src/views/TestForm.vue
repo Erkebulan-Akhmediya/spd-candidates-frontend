@@ -6,8 +6,8 @@ import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
 import type { QuestionTypeApi } from '@/interfaces/question.ts'
 import { type TestToSend, TestType, type TestTypeApi } from '@/interfaces/test.ts'
-import TestConverterService from '@/utils/TestConverterService.ts'
-import TestValidatorService from '@/utils/TestValidatorService.ts'
+import TestConverterService from '@/services/TestConverterService.ts'
+import TestValidatorService from '@/services/TestValidatorService.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import OptionsPerQuestion from '@/components/TestForm/OptionsPerQuestion.vue'
 
@@ -74,7 +74,7 @@ export default defineComponent({
 
         await this.$http.post('/test', test)
 
-        await this.$router.push('/test/all')
+        await this.$router.push('/test/constructor/all')
       } catch (e) {
         this.isConfirmSaveDialogOpen = false
         console.log(e)
