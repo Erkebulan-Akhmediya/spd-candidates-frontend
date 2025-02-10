@@ -14,6 +14,7 @@ export const useTestStore = defineStore('test', {
         duration: 0,
         areasOfActivities: new Array<string>(),
         type: TestType.withMcqHavingNoCorrect,
+        maxPointsPerQuestion: 3,
         variants: new Array<VariantToCreate>({
           questions: new Array<QuestionToCreate>({
             withFile: false,

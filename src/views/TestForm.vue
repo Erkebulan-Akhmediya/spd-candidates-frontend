@@ -152,6 +152,15 @@ export default defineComponent({
         <v-col cols="3">
           <options-per-question />
         </v-col>
+        <v-col cols="3">
+          <v-text-field
+            v-if="test.type === TestType.pointDistribution.valueOf()"
+            label="Макс кл-во баллов"
+            variant="outlined"
+            type="number"
+            v-model="test.maxPointsPerQuestion"
+          />
+        </v-col>
       </v-row>
 
       <v-row>

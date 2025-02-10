@@ -11,11 +11,14 @@ export interface TestToCreate extends Test {
   areasOfActivities: string[]
   type: TestType.withMcqHavingNoCorrect
   variants: VariantToCreate[]
+  maxPointsPerQuestion: number
 }
 
 export interface TestToSend extends Test {
   areasOfActivities: string[]
+  type: TestType.withMcqHavingNoCorrect
   variants: VariantToSend[]
+  maxPointsPerQuestion: number
 }
 
 export interface PassingTest extends Test {

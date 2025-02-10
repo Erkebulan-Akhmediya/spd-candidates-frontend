@@ -75,6 +75,25 @@ export default class TestValidatorService {
 
   private validateQuestion(): void {
     if (this.test === null) throw 'Test is required for validation'
+    this.validateQuestionFields()
+
+    // нет нужды валидировать варианты ответа тестов с этими типами
+    // т.к. пользователь не указывает их
+    const typesRequiringNoValidation: TestType[] = [
+      TestType.pointDistribution,
+      TestType.withOpenQuestions
+    ]
+    if (typesRequiringNoValidation.includes(this.test.type)) return
+    this.validateQuestionByType()
+
+    const question: QuestionToCreate = this.getQuestionByIndex()
+    question.options.forEach((_, optionIndex: number): void => {
+      this.optionIndex = optionIndex
+      this.validateOption()
+    })
+  }
+
+  private validateQuestionFields(): void {
     const question: QuestionToCreate = this.getQuestionByIndex()
 
     if (question.withFile && question.file === null) {
@@ -85,14 +104,6 @@ export default class TestValidatorService {
     if (!question.nameRus) this.emptyFields.push(`вопрос (рус) в вопросе ${this.questionIndex + 1}`)
     if (!question.nameKaz) this.emptyFields.push(`вопрос (каз) в вопросе ${this.questionIndex + 1}`)
     if (!question.type) this.emptyFields.push(`тип в вопросе ${this.questionIndex + 1}`)
-
-    if (this.test.type === TestType.withOpenQuestions.valueOf()) return
-    this.validateQuestionByType()
-
-    question.options.forEach((_, optionIndex: number): void => {
-      this.optionIndex = optionIndex
-      this.validateOption()
-    })
   }
 
   private validateQuestionByType(): void {
@@ -149,21 +160,10 @@ export default class TestValidatorService {
 
   private validateOption(): void {
     const option: OptionToCreate = this.getOptionByIndex()
-    if (option.withFile && option.file === null) {
-      this.emptyFields.push(
-        `файл в варианте ответа ${this.optionIndex + 1} в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`,
-      )
-    }
-    if (!option.nameKaz) {
-      this.emptyFields.push(
-        `ответ (каз) в варианте ответа ${this.optionIndex + 1} в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`,
-      )
-    }
-    if (!option.nameRus) {
-      this.emptyFields.push(
-        `ответ (рус) в варианте ответа ${this.optionIndex + 1} в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`,
-      )
-    }
+    const emptyFieldLocation: string = `в варианте ответа ${this.optionIndex + 1} в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`
+    if (option.withFile && option.file === null) this.emptyFields.push(`файл ${emptyFieldLocation}`)
+    if (!option.nameKaz) this.emptyFields.push(`ответ (каз) ${emptyFieldLocation}`)
+    if (!option.nameRus) this.emptyFields.push(`ответ (рус) ${emptyFieldLocation}`)
   }
 
   private getOptionByIndex(): OptionToCreate {
