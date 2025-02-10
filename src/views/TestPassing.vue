@@ -15,6 +15,9 @@ export default defineComponent({
     selectedQuestionId(): number {
       return this.passingTest.questionIds[this.passingTest.selectedQuestionIndex]
     },
+    selectedQuestionFetched(): boolean {
+      return this.passingTest.selectedQuestion !== null;
+    }
   },
 
   async created() {
@@ -64,8 +67,7 @@ export default defineComponent({
   <v-container fluid>
     <v-card :title="passingTest.nameRus">
       <v-card-text>
-        <!-- create question component after selected question is fetched -->
-        <question v-if="passingTest.selectedQuestion" />
+        <question v-if="selectedQuestionFetched" />
         <question-selector />
       </v-card-text>
     </v-card>

@@ -7,9 +7,12 @@ import type FileService from '@/services/FileService.ts'
 export default class TestConverterService {
   private static instance: TestConverterService
   private testType: TestType
+  private maxPointsPerQuestion: number
 
   private constructor(private readonly file: FileService) {
-    this.testType = 1 // дефолтное значение, выбрано случайно
+    // дефолтные значения, выбраны случайно
+    this.testType = 1
+    this.maxPointsPerQuestion = 1
   }
 
   public static getInstance(file: FileService): TestConverterService {
@@ -21,6 +24,7 @@ export default class TestConverterService {
 
   public async convertTestToSend(test: TestToCreate): Promise<TestToSend> {
     this.testType = test.type
+    this.maxPointsPerQuestion = test.maxPointsPerQuestion
     return {
       ...test,
       variants: await Promise.all(test.variants.map(this.convertVariantToSend.bind(this))),
@@ -37,7 +41,7 @@ export default class TestConverterService {
   private async convertQuestionToSend(question: QuestionToCreate): Promise<QuestionToSend> {
     let options: OptionToSend[]
     if (this.testType === TestType.pointDistribution) {
-      options = this.enumerateOptions(question.options)
+      options = this.createOptionsForPointDistribution()
     } else {
       options = await Promise.all(question.options.map(this.convertOptionToSend.bind(this)))
     }
@@ -49,19 +53,19 @@ export default class TestConverterService {
     }
   }
 
-  private enumerateOptions(options: OptionToCreate[]): OptionToSend[] {
+  private createOptionsForPointDistribution(): OptionToSend[] {
     let name: string = 'a'
     const optionsToSend: OptionToSend[] = []
-    options.forEach((option: OptionToCreate): void => {
+    for (let i: number = 0; i < this.maxPointsPerQuestion; i++) {
       optionsToSend.push({
-        ...option,
         withFile: false,
         fileName: null,
         nameRus: name,
         nameKaz: name,
+        isCorrect: null,
       })
       name = this.getNextChar(name)
-    })
+    }
     return optionsToSend
   }
 
