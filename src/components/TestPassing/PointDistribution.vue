@@ -14,8 +14,18 @@ export default defineComponent({
 
 <template>
   <v-list>
-    <v-list-item v-for="(option, index) in passingTest.selectedQuestion ?? []" :key="index">
-
+    <v-list-item
+      v-for="(option, index) in passingTest.selectedQuestion?.options ?? []"
+      :key="index"
+    >
+      <v-list-item-title>
+        <v-row class="pa-3" align="center">
+          <h2 class="pa-0 ma-0">{{ option.nameRus }}</h2>
+          <v-col cols="3">
+            <v-text-field type="number" label="Балл" variant="outlined" />
+          </v-col>
+        </v-row>
+      </v-list-item-title>
     </v-list-item>
   </v-list>
 </template>

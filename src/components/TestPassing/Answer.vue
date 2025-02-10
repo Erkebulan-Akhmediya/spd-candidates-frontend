@@ -4,10 +4,11 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import Options from '@/components/TestPassing/Options.vue'
 import { TestType } from '@/interfaces/test.ts'
+import PointDistribution from '@/components/TestPassing/PointDistribution.vue'
 
 export default defineComponent({
   name: `Answer`,
-  components: { Options },
+  components: { PointDistribution, Options },
 
   data() {
     return {
@@ -52,6 +53,7 @@ export default defineComponent({
     label="Ответ"
     v-model="answer"
   />
+  <point-distribution v-else-if="passingTest.testTypeId === TestType.pointDistribution" />
   <options
     v-else-if="isMcq"
     @answered="updateQuestionAnswer"
