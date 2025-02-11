@@ -25,7 +25,7 @@ export default defineComponent({
   computed: {
     ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
     testCreator() {
-      return new TestCreatorService(this.optionsPerQuestion)
+      return TestCreatorService.getInstance()
     },
   },
 
@@ -41,7 +41,7 @@ export default defineComponent({
 
       if (optionCount === this.optionsPerQuestion) return
       this.test.variants[this.variantIndex].questions[this.questionIndex].options =
-        this.testCreator.newOptionToCreateList()
+        this.testCreator.newOptionToCreateList(this.optionsPerQuestion)
     }
   },
 

@@ -28,13 +28,15 @@ export default defineComponent({
   computed: {
     ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
     testCreator(): TestCreatorService {
-      return new TestCreatorService(this.optionsPerQuestion)
+      return TestCreatorService.getInstance()
     },
   },
 
   methods: {
     addQuestion() {
-      this.test.variants[this.variantIndex].questions.push(this.testCreator.newQuestionToCreate())
+      this.test.variants[this.variantIndex].questions.push(
+        this.testCreator.newQuestionToCreate(this.optionsPerQuestion)
+      )
     },
 
     openConfirmDialog(index: number) {

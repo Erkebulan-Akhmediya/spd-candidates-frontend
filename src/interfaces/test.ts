@@ -1,10 +1,12 @@
 import type { Translatable } from '@/interfaces/global.ts'
 import type { VariantToCreate, VariantToSend } from '@/interfaces/variant.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
+import type { Scale } from '@/interfaces/test-evaluation.ts'
 
 export interface Test extends Translatable {
   isLimitless: boolean
   duration: number
+  scales: Scale[]
 }
 
 export interface TestToCreate extends Test {

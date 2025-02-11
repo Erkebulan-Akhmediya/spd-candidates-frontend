@@ -9,13 +9,14 @@ import TestConverterService from '@/services/TestConverterService.ts'
 import TestValidatorService from '@/services/TestValidatorService.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import OptionsPerQuestion from '@/components/TestForm/OptionsPerQuestion.vue'
+import Scales from '@/components/TestForm/Scales.vue'
 
 export default defineComponent({
   name: 'TestForm',
-  components: { OptionsPerQuestion, TestAreaOfActivity, VariantConstructorList },
+  components: { Scales, OptionsPerQuestion, TestAreaOfActivity, VariantConstructorList },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test', 'questionTypes']),
+    ...mapWritableState(useTestStore, ['test', 'testTypes']),
 
     TestType: () => TestType,
 
@@ -23,9 +24,7 @@ export default defineComponent({
       return TestConverterService.getInstance(this.$file)
     },
 
-    testValidator(): TestValidatorService {
-      return TestValidatorService.getInstance()
-    },
+    testValidator: () => TestValidatorService.getInstance(),
   },
 
   data() {
@@ -77,6 +76,11 @@ export default defineComponent({
       this.toShowErr = true
     },
   },
+
+  watch: {
+
+  }
+
 })
 </script>
 
@@ -150,6 +154,12 @@ export default defineComponent({
             type="number"
             v-model="test.maxPointsPerQuestion"
           />
+        </v-col>
+      </v-row>
+
+      <v-row v-if="test.type !== TestType.withOpenQuestions.valueOf()">
+        <v-col cols="12">
+          <scales />
         </v-col>
       </v-row>
 
