@@ -61,4 +61,21 @@ export default class TestCreatorService {
     }
   }
 
+  public newDistributedOptionList(optionsPerQuestion: number): OptionToCreate[] {
+    return Array.from(
+      { length: optionsPerQuestion },
+      (_, index: number): OptionToCreate => this.newDistributedOption(index),
+    )
+  }
+
+  private newDistributedOption(index: number): OptionToCreate {
+    return {
+      withFile: false,
+      file: null,
+      isCorrect: null,
+      nameRus: String.fromCharCode('a'.charCodeAt(0) + index),
+      nameKaz: String.fromCharCode('a'.charCodeAt(0) + index),
+    }
+  }
+
 }

@@ -25,6 +25,7 @@ export default defineComponent({
       ].includes(this.test.type)
     },
     isDisabled(): boolean {
+      if (this.test.type === TestType.pointDistribution.valueOf()) return false
       return this.test.variants.some((variant: VariantToCreate): boolean =>
         variant.questions.some((question: QuestionToCreate): boolean =>
           question.options.some(
@@ -44,7 +45,11 @@ export default defineComponent({
     optionsPerQuestion() {
       this.test.variants.forEach((variant) => {
         variant.questions.forEach((question: QuestionToCreate) => {
-          question.options = this.testCreator.newOptionToCreateList(this.optionsPerQuestion)
+          if (this.test.type === TestType.pointDistribution.valueOf()) {
+            question.options = this.testCreator.newDistributedOptionList(this.optionsPerQuestion)
+          } else {
+            question.options = this.testCreator.newOptionToCreateList(this.optionsPerQuestion)
+          }
         })
       })
     },
