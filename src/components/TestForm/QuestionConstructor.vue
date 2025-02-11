@@ -25,11 +25,12 @@ export default defineComponent({
   computed: {
     ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
 
-    isMcq(): boolean {
+    withOptions(): boolean {
       const mcqTypes: number [] = [
         TestType.withMcqHavingNoCorrect,
         TestType.withMcqHavingOneCorrect,
-        TestType.withMcqHavingMultipleCorrect
+        TestType.withMcqHavingMultipleCorrect,
+        TestType.pointDistribution
       ];
       return mcqTypes.includes(this.test.type)
     },
@@ -90,7 +91,7 @@ export default defineComponent({
       <v-row>
         <v-col cols="12">
           <option-constructor-list
-            v-if="isMcq"
+            v-if="withOptions"
             :variant-index="variantIndex"
             :question-index="questionIndex"
           />

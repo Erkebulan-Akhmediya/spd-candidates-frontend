@@ -6,27 +6,30 @@ import { useTestStore } from '@/stores/test.ts'
 import TestCreatorService from '@/services/TestCreatorService.ts'
 import type { QuestionToCreate } from '@/interfaces/question.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
+import PointDistributionOptionConstructor from '@/components/TestForm/PointDistributionOptionConstructor.vue'
+import { TestType } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: `OptionConstructorList`,
-  components: { OptionConstructor },
+  components: { PointDistributionOptionConstructor, OptionConstructor },
 
   props: {
     variantIndex: {
       type: Number,
-      required: true,
+      required: true
     },
     questionIndex: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
 
   computed: {
+    TestType: () => TestType,
     ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
     testCreator() {
       return TestCreatorService.getInstance()
-    },
+    }
   },
 
   mounted() {
@@ -43,7 +46,7 @@ export default defineComponent({
       this.test.variants[this.variantIndex].questions[this.questionIndex].options =
         this.testCreator.newOptionToCreateList(this.optionsPerQuestion)
     }
-  },
+  }
 
 })
 </script>
@@ -51,13 +54,24 @@ export default defineComponent({
 <template>
   <v-divider />
   <v-list>
-    <option-constructor
+    <v-list-item
       v-for="(_, optionIndex) in test.variants[variantIndex].questions[questionIndex].options"
       :key="optionIndex"
-      :variant-index="variantIndex"
-      :question-index="questionIndex"
-      :option-index="optionIndex"
-    />
+    >
+      <point-distribution-option-constructor
+        v-if="test.type === TestType.pointDistribution.valueOf()"
+        :variant-index="variantIndex"
+        :question-index="questionIndex"
+        :option-index="optionIndex"
+      />
+      <option-constructor
+        v-else
+        :variant-index="variantIndex"
+        :question-index="questionIndex"
+        :option-index="optionIndex"
+      />
+      <v-divider />
+    </v-list-item>
   </v-list>
 </template>
 
