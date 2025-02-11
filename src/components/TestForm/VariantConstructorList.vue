@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import VariantConstructor from '@/components/TestForm/VariantConstructor.vue'
-import { type QuestionToCreate, QuestionType } from '@/interfaces/question.ts'
+import { type QuestionToCreate } from '@/interfaces/question.ts'
 import type { OptionToCreate } from '@/interfaces/option.ts'
 
 export default defineComponent({
@@ -33,7 +33,6 @@ export default defineComponent({
             file: null,
             nameRus: '',
             nameKaz: '',
-            type: QuestionType.mcqWithOneCorrect,
             options: new Array<OptionToCreate>(
               {
                 withFile: false,

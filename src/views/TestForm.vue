@@ -4,7 +4,6 @@ import VariantConstructorList from '@/components/TestForm/VariantConstructorList
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
-import type { QuestionTypeApi } from '@/interfaces/question.ts'
 import { type TestToSend, TestType, type TestTypeApi } from '@/interfaces/test.ts'
 import TestConverterService from '@/services/TestConverterService.ts'
 import TestValidatorService from '@/services/TestValidatorService.ts'
@@ -16,7 +15,7 @@ export default defineComponent({
   components: { OptionsPerQuestion, TestAreaOfActivity, VariantConstructorList },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test', 'questionTypes', 'testTypes']),
+    ...mapWritableState(useTestStore, ['test', 'questionTypes']),
 
     TestType: () => TestType,
 
@@ -40,7 +39,6 @@ export default defineComponent({
   },
 
   async created() {
-    await this.fetchQuestionTypes()
     await this.fetchTestTypes()
   },
 
@@ -48,14 +46,6 @@ export default defineComponent({
     getTranslatedName,
     async goBack(): Promise<void> {
       await this.$router.push('/test/all')
-    },
-
-    async fetchQuestionTypes(): Promise<void> {
-      try {
-        this.questionTypes = await this.$http.get<QuestionTypeApi[]>('/question/type/all')
-      } catch (e) {
-        console.log(e)
-      }
     },
 
     async fetchTestTypes(): Promise<void> {

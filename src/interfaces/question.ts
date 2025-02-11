@@ -1,21 +1,8 @@
 import type { Translatable } from '@/interfaces/global.ts'
 import type { OptionToCreate, OptionToSend, PassingOption } from '@/interfaces/option.ts'
 
-export enum QuestionType {
-  withoutAnswer = 1,
-  open = 2,
-  mcqWithNoCorrect = 3,
-  mcqWithOneCorrect = 4,
-  mcqWithMultipleCorrect = 5,
-}
-
-export interface QuestionTypeApi extends Translatable {
-  id: string
-}
-
 export interface Question extends Translatable {
   withFile: boolean
-  type: QuestionType
 }
 
 export interface QuestionToCreate extends Question {

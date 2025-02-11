@@ -1,5 +1,5 @@
 import type { OptionToCreate } from '@/interfaces/option.ts'
-import { type QuestionToCreate, QuestionType } from '@/interfaces/question.ts'
+import { type QuestionToCreate } from '@/interfaces/question.ts'
 
 export default class TestCreatorService {
 
@@ -11,7 +11,6 @@ export default class TestCreatorService {
       file: null,
       nameRus: '',
       nameKaz: '',
-      type: QuestionType.mcqWithOneCorrect,
       options: this.newOptionToCreateList(),
     }
   }

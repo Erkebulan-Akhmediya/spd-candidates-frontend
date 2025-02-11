@@ -103,7 +103,6 @@ export default class TestValidatorService {
     }
     if (!question.nameRus) this.emptyFields.push(`вопрос (рус) в вопросе ${this.questionIndex + 1}`)
     if (!question.nameKaz) this.emptyFields.push(`вопрос (каз) в вопросе ${this.questionIndex + 1}`)
-    if (!question.type) this.emptyFields.push(`тип в вопросе ${this.questionIndex + 1}`)
   }
 
   private validateQuestionByType(): void {
