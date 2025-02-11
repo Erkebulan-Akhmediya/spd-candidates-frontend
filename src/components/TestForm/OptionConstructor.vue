@@ -23,7 +23,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
+    ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion', 'singleScaleTypes']),
     toShowIsCorrectCheckbox() {
       const typesRequiringCheckbox: number[] = [
         TestType.withMcqHavingOneCorrect,
@@ -62,8 +62,9 @@ export default defineComponent({
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="2" v-if="toShowIsCorrectCheckbox">
+        <v-col cols="2">
           <v-checkbox
+            v-if="toShowIsCorrectCheckbox"
             label="Правильный ответ"
             v-model="
               test.variants[variantIndex].questions[questionIndex].options[optionIndex].isCorrect
@@ -78,7 +79,7 @@ export default defineComponent({
             "
           />
         </v-col>
-        <v-col cols="5">
+        <v-col cols="3">
           <v-file-input
             label="Прикрепите файл"
             v-model="test.variants[variantIndex].questions[questionIndex].options[optionIndex].file"
@@ -87,6 +88,19 @@ export default defineComponent({
               test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile
             "
           />
+        </v-col>
+        <v-col cols="3">
+          <v-select
+            v-if="!singleScaleTypes.includes(test.type)"
+            label="Шкала"
+            variant="outlined"
+            :items="test.scales"
+            item-value="index"
+            item-title="nameRus"
+          />
+        </v-col>
+        <v-col cols="2">
+          <v-text-field label="Балл" variant="outlined" type="number" />
         </v-col>
       </v-row>
       <v-divider />

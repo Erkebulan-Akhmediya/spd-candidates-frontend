@@ -44,9 +44,13 @@ export const useTestStore = defineStore('test', {
           }),
         }),
       } as TestToCreate,
-      testTypes: new Array<TestTypeApi>(),
-      optionsPerQuestion: 2,
       passingTest: {} as PassingTest,
+      optionsPerQuestion: 2,
+      testTypes: new Array<TestTypeApi>(),
+      singleScaleTypes: [
+        TestType.withMcqHavingOneCorrect,
+        TestType.withMcqHavingMultipleCorrect
+      ],
     }
   },
 })

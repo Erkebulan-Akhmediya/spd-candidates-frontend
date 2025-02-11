@@ -20,15 +20,9 @@ export default {
     TestType() {
       return TestType
     },
-    ...mapWritableState(useTestStore, ['test']),
+    ...mapWritableState(useTestStore, ['test', 'singleScaleTypes']),
     showDeleteButton(): boolean {
       return this.test.scales.length > 1
-    },
-    singleScaleTypes(): TestType[] {
-      return [
-        TestType.withMcqHavingOneCorrect,
-        TestType.withMcqHavingMultipleCorrect
-      ];
     },
     isSingleScale(): boolean {
       return this.singleScaleTypes.includes(this.test.type)
