@@ -9,7 +9,7 @@ import { TestType } from '@/interfaces/test.ts'
 
 export default defineComponent({
   name: `Scales`,
-  components: { ScalePanel: ScalePanel },
+  components: { ScalePanel },
 
   computed: {
     TestType() {

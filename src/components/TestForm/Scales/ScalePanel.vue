@@ -23,6 +23,15 @@ export default {
     ...mapWritableState(useTestStore, ['test']),
     showDeleteButton(): boolean {
       return this.test.scales.length > 1
+    },
+    singleScaleTypes(): TestType[] {
+      return [
+        TestType.withMcqHavingOneCorrect,
+        TestType.withMcqHavingMultipleCorrect
+      ];
+    },
+    isSingleScale(): boolean {
+      return this.singleScaleTypes.includes(this.test.type)
     }
   },
 
@@ -49,14 +58,14 @@ export default {
             <v-text-field
               label="Название (каз)"
               variant="outlined"
-              :readonly="test.type === TestType.withMcqHavingNoCorrect"
+              :readonly="isSingleScale"
             />
           </v-col>
           <v-col :cols="showDeleteButton ? 5 : 6">
             <v-text-field
               label="Название (рус)"
               variant="outlined"
-              :readonly="test.type === TestType.withMcqHavingNoCorrect"
+              :readonly="isSingleScale"
             />
           </v-col>
           <v-col cols="2" v-if="showDeleteButton">
