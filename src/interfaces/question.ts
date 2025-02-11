@@ -44,4 +44,4 @@ export type Answer =
 export type AnswerForOpenQuestion = string
 export type AnswerForMcqWithOneOrNoCorrect = number
 export type AnswerForMcqWithMultipleCorrect = number[]
-export type AnswerForPointDistribution = { optionId: number; point: number }
+export type AnswerForPointDistribution = { optionId: number; point: number }[]

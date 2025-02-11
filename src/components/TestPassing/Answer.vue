@@ -53,7 +53,10 @@ export default defineComponent({
     label="Ответ"
     v-model="answer"
   />
-  <point-distribution v-else-if="passingTest.testTypeId === TestType.pointDistribution" />
+  <point-distribution
+    v-else-if="passingTest.testTypeId === TestType.pointDistribution"
+    @answered="updateQuestionAnswer"
+  />
   <options
     v-else-if="isMcq"
     @answered="updateQuestionAnswer"
