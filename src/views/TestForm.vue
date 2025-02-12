@@ -185,8 +185,8 @@ export default defineComponent({
     <v-card-actions>
       <v-row class="pa-2">
         <v-btn variant="tonal" class="mr-2">Отмена</v-btn>
-        <v-btn variant="elevated" color="primary" @click="isConfirmSaveDialogOpen = true"
-          >Сохранить
+        <v-btn variant="elevated" color="primary" @click="isConfirmSaveDialogOpen = true">
+          Сохранить
         </v-btn>
       </v-row>
     </v-card-actions>

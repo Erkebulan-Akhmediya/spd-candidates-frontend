@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import ScalePanel from '@/components/TestForm/Scales/ScalePanel.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import type { Scale } from '@/interfaces/test-evaluation.ts'
+import type { Scale, ScaleSection } from '@/interfaces/test-evaluation.ts'
 import TestCreatorService from '@/services/TestCreatorService.ts'
 import { TestType } from '@/interfaces/test.ts'
 
@@ -12,11 +12,15 @@ export default defineComponent({
   components: { ScalePanel },
 
   computed: {
-    TestType() {
-      return TestType
+    ...mapWritableState(useTestStore,['test', 'singleScaleTypes']),
+
+    TestType: () => TestType,
+
+    testCreator: () => TestCreatorService.getInstance(),
+
+    testType(): number {
+      return this.test.type
     },
-    ...mapWritableState(useTestStore,['test']),
-    testCreator: () => TestCreatorService.getInstance()
   },
 
   methods: {
@@ -24,6 +28,29 @@ export default defineComponent({
       const newScaleIndex: number = this.test.scales.length + 1;
       const newScale: Scale = this.testCreator.newScale(newScaleIndex);
       this.test.scales.push(newScale)
+    },
+
+    setDefaultScale(): void {
+      this.test.scales = [{
+        index: 1,
+        nameRus: 'Шкала по умолчанию',
+        nameKaz: 'Шкала по умолчанию',
+        sections: new Array<ScaleSection>({
+          index: 1,
+          upperBound: 0,
+          lowerBound: 0,
+          descriptionRus: '',
+          descriptionKaz: '',
+        }),
+      }]
+    }
+  },
+
+  watch: {
+    testType() {
+      if (this.singleScaleTypes.includes(this.test.type)) {
+        this.setDefaultScale()
+      }
     },
   }
 
