@@ -1,4 +1,5 @@
 import type { Translatable } from '@/interfaces/global.ts'
+import type { OptionIncrement } from '@/interfaces/test-evaluation.ts'
 
 export interface Option extends Translatable {
   withFile: boolean
@@ -7,6 +8,7 @@ export interface Option extends Translatable {
 
 export interface OptionToCreate extends Option {
   file: File | null
+  increment: OptionIncrement
 }
 
 export interface OptionToSend extends Option {

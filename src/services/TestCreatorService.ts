@@ -34,45 +34,48 @@ export default class TestCreatorService {
     }
   }
 
-  public newQuestionToCreate(optionsPerQuestion: number): QuestionToCreate {
+  public newQuestion(optionsPerQuestion: number): QuestionToCreate {
     return {
       withFile: false,
       file: null,
       nameRus: '',
       nameKaz: '',
-      options: this.newOptionToCreateList(optionsPerQuestion),
+      options: this.newOptionList(optionsPerQuestion),
     }
   }
 
-  public newOptionToCreateList(optionsPerQuestion: number): OptionToCreate[] {
+  public newOptionList(optionsPerQuestion: number): OptionToCreate[] {
     return Array.from(
       { length: optionsPerQuestion },
-      (): OptionToCreate => this.newOptionToCreate(),
+      (): OptionToCreate => this.newOption(),
     )
   }
 
-  public newOptionToCreate(): OptionToCreate {
+  public newOption(): OptionToCreate {
     return {
       withFile: false,
       file: null,
       nameKaz: '',
       nameRus: '',
       isCorrect: null,
+      increment: {
+        index: 1,
+        scaleIndex: 1,
+        score: 0
+      }
     }
   }
 
-  public newDistributedOptionList(optionsPerQuestion: number): OptionToCreate[] {
+  public newPointDistributionOptionList(optionsPerQuestion: number): OptionToCreate[] {
     return Array.from(
       { length: optionsPerQuestion },
-      (_, index: number): OptionToCreate => this.newDistributedOption(index),
+      (_, index: number): OptionToCreate => this.newPointDistributionOption(index),
     )
   }
 
-  private newDistributedOption(index: number): OptionToCreate {
+  public newPointDistributionOption(index: number): OptionToCreate {
     return {
-      withFile: false,
-      file: null,
-      isCorrect: null,
+      ...this.newOption(),
       nameRus: String.fromCharCode('a'.charCodeAt(0) + index),
       nameKaz: String.fromCharCode('a'.charCodeAt(0) + index),
     }

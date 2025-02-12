@@ -4,6 +4,7 @@ import OptionScaleSelector from '@/components/TestForm/OptionScaleSelector.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import type { OptionToCreate } from '@/interfaces/option.ts'
+import TestCreatorService from '@/services/TestCreatorService.ts'
 
 export default defineComponent({
   name: 'PointDistributionOptionConstructor',
@@ -32,9 +33,9 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useTestStore, ['test']),
-    optionName(): string {
-      return String.fromCharCode('a'.charCodeAt(0) + this.optionIndex)
-    },
+
+    testCreator: () => TestCreatorService.getInstance(),
+
     currentOption(): OptionToCreate {
       return this.test
         .variants[this.variantIndex]
@@ -51,13 +52,10 @@ export default defineComponent({
 
   methods: {
     setOption() {
-      this.test.variants[this.variantIndex].questions[this.questionIndex].options[this.optionIndex] = {
-        withFile: false,
-        file: null,
-        nameRus: this.optionName,
-        nameKaz: this.optionName,
-        isCorrect: null
-      }
+      this.test
+        .variants[this.variantIndex]
+        .questions[this.questionIndex]
+        .options[this.optionIndex] = this.testCreator.newPointDistributionOption(this.optionIndex)
     }
   },
 
@@ -72,7 +70,11 @@ export default defineComponent({
         <h3>Ответ {{currentOption.nameRus}}</h3>
       </v-col>
       <v-col cols="3">
-        <option-scale-selector />
+        <option-scale-selector
+          :variant-index="variantIndex"
+          :question-index="questionIndex"
+          :option-index="optionIndex"
+        />
       </v-col>
     </v-row>
   </v-list-item-title>

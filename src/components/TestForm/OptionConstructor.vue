@@ -12,16 +12,16 @@ export default defineComponent({
   props: {
     variantIndex: {
       type: Number,
-      required: true
+      required: true,
     },
     questionIndex: {
       type: Number,
-      required: true
+      required: true,
     },
     optionIndex: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
 
   computed: {
@@ -29,11 +29,11 @@ export default defineComponent({
     toShowIsCorrectCheckbox() {
       const typesRequiringCheckbox: number[] = [
         TestType.withMcqHavingOneCorrect,
-        TestType.withMcqHavingMultipleCorrect
+        TestType.withMcqHavingMultipleCorrect,
       ]
       return typesRequiringCheckbox.includes(this.test.type)
-    }
-  }
+    },
+  },
 })
 </script>
 
@@ -48,8 +48,8 @@ export default defineComponent({
           label="Ответ (каз)"
           variant="outlined"
           v-model="
-              test.variants[variantIndex].questions[questionIndex].options[optionIndex].nameKaz
-            "
+            test.variants[variantIndex].questions[questionIndex].options[optionIndex].nameKaz
+          "
         />
       </v-col>
       <v-col cols="5">
@@ -57,8 +57,8 @@ export default defineComponent({
           label="Ответ (рус)"
           variant="outlined"
           v-model="
-              test.variants[variantIndex].questions[questionIndex].options[optionIndex].nameRus
-            "
+            test.variants[variantIndex].questions[questionIndex].options[optionIndex].nameRus
+          "
         />
       </v-col>
     </v-row>
@@ -68,16 +68,16 @@ export default defineComponent({
           v-if="toShowIsCorrectCheckbox"
           label="Правильный ответ"
           v-model="
-              test.variants[variantIndex].questions[questionIndex].options[optionIndex].isCorrect
-            "
+            test.variants[variantIndex].questions[questionIndex].options[optionIndex].isCorrect
+          "
         />
       </v-col>
       <v-col cols="2">
         <v-checkbox
           label="С файлом?"
           v-model="
-              test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile
-            "
+            test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile
+          "
         />
       </v-col>
       <v-col cols="3">
@@ -85,16 +85,27 @@ export default defineComponent({
           label="Прикрепите файл"
           v-model="test.variants[variantIndex].questions[questionIndex].options[optionIndex].file"
           variant="outlined"
-          v-if="
-              test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile
-            "
+          v-if="test.variants[variantIndex].questions[questionIndex].options[optionIndex].withFile"
         />
       </v-col>
       <v-col cols="3">
-        <option-scale-selector v-if="!singleScaleTypes.includes(test.type)" />
+        <option-scale-selector
+          v-if="!singleScaleTypes.includes(test.type)"
+          :variant-index="variantIndex"
+          :question-index="questionIndex"
+          :option-index="optionIndex"
+        />
       </v-col>
       <v-col cols="2">
-        <v-text-field label="Балл" variant="outlined" type="number" />
+        <v-text-field
+          label="Балл"
+          variant="outlined"
+          type="number"
+          v-model="
+            test.variants[variantIndex].questions[questionIndex].options[optionIndex].increment
+              .score
+          "
+        />
       </v-col>
     </v-row>
   </v-list-item-title>

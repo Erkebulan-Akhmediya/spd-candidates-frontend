@@ -43,10 +43,20 @@ export default defineComponent({
       <v-col cols="12">
         <v-row>
           <v-col cols="3">
-            <v-text-field label="Нижний балл" type="number" variant="outlined" />
+            <v-text-field
+              label="Нижний балл"
+              type="number"
+              variant="outlined"
+              v-model="test.scales[scaleIndex-1].sections[sectionIndex-1].lowerBound"
+            />
           </v-col>
           <v-col cols="3">
-            <v-text-field label="Верхний балл" type="number" variant="outlined" />
+            <v-text-field
+              label="Верхний балл"
+              type="number"
+              variant="outlined"
+              v-model="test.scales[scaleIndex-1].sections[sectionIndex-1].upperBound"
+            />
           </v-col>
           <v-col cols="3" v-if="test.scales[scaleIndex-1].sections.length > 1">
             <v-btn color="error" @click="deleteSection">Удалить секцию</v-btn>
@@ -54,10 +64,20 @@ export default defineComponent({
         </v-row>
         <v-row>
           <v-col cols="6">
-            <v-textarea label="Описание (каз)" variant="outlined" rows="7" />
+            <v-textarea
+              label="Описание (каз)"
+              variant="outlined"
+              rows="7"
+              v-model="test.scales[scaleIndex-1].sections[sectionIndex-1].descriptionKaz"
+            />
           </v-col>
           <v-col cols="6">
-            <v-textarea label="Описание (рус)" variant="outlined" rows="7" />
+            <v-textarea
+              label="Описание (рус)"
+              variant="outlined"
+              rows="7"
+              v-model="test.scales[scaleIndex-1].sections[sectionIndex-1].descriptionRus"
+            />
           </v-col>
         </v-row>
       </v-col>

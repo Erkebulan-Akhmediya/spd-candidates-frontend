@@ -5,6 +5,22 @@ import { useTestStore } from '@/stores/test.ts'
 
 export default defineComponent({
   name: 'OptionScaleSelector',
+
+  props: {
+    variantIndex: {
+      type: Number,
+      required: true
+    },
+    questionIndex: {
+      type: Number,
+      required: true
+    },
+    optionIndex: {
+      type: Number,
+      required: true
+    }
+  },
+
   computed: {
     ...mapWritableState(useTestStore, ['test']),
   },
@@ -18,6 +34,9 @@ export default defineComponent({
     :items="test.scales"
     item-value="index"
     item-title="nameRus"
+    v-model="
+      test.variants[variantIndex].questions[questionIndex].options[optionIndex].increment.scaleIndex
+    "
   />
 </template>
 

@@ -17,13 +17,14 @@ export default {
   },
 
   computed: {
-    TestType() {
-      return TestType
-    },
     ...mapWritableState(useTestStore, ['test', 'singleScaleTypes']),
+
+    TestType: () => TestType,
+
     showDeleteButton(): boolean {
       return this.test.scales.length > 1
     },
+
     isSingleScale(): boolean {
       return this.singleScaleTypes.includes(this.test.type)
     }
@@ -53,6 +54,7 @@ export default {
               label="Название (каз)"
               variant="outlined"
               :readonly="isSingleScale"
+              v-model="test.scales[scaleIndex-1].nameKaz"
             />
           </v-col>
           <v-col :cols="showDeleteButton ? 5 : 6">
@@ -60,6 +62,7 @@ export default {
               label="Название (рус)"
               variant="outlined"
               :readonly="isSingleScale"
+              v-model="test.scales[scaleIndex-1].nameRus"
             />
           </v-col>
           <v-col cols="2" v-if="showDeleteButton">

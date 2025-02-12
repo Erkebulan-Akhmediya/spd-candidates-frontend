@@ -12,3 +12,9 @@ export interface ScaleSection {
   descriptionRus: string
   descriptionKaz: string
 }
+
+export interface OptionIncrement {
+  index: number
+  scaleIndex: number
+  score: number
+}

@@ -35,7 +35,7 @@ export default defineComponent({
   methods: {
     addQuestion() {
       this.test.variants[this.variantIndex].questions.push(
-        this.testCreator.newQuestionToCreate(this.optionsPerQuestion)
+        this.testCreator.newQuestion(this.optionsPerQuestion)
       )
     },
 

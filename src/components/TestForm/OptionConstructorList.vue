@@ -44,7 +44,7 @@ export default defineComponent({
 
       if (optionCount === this.optionsPerQuestion) return
       this.test.variants[this.variantIndex].questions[this.questionIndex].options =
-        this.testCreator.newOptionToCreateList(this.optionsPerQuestion)
+        this.testCreator.newOptionList(this.optionsPerQuestion)
     }
   }
 
