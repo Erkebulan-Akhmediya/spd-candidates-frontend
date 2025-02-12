@@ -26,6 +26,7 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion', 'singleScaleTypes']),
+
     toShowIsCorrectCheckbox() {
       const typesRequiringCheckbox: number[] = [
         TestType.withMcqHavingOneCorrect,
@@ -33,6 +34,30 @@ export default defineComponent({
       ]
       return typesRequiringCheckbox.includes(this.test.type)
     },
+
+    testType(): number {
+      return this.test.type
+    },
+
+  },
+
+  methods: {
+    setDefaultScale() {
+      this.test
+        .variants[this.variantIndex]
+        .questions[this.questionIndex]
+        .options[this.optionIndex]
+        .increment
+        .scaleIndex = 1
+    }
+  },
+
+  watch: {
+    testType() {
+      if (this.singleScaleTypes.includes(this.test.type)) {
+        this.setDefaultScale()
+      }
+    }
   },
 })
 </script>
