@@ -10,6 +10,12 @@ export default defineComponent({
   name: 'TestPassing',
   components: { Question, QuestionSelector },
 
+  data() {
+    return {
+      toShowEndTestConfirm: false,
+    }
+  },
+
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
     selectedQuestionId(): number {
@@ -49,6 +55,10 @@ export default defineComponent({
       }
     },
 
+    showEndTestConfirm(): void {
+      this.toShowEndTestConfirm = true
+    },
+
     async endTest(): Promise<void> {
       await this.$router.push('/test/all')
     }
@@ -73,10 +83,21 @@ export default defineComponent({
     </v-card>
     <v-card-actions>
       <v-row class="pa-3" justify="end">
-        <v-btn color="error" variant="elevated" @click="endTest">Завершить тест</v-btn>
+        <v-btn color="error" variant="elevated" @click="showEndTestConfirm">Завершить тест</v-btn>
       </v-row>
     </v-card-actions>
   </v-container>
+  <v-dialog v-model="toShowEndTestConfirm" max-width="300">
+    <v-card>
+      <v-card-title>Завершить тест?</v-card-title>
+      <v-card-actions>
+        <v-row justify="end">
+          <v-btn variant="elevated" @click="toShowEndTestConfirm = false">Назад</v-btn>
+          <v-btn variant="elevated" color="error" @click="endTest" class="mx-3">Завершить</v-btn>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped></style>
