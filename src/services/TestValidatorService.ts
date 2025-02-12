@@ -2,6 +2,7 @@ import type { OptionToCreate } from '@/interfaces/option.ts'
 import { type QuestionToCreate } from '@/interfaces/question.ts'
 import { type TestToCreate, TestType } from '@/interfaces/test.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
+import type { Scale } from '@/interfaces/test-evaluation.ts'
 
 export default class TestValidatorService {
   private static instance: TestValidatorService
@@ -9,6 +10,7 @@ export default class TestValidatorService {
   private emptyFields: string[]
   private errors: string[]
   private test: TestToCreate | null
+  private scaleIndex: number
   private variantIndex: number
   private questionIndex: number
   private optionIndex: number
@@ -17,6 +19,7 @@ export default class TestValidatorService {
     this.emptyFields = []
     this.errors = []
     this.test = null
+    this.scaleIndex = 0
     this.variantIndex = 0
     this.questionIndex = 0
     this.optionIndex = 0
@@ -46,6 +49,21 @@ export default class TestValidatorService {
 
   private validateTest(): void {
     if (this.test === null) throw 'Test is required for validation'
+    this.validateTestFields()
+
+    this.test.scales.forEach((_, scaleIndex: number): void => {
+      this.scaleIndex = scaleIndex
+      this.validateScale()
+    })
+
+    this.test.variants.forEach((_, variantIndex: number): void => {
+      this.variantIndex = variantIndex
+      this.validateVariant()
+    })
+  }
+
+  private validateTestFields(): void {
+    if (this.test === null) throw 'Test is required for validation'
 
     if (!this.test.nameRus) this.emptyFields.push('название теста (рус)')
     if (!this.test.nameKaz) this.emptyFields.push('название теста (каз)')
@@ -53,11 +71,14 @@ export default class TestValidatorService {
     if (this.test.areasOfActivities.length === 0) {
       this.emptyFields.push('направления деятельности')
     }
+  }
 
-    this.test.variants.forEach((_, variantIndex: number): void => {
-      this.variantIndex = variantIndex
-      this.validateVariant()
-    })
+  private validateScale(): void {
+    if (this.test === null) throw 'Test is required for validation'
+
+    const scale: Scale = this.test.scales[this.scaleIndex];
+    if (!scale.nameKaz) this.emptyFields.push(`название (каз) в шкале ${scale.index}`)
+    if (!scale.nameRus) this.emptyFields.push(`название (рус) в шкале ${scale.index}`)
   }
 
   private validateVariant(): void {
