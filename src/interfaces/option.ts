@@ -13,6 +13,7 @@ export interface OptionToCreate extends Option {
 
 export interface OptionToSend extends Option {
   fileName: string | null
+  increment: OptionIncrement
 }
 
 export interface PassingOption extends Option {

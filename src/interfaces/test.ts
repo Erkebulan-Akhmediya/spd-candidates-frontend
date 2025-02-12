@@ -6,21 +6,21 @@ import type { Scale } from '@/interfaces/test-evaluation.ts'
 export interface Test extends Translatable {
   isLimitless: boolean
   duration: number
+}
+
+interface TestToCreateOrSend extends Test {
+  areasOfActivities: string[]
+  type: TestType.withMcqHavingNoCorrect
+  maxPointsPerQuestion: number
   scales: Scale[]
 }
 
-export interface TestToCreate extends Test {
-  areasOfActivities: string[]
-  type: TestType.withMcqHavingNoCorrect
+export interface TestToCreate extends TestToCreateOrSend {
   variants: VariantToCreate[]
-  maxPointsPerQuestion: number
 }
 
-export interface TestToSend extends Test {
-  areasOfActivities: string[]
-  type: TestType.withMcqHavingNoCorrect
+export interface TestToSend extends TestToCreateOrSend {
   variants: VariantToSend[]
-  maxPointsPerQuestion: number
 }
 
 export interface PassingTest extends Test {
