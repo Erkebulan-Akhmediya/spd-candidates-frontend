@@ -21,6 +21,13 @@ export default defineComponent({
     testType(): number {
       return this.test.type
     },
+
+    multiScaleTypes(): TestType[] {
+      return [
+        TestType.withMcqHavingNoCorrect,
+        TestType.pointDistribution
+      ]
+    },
   },
 
   methods: {
@@ -61,7 +68,7 @@ export default defineComponent({
   <v-expansion-panels variant="popout">
     <scale-panel v-for="scale in test.scales" :key="scale.index" :scale-index="scale.index" />
   </v-expansion-panels>
-  <v-row justify="center" class="ma-3" v-if="test.type === TestType.withMcqHavingNoCorrect">
+  <v-row justify="center" class="ma-3" v-if="multiScaleTypes.includes(test.type)">
     <v-btn color="primary" @click="addScale">Добавить шкалу</v-btn>
   </v-row>
 </template>

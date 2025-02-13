@@ -7,7 +7,6 @@ import QuestionFile from '@/components/TestPassing/QuestionFile.vue'
 import type {
   Answer, AnswerForMcqWithMultipleCorrect,
   AnswerForMcqWithOneOrNoCorrect,
-  AnswerForOpenQuestion, AnswerForPointDistribution,
   PassingQuestion
 } from '@/interfaces/question.ts'
 import { TestType } from '@/interfaces/test.ts'
@@ -49,14 +48,10 @@ export default defineComponent({
         TestType.withMcqHavingOneCorrect
       ].includes(this.passingTest.testTypeId)
 
-      if (this.passingTest.testTypeId === TestType.withOpenQuestions) {
-        this.answer = existingAnswer ? (existingAnswer as AnswerForOpenQuestion) : null
-      } else if (mcqWithOneOrNoCorrect) {
+      if (mcqWithOneOrNoCorrect) {
         this.answer = existingAnswer ? (existingAnswer as AnswerForMcqWithOneOrNoCorrect) : null
       } else if (this.passingTest.testTypeId === TestType.withMcqHavingMultipleCorrect) {
         this.answer = existingAnswer ? (existingAnswer as AnswerForMcqWithMultipleCorrect) : null
-      } else if (this.passingTest.testTypeId === TestType.pointDistribution) {
-        this.answer = existingAnswer ? (existingAnswer as AnswerForPointDistribution) : null
       } else {
         this.answer = null
       }

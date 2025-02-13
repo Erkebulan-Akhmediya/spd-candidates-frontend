@@ -2,19 +2,15 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import Options from '@/components/TestPassing/Options.vue'
+import Options from '@/components/TestPassing/Answer/Options.vue'
 import { TestType } from '@/interfaces/test.ts'
-import PointDistribution from '@/components/TestPassing/PointDistribution.vue'
+import PointDistribution from '@/components/TestPassing/Answer/PointDistribution.vue'
+import type { Answer } from '@/interfaces/question.ts'
+import Open from '@/components/TestPassing/Answer/Open.vue'
 
 export default defineComponent({
   name: `Answer`,
-  components: { PointDistribution, Options },
-
-  data() {
-    return {
-      answer: '',
-    }
-  },
+  components: { Open, PointDistribution, Options },
 
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
@@ -30,28 +26,22 @@ export default defineComponent({
   },
 
   methods: {
-    updateQuestionAnswer(answer?: number | number[] | null): void {
+    updateQuestionAnswer(answer: Answer | null): void {
       this.passingTest.questions.set(this.passingTest.selectedQuestion!.id, {
         ...this.passingTest.selectedQuestion!,
-        answer: answer ? answer : this.answer,
+        answer,
       })
-    },
-  },
-
-  watch: {
-    answer() {
-      this.updateQuestionAnswer()
     },
   },
 })
 </script>
 
 <template>
-  <v-textarea
+  <open
     v-if="passingTest.testTypeId === TestType.withOpenQuestions"
     variant="outlined"
     label="Ответ"
-    v-model="answer"
+    @answered="updateQuestionAnswer"
   />
   <point-distribution
     v-else-if="passingTest.testTypeId === TestType.pointDistribution"
