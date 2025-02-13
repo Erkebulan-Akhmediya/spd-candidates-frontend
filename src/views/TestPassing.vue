@@ -4,7 +4,12 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import QuestionSelector from '@/components/TestPassing/QuestionSelector.vue'
 import Question from '@/components/TestPassing/Question.vue'
-import type { PassingQuestion } from '@/interfaces/question.ts'
+import type { Answer, PassingQuestion } from '@/interfaces/question.ts'
+
+interface AnswerDto {
+  questionId: number
+  answer: Answer | null
+}
 
 export default defineComponent({
   name: 'TestPassing',
@@ -61,7 +66,11 @@ export default defineComponent({
 
     async endTest(): Promise<void> {
       try {
-        await this.$http.put(`/test/session/${this.passingTest.testSessionId}`)
+        const questions: PassingQuestion[] = [...this.passingTest.questions.values()]
+        const answers: AnswerDto[] = questions.map(
+          ({id, answer}): AnswerDto => ({questionId: id, answer})
+        );
+        await this.$http.put(`/test/session/${this.passingTest.testSessionId}`, answers)
         await this.$router.push('/test/all')
       } catch (e) {
         console.log(e)
