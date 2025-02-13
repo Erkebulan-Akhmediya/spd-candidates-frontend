@@ -14,7 +14,6 @@ export interface ScaleSection {
 }
 
 export interface OptionIncrement {
-  index: number
   scaleIndex: number
   score: number
 }

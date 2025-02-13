@@ -39,6 +39,13 @@ export default defineComponent({
       return this.test.type
     },
 
+    optionIsCorrect(): boolean {
+      return this.test
+        .variants[this.variantIndex]
+        .questions[this.questionIndex]
+        .options[this.optionIndex]
+        .isCorrect ?? false
+    },
   },
 
   methods: {
@@ -47,9 +54,8 @@ export default defineComponent({
         .variants[this.variantIndex]
         .questions[this.questionIndex]
         .options[this.optionIndex]
-        .increment
-        .scaleIndex = 1
-    }
+        .increment.scaleIndex = 1
+    },
   },
 
   watch: {
@@ -57,7 +63,17 @@ export default defineComponent({
       if (this.singleScaleTypes.includes(this.test.type)) {
         this.setDefaultScale()
       }
-    }
+    },
+
+    optionIsCorrect() {
+      if (!this.singleScaleTypes.includes(this.test.type)) return
+      if (!this.optionIsCorrect) return
+      this.test
+        .variants[this.variantIndex]
+        .questions[this.questionIndex]
+        .options[this.optionIndex]
+        .increment.score = 1
+    },
   },
 })
 </script>
@@ -123,6 +139,7 @@ export default defineComponent({
       </v-col>
       <v-col cols="2">
         <v-text-field
+          v-if="!singleScaleTypes.includes(test.type)"
           label="Балл"
           variant="outlined"
           type="number"
