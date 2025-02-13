@@ -60,7 +60,12 @@ export default defineComponent({
     },
 
     async endTest(): Promise<void> {
-      await this.$router.push('/test/all')
+      try {
+        await this.$http.put(`/test/session/${this.passingTest.testSessionId}`)
+        await this.$router.push('/test/all')
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
 
