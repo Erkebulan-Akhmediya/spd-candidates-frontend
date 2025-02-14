@@ -11,7 +11,7 @@ export default new Array<RouteRecordRaw>(
   },
   {
     path: 'test/assessment/all',
-    component: () => import('@/views/TestAssessmentList.vue')
+    component: () => import('@/views/AllTestAssessments.vue')
   },
   {
     path: 'test/result/all',
