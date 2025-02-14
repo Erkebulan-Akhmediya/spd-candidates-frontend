@@ -1,6 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LocaleChanger from '@/components/LocaleChanger.vue'
+import type { Region } from '@/interfaces/global.ts'
+import { mapWritableState } from 'pinia'
+import { useRegionStore } from '@/stores/region.ts'
 
 interface SideBarItem {
   name: string
@@ -57,6 +60,14 @@ export default defineComponent({
     },
   },
 
+  computed: {
+    ...mapWritableState(useRegionStore, ['regions']),
+  },
+
+  async created() {
+    await this.fetchAllRegions();
+  },
+
   mounted() {
     this.setSelectedSideBarItem()
   },
@@ -71,6 +82,19 @@ export default defineComponent({
         this.selectedSideBarItem[0] = 'sideBarItems.candidates'
       } else {
         this.selectedSideBarItem[0] = selectedSideBarItem.name
+      }
+    },
+
+    async fetchAllRegions(): Promise<void> {
+      try {
+        this.regions = await this.$http.get<Region[]>('/region/all')
+        this.regions.unshift({
+          id: -1,
+          nameRus: 'Все регионы',
+          nameKaz: 'Барлық аумақтар',
+        })
+      } catch (e: unknown) {
+        console.log(e)
       }
     },
 

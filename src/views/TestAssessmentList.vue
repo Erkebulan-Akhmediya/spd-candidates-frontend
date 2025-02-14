@@ -1,13 +1,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import RegionSideBar from '@/components/RegionSideBar.vue'
 
 export default defineComponent({
   name: 'TestAssessmentList',
+  components: { RegionSideBar }
 })
 </script>
 
 <template>
-  <h1>test assessment</h1>
+  <v-container fluid>
+    <region-side-bar />
+  </v-container>
 </template>
 
 <style scoped></style>
