@@ -25,9 +25,7 @@ export default defineComponent({
       this.$emit('answered', this.answer)
     },
     selectedQuestion() {
-      console.log('question changed')
       const existingAnswer: Answer | null | undefined = this.selectedQuestion?.answer
-      console.log('existingAnswer', existingAnswer)
       this.answer = (existingAnswer !== undefined && existingAnswer !== null) ? (existingAnswer as AnswerForOpenQuestion) : ''
     }
   }
