@@ -84,6 +84,9 @@ export default defineComponent({
     selectedRegionId() {
       this.fetchTestSessionsForAssessment()
     },
+    tab() {
+      this.fetchTestSessionsForAssessment()
+    },
   },
 })
 </script>
