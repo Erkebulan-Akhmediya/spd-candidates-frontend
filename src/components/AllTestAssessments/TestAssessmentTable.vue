@@ -11,6 +11,7 @@ interface TestSessionListForAssessment {
 }
 
 interface TestSessionForAssessment {
+  id: number
   candidateFullName: string
   testNameRus: string
   testNameKaz: string
@@ -27,27 +28,31 @@ export default defineComponent({
       headers: [
         {
           key: 'candidateFullName',
-          title: 'Кандидат',
+          title: 'Кандидат'
         },
         {
           key: 'testName',
-          title: 'Тест',
+          title: 'Тест'
         },
         {
           key: 'statusName',
-          title: 'Статус',
+          title: 'Статус'
         },
+        {
+          key: 'openButton',
+          title: ''
+        }
       ],
       pageNumber: 1,
       pageSize: 10,
       count: 0,
-      testSessions: new Array<TestSessionForAssessment>(),
+      testSessions: new Array<TestSessionForAssessment>()
     }
   },
 
   computed: {
     ...mapWritableState(useRegionStore, ['selectedRegionId']),
-    ...mapWritableState(useTestAssessmentStore, ['tab']),
+    ...mapWritableState(useTestAssessmentStore, ['tab'])
   },
 
   async mounted() {
@@ -65,9 +70,9 @@ export default defineComponent({
               pageNumber: this.pageNumber - 1,
               pageSize: this.pageSize,
               regionId: this.selectedRegionId[0],
-              checked: this.tab === 'checked',
-            },
-          },
+              checked: this.tab === 'checked'
+            }
+          }
         )
         this.count = count
         this.testSessions = testSessions
@@ -78,6 +83,9 @@ export default defineComponent({
     getChipColor(item: TestSessionForAssessment): string {
       return item.statusId === 3 ? 'success' : 'error'
     },
+    async openTestSession(item: TestSessionForAssessment): Promise<void> {
+      await this.$router.push(`/test/${item.id}/assessment`)
+    }
   },
 
   watch: {
@@ -86,8 +94,8 @@ export default defineComponent({
     },
     tab() {
       this.fetchTestSessionsForAssessment()
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -107,6 +115,11 @@ export default defineComponent({
       <v-chip :color="getChipColor(item)">
         {{ getTranslatedName({ nameKaz: item.statusNameKaz, nameRus: item.statusNameRus }) }}
       </v-chip>
+    </template>
+    <template v-slot:[`item.openButton`]="{ item }">
+      <v-btn icon size="35" color="primary" @click="openTestSession(item)" class="ma-3">
+        <v-icon size="20">mdi-eye</v-icon>
+      </v-btn>
     </template>
   </v-data-table-server>
 </template>
