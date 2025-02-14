@@ -11,7 +11,9 @@ export default {
     employees: 'Қызметкерлер',
     candidates: 'Үміткерлер',
     testsConstructor: 'Тесттер конструкторы',
-    tests: 'Тесты',
+    tests: 'Тестілеу',
+    testAssessment: 'Тесттерді тексеру',
+    testResults: 'Тестілеу нәтижелері',
     exit: 'Шығу',
   },
   login: {

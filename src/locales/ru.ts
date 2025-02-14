@@ -8,7 +8,9 @@ export default {
     employees: 'Сотрудники',
     candidates: 'Кандидаты',
     testsConstructor: 'Конструктор тестов',
-    tests: 'Тесты',
+    tests: 'Тестирование',
+    testAssessment: 'Проверка тестов',
+    testResults: 'Результаты тестов',
     exit: 'Выход',
   },
   login: {

@@ -35,6 +35,16 @@ export default defineComponent({
         {
           name: 'sideBarItems.tests',
           path: '/test/all',
+          icon: 'mdi-book-edit-outline',
+        },
+        {
+          name: 'sideBarItems.testAssessment',
+          path: '/test/assessment/all',
+          icon: 'mdi-book-check'
+        },
+        {
+          name: 'sideBarItems.testResults',
+          path: '/test/result/all',
           icon: 'mdi-book-open-variant-outline',
         },
       ),
