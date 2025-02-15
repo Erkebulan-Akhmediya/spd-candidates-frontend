@@ -1,18 +1,18 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import RegionSideBar from '@/components/RegionSideBar.vue'
-import TestAssessmentTabs from '@/components/AllTestAssessments/TestAssessmentTabs.vue'
+import TestAssessmentTable from '@/components/AllTestAssessments/TestAssessmentTable.vue'
 
 export default defineComponent({
   name: 'AllTestAssessments',
-  components: { TestAssessmentTabs, RegionSideBar }
+  components: { TestAssessmentTable, RegionSideBar }
 })
 </script>
 
 <template>
   <v-container fluid>
     <region-side-bar />
-    <test-assessment-tabs />
+    <test-assessment-table />
   </v-container>
 </template>
 

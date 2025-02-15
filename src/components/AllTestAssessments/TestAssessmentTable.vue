@@ -2,7 +2,6 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useRegionStore } from '@/stores/region.ts'
-import { useTestAssessmentStore } from '@/stores/test-assessment.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import type { TestSessionForAssessment, TestSessionListForAssessment } from '@/interfaces/test-assessment.ts'
 
@@ -21,10 +20,6 @@ export default defineComponent({
           title: 'Тест'
         },
         {
-          key: 'statusName',
-          title: 'Статус'
-        },
-        {
           key: 'openButton',
           title: '',
           width: '10%'
@@ -38,8 +33,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useRegionStore, ['selectedRegionId']),
-    ...mapWritableState(useTestAssessmentStore, ['tab'])
+    ...mapWritableState(useRegionStore, ['selectedRegionId'])
   },
 
   async mounted() {
@@ -57,7 +51,6 @@ export default defineComponent({
               pageNumber: this.pageNumber - 1,
               pageSize: this.pageSize,
               regionId: this.selectedRegionId[0],
-              checked: this.tab === 'checked'
             }
           }
         )
@@ -66,9 +59,6 @@ export default defineComponent({
       } catch (e) {
         console.log(e)
       }
-    },
-    getChipColor(item: TestSessionForAssessment): string {
-      return item.statusId === 3 ? 'success' : 'error'
     },
     async openTestSession(item: TestSessionForAssessment): Promise<void> {
       await this.$router.push(`/test/${item.id}/assessment`)
@@ -79,9 +69,6 @@ export default defineComponent({
     selectedRegionId() {
       this.fetchTestSessionsForAssessment()
     },
-    tab() {
-      this.fetchTestSessionsForAssessment()
-    }
   }
 })
 </script>
@@ -97,11 +84,6 @@ export default defineComponent({
   >
     <template v-slot:[`item.testName`]="{ item }">
       <p>{{ getTranslatedName({ nameKaz: item.testNameKaz, nameRus: item.testNameRus }) }}</p>
-    </template>
-    <template v-slot:[`item.statusName`]="{ item }">
-      <v-chip :color="getChipColor(item)">
-        {{ getTranslatedName({ nameKaz: item.statusNameKaz, nameRus: item.statusNameRus }) }}
-      </v-chip>
     </template>
     <template v-slot:[`item.openButton`]="{ item }">
       <v-btn color="primary" @click="openTestSession(item)">
