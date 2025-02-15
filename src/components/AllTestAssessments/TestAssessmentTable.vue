@@ -4,21 +4,7 @@ import { mapWritableState } from 'pinia'
 import { useRegionStore } from '@/stores/region.ts'
 import { useTestAssessmentStore } from '@/stores/test-assessment.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
-
-interface TestSessionListForAssessment {
-  count: number
-  testSessions: TestSessionForAssessment[]
-}
-
-interface TestSessionForAssessment {
-  id: number
-  candidateFullName: string
-  testNameRus: string
-  testNameKaz: string
-  statusId: number
-  statusNameRus: string
-  statusNameKaz: string
-}
+import type { TestSessionForAssessment, TestSessionListForAssessment } from '@/interfaces/test-assessment.ts'
 
 export default defineComponent({
   name: 'TestAssessmentTable',
@@ -40,7 +26,8 @@ export default defineComponent({
         },
         {
           key: 'openButton',
-          title: ''
+          title: '',
+          width: '10%'
         }
       ],
       pageNumber: 1,
@@ -117,8 +104,8 @@ export default defineComponent({
       </v-chip>
     </template>
     <template v-slot:[`item.openButton`]="{ item }">
-      <v-btn icon size="35" color="primary" @click="openTestSession(item)" class="ma-3">
-        <v-icon size="20">mdi-eye</v-icon>
+      <v-btn color="primary" @click="openTestSession(item)">
+        Проверить
       </v-btn>
     </template>
   </v-data-table-server>
