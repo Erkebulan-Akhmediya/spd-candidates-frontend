@@ -39,10 +39,8 @@ export default defineComponent({
 
     async saveAssessment() {
       try {
-        await this.$http.post(
-          `/test/session/${this.assessedTestSessionId}/assessment`,
-          this.testSession
-        )
+        await this.$http.post(`/test/session/assessment`, this.testSession)
+        this.$router.push('/test/assessment/all')
       } catch (e) {
         console.log(e)
       }
