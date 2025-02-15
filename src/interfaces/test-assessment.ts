@@ -8,9 +8,6 @@ export interface TestSessionForAssessment {
   candidateFullName: string
   testNameRus: string
   testNameKaz: string
-  statusId: number
-  statusNameRus: string
-  statusNameKaz: string
   answers: TestSessionAnswerForAssessment[]
 }
 
