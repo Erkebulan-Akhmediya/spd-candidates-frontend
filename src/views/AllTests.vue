@@ -34,11 +34,7 @@ export default defineComponent({
 
     async fetchTests() {
       try {
-        const data = await this.$http.get<GetAllTestsResponse>('/test/all', {
-          params: {
-            areaOfActivity: sessionStorage.getItem('areaOfActivity'),
-          },
-        })
+        const data = await this.$http.get<GetAllTestsResponse>('/test/all')
         this.tests = data.tests
       } catch (e) {
         console.log(e)

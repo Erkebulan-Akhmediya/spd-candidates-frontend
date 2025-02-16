@@ -4,7 +4,6 @@ import LocaleChanger from '@/components/LocaleChanger.vue'
 
 interface LoginResponse {
   token: string,
-  areaOfActivity: string,
 }
 
 export default defineComponent({
@@ -23,12 +22,11 @@ export default defineComponent({
   methods: {
     async login(): Promise<void> {
       try {
-        const data: LoginResponse = await this.$http.post<LoginResponse>('/auth/login', {
+        const { token } = await this.$http.post<LoginResponse>('/auth/login', {
           username: this.username,
           password: this.password,
         })
-        sessionStorage.setItem('token', data.token)
-        sessionStorage.setItem('areaOfActivity', data.areaOfActivity)
+        sessionStorage.setItem('token', token)
         await this.$router.push('/candidate/all')
       } catch (e: unknown) {
         console.log(e)
