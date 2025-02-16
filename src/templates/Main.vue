@@ -26,11 +26,6 @@ export default defineComponent({
           icon: 'mdi-account-school',
         },
         {
-          name: 'sideBarItems.employees',
-          path: '/employee/all',
-          icon: 'mdi-account-tie',
-        },
-        {
           name: 'sideBarItems.testsConstructor',
           path: '/test/constructor/all',
           icon: 'mdi-book-plus',
@@ -69,10 +64,23 @@ export default defineComponent({
   },
 
   mounted() {
+    this.filterSideBarItems()
     this.setSelectedSideBarItem()
   },
 
   methods: {
+    filterSideBarItems(): void {
+      const rolesItem: string | null = sessionStorage.getItem('roles');
+      if (rolesItem == null) return;
+
+      const roles: string[] = JSON.parse(rolesItem)
+      if (!roles.includes('candidate')) return
+
+      this.sideBarItems = this.sideBarItems.filter(
+        (item: SideBarItem): boolean => item.path === '/test/all'
+      )
+    },
+
     setSelectedSideBarItem(): void {
       const selectedSideBarItem: SideBarItem | undefined = this.sideBarItems.find(
         (item: SideBarItem): boolean => item.path === this.$route.path,
