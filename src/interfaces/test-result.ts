@@ -9,3 +9,20 @@ export interface CheckedTestSession {
   testNameRus: string
   testNameKaz: string
 }
+
+export interface TestSessionResultList {
+  resultType: string
+  results: TestSessionResult[]
+}
+
+export interface TestSessionResult {
+  questionNameRus: string | null
+  questionNameKaz: string | null
+  answer: string | null
+  assessment: string | null
+  score: number
+  scaleNameRus: string | null
+  scaleNameKaz: string | null
+  descriptionRus: string | null
+  descriptionKaz: string | null
+}

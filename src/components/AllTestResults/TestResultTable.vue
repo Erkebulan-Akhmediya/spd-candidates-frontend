@@ -21,6 +21,11 @@ export default defineComponent({
         {
           key: 'testName',
           title: 'Тест'
+        },
+        {
+          key: 'openButton',
+          title: '',
+          width: '10%'
         }
       ],
       testSessions: new Array<CheckedTestSession>(),
@@ -33,7 +38,7 @@ export default defineComponent({
 
   methods: {
     getTranslatedName,
-    async fetchTestSessionsForResults() {
+    async fetchTestSessionsForResults(): Promise<void> {
       try {
         const { count, testSessions } = await this.$http.get<CheckedTestSessionList>(
           '/test/session/all/result',
@@ -51,7 +56,16 @@ export default defineComponent({
         console.log(e)
       }
     },
-  }
+    async openTestResult(testSession: CheckedTestSession): Promise<void> {
+      await this.$router.push(`/test/${testSession.id}/result`)
+    },
+  },
+
+  watch: {
+    async selectedRegionId() {
+      await this.fetchTestSessionsForResults()
+    }
+  },
 
 })
 </script>
@@ -67,6 +81,9 @@ export default defineComponent({
   >
     <template v-slot:[`item.testName`]="{ item }">
       <p>{{ getTranslatedName({ nameKaz: item.testNameKaz, nameRus: item.testNameRus }) }}</p>
+    </template>
+    <template v-slot:[`item.openButton`]="{ item }">
+      <v-btn variant="elevated" color="primary" @click="openTestResult(item)">Посмотреть</v-btn>
     </template>
   </v-data-table-server>
 </template>

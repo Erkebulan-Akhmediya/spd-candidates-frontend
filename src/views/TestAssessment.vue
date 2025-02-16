@@ -4,10 +4,11 @@ import type { TestSessionForAssessment } from '@/interfaces/test-assessment.ts'
 import { mapWritableState } from 'pinia'
 import { useTestAssessmentStore } from '@/stores/test-assessment.ts'
 import TestAssessmentQuestions from '@/components/TestAssessment/TestAssessmentQuestions.vue'
+import GoBackBtn from '@/components/GoBackBtn.vue'
 
 export default defineComponent({
   name: 'TestAssessment',
-  components: { TestAssessmentQuestions },
+  components: { GoBackBtn, TestAssessmentQuestions },
 
   data() {
     return {
@@ -68,10 +69,7 @@ export default defineComponent({
   <v-card>
     <v-card-title>
       <v-row justify="start" class="pa-5">
-        <v-btn @click="goBack">
-          <v-icon>mdi-arrow-left</v-icon>
-          <p>Назад</p>
-        </v-btn>
+        <go-back-btn />
         <p class="ml-5">Проверка теста</p>
       </v-row>
     </v-card-title>
