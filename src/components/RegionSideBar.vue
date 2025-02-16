@@ -9,6 +9,12 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useRegionStore, ['regions', 'selectedRegionId']),
+    isHr(): boolean {
+      const rolesItem: string | null = sessionStorage.getItem('roles')
+      if (rolesItem === null) return false
+      const roles: string[] = JSON.parse(rolesItem)
+      return roles.includes('hr')
+    },
   },
 
   methods: {
@@ -18,7 +24,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-navigation-drawer permanent>
+  <v-navigation-drawer permanent v-if="!isHr">
     <v-list v-model:selected="selectedRegionId" density="compact">
       <v-list-item
         v-for="region in regions"

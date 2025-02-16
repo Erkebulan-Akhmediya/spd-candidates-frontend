@@ -1,10 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LocaleChanger from '@/components/LocaleChanger.vue'
+import { mapWritableState } from 'pinia'
+import { useRegionStore } from '@/stores/region.ts'
 
 interface LoginResponse {
   token: string,
   roles: string[],
+  regionId: number | null
 }
 
 export default defineComponent({
@@ -20,13 +23,20 @@ export default defineComponent({
     }
   },
 
+  computed: {
+    ...mapWritableState(useRegionStore, ['selectedRegionId']),
+  },
+
   methods: {
     async login(): Promise<void> {
       try {
-        const { token, roles } = await this.$http.post<LoginResponse>('/auth/login', {
+        const { token, roles, regionId } = await this.$http.post<LoginResponse>('/auth/login', {
           username: this.username,
           password: this.password,
         })
+        if (regionId !== null) {
+          this.selectedRegionId = [regionId]
+        }
         sessionStorage.setItem('token', token)
         sessionStorage.setItem('roles', JSON.stringify(roles))
 
