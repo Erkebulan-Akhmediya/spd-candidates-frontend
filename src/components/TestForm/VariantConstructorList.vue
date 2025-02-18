@@ -40,6 +40,11 @@ export default defineComponent({
                 nameKaz: '',
                 nameRus: '',
                 isCorrect: null,
+                increment: {
+                  index: 1,
+                  scaleIndex: 1,
+                  score: 0
+                }
               }
             )
           }
