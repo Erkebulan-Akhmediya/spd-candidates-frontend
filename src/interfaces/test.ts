@@ -45,6 +45,7 @@ export interface GetAllTestsResponse {
 
 export interface TestTypeApi extends Translatable {
   id: number
+  automaticallyEvaluated: boolean
 }
 
 export enum TestType {

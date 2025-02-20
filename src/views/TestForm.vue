@@ -25,6 +25,18 @@ export default defineComponent({
     },
 
     testValidator: () => TestValidatorService.getInstance(),
+
+    automaticallyEvaluated(): boolean {
+      const autoEvaluatedTestTypes: TestTypeApi[] = this.testTypes.filter(
+        (type: TestTypeApi): boolean => type.automaticallyEvaluated,
+      )
+
+      const autoEvaluatedTestTypeIds: number[] = autoEvaluatedTestTypes.map(
+        (type: TestTypeApi): number => type.id,
+      )
+
+      return autoEvaluatedTestTypeIds.includes(this.test.type)
+    },
   },
 
   data() {
@@ -76,7 +88,6 @@ export default defineComponent({
       this.toShowErr = true
     },
   },
-
 })
 </script>
 
@@ -153,7 +164,7 @@ export default defineComponent({
         </v-col>
       </v-row>
 
-      <v-row v-if="test.type !== TestType.withOpenQuestions.valueOf()">
+      <v-row v-if="automaticallyEvaluated">
         <v-col cols="12">
           <scales />
         </v-col>
