@@ -27,6 +27,7 @@ export type Answer =
   | AnswerForMcqWithOneOrNoCorrect
   | AnswerForMcqWithMultipleCorrect
   | AnswerForPointDistribution
+  | File
 
 export type AnswerForOpenQuestion = string
 export type AnswerForMcqWithOneOrNoCorrect = number

@@ -48,7 +48,10 @@ export default defineComponent({
     v-else-if="passingTest.testTypeId === TestType.pointDistribution"
     @answered="updateQuestionAnswer"
   />
-  <file v-else-if="passingTest.testTypeId === TestType.fileAnswer" />
+  <file
+    v-else-if="passingTest.testTypeId === TestType.fileAnswer"
+    @answered="updateQuestionAnswer"
+  />
   <options
     v-else-if="isMcq"
     @answered="updateQuestionAnswer"

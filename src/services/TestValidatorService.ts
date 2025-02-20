@@ -76,7 +76,7 @@ export default class TestValidatorService {
   private validateScale(): void {
     if (this.test === null) throw 'Test is required for validation'
 
-    const scale: Scale = this.test.scales[this.scaleIndex];
+    const scale: Scale = this.test.scales[this.scaleIndex]
     if (!scale.nameKaz) this.emptyFields.push(`название (каз) в шкале ${scale.index}`)
     if (!scale.nameRus) this.emptyFields.push(`название (рус) в шкале ${scale.index}`)
   }
@@ -102,7 +102,8 @@ export default class TestValidatorService {
     // т.к. пользователь не указывает их
     const typesRequiringNoValidation: TestType[] = [
       TestType.pointDistribution,
-      TestType.withOpenQuestions
+      TestType.withOpenQuestions,
+      TestType.fileAnswer,
     ]
     if (typesRequiringNoValidation.includes(this.test.type)) return
     this.validateQuestionByType()

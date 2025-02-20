@@ -67,8 +67,18 @@ export default defineComponent({
     async endTest(): Promise<void> {
       try {
         const questions: PassingQuestion[] = [...this.passingTest.questions.values()]
-        const answers: AnswerDto[] = questions.map(
-          ({id, answer}): AnswerDto => ({questionId: id, answer})
+        const answers: AnswerDto[] = await Promise.all(
+          questions.map(
+            async ({id, answer}): Promise<AnswerDto> => {
+              if (answer instanceof File) {
+                answer = await this.$file.upload(answer);
+              }
+              return {
+                questionId: id,
+                answer
+              }
+            }
+          )
         );
         await this.$http.put(`/test/session/${this.passingTest.testSessionId}`, answers)
         await this.$router.push('/test/all')
