@@ -7,10 +7,11 @@ import { TestType } from '@/interfaces/test.ts'
 import PointDistribution from '@/components/TestPassing/Answer/PointDistribution.vue'
 import type { Answer } from '@/interfaces/question.ts'
 import Open from '@/components/TestPassing/Answer/Open.vue'
+import File from '@/components/TestPassing/Answer/File.vue'
 
 export default defineComponent({
   name: `Answer`,
-  components: { Open, PointDistribution, Options },
+  components: { File, Open, PointDistribution, Options },
 
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
@@ -47,6 +48,7 @@ export default defineComponent({
     v-else-if="passingTest.testTypeId === TestType.pointDistribution"
     @answered="updateQuestionAnswer"
   />
+  <file v-else-if="passingTest.testTypeId === TestType.fileAnswer" />
   <options
     v-else-if="isMcq"
     @answered="updateQuestionAnswer"

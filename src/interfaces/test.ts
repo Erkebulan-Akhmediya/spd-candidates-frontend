@@ -54,4 +54,5 @@ export enum TestType {
   withMcqHavingOneCorrect = 3,
   withMcqHavingMultipleCorrect = 4,
   pointDistribution = 5,
+  fileAnswer = 6
 }
