@@ -15,7 +15,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate']),
+    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto']),
   },
 
   methods: {
@@ -84,6 +84,11 @@ export default defineComponent({
       try {
         this.validatePassword()
         this.validate()
+        if (this.candidatePhoto !== null) {
+          this.candidate.photoFileName = await this.$file.upload(this.candidatePhoto)
+        } else {
+          this.candidate.photoFileName = null
+        }
         await this.$http.post('/candidate', this.candidate)
         await this.goBack()
       } catch (e: unknown) {

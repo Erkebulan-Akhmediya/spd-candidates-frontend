@@ -43,6 +43,7 @@ export interface Candidate {
   username: string
   password: string
   areaOfActivity: string
+  photoFileName: string | null
 }
 
 export type Tab = 'create' | 'new' | 'security' | 'approval' | 'approved' | 'rejected'

@@ -26,7 +26,9 @@ export const useCandidateStore = defineStore('candidate', {
         username: String(),
         password: String(),
         areaOfActivity: String(),
-      } as Candidate
+        photoFileName: null,
+      } as Candidate,
+      candidatePhoto: null as File | null,
     }
   }
 })

@@ -27,26 +27,26 @@ export default defineComponent({
     DriverLicenses,
     Languages,
     Nationalities,
-    VDateInput,
+    VDateInput
   },
 
   props: {
     tab: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
     return {
       errMsg: String(),
       toShowErr: false,
-      toShowComment: false,
+      toShowComment: false
     }
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate']),
+    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto'])
   },
 
   async mounted() {
@@ -107,8 +107,8 @@ export default defineComponent({
       if (this.tab === 'security') return 'Проверка ВБ'
       if (this.tab === 'approval') return 'Согласование'
       return ''
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -151,6 +151,14 @@ export default defineComponent({
               variant="outlined"
               v-model="candidate.password"
               v-if="tab === 'create'"
+            />
+          </v-col>
+          <v-col cols="4">
+            <v-file-input
+              label="Фото"
+              variant="outlined"
+              v-model="candidatePhoto"
+              :disabled="['approval', 'security', 'approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
