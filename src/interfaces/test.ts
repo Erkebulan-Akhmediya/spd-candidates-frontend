@@ -6,6 +6,8 @@ import type { Scale } from '@/interfaces/test-evaluation.ts'
 export interface Test extends Translatable {
   isLimitless: boolean
   duration: number
+  descriptionRus: string
+  descriptionKaz: string
 }
 
 interface TestToCreateOrSend extends Test {

@@ -49,7 +49,11 @@ export default defineComponent({
         .variants[this.variantIndex]
         .questions[this.questionIndex]
         .options[this.optionIndex] = this.testCreator.newOption()
-    }
+    },
+
+    indexToChar(index: number): string {
+      return String.fromCharCode('a'.charCodeAt(0) + index).toUpperCase()
+    },
   },
 
 })
@@ -60,7 +64,7 @@ export default defineComponent({
     <v-progress-circular v-if="loading" />
     <v-row v-else justify="space-between" align="center" class="pa-3">
       <v-col cols="1">
-        <h3>Ответ {{optionIndex + 1}}</h3>
+        <h3>Ответ {{indexToChar(optionIndex)}}</h3>
       </v-col>
       <v-col cols="8">
         <option-names

@@ -121,6 +121,14 @@ export default defineComponent({
         </v-col>
       </v-row>
       <v-row>
+        <v-col cols="6">
+          <v-textarea label="Описание (каз)" variant="outlined" v-model="test.descriptionKaz" />
+        </v-col>
+        <v-col cols="6">
+          <v-textarea label="Описание (рус)" variant="outlined" v-model="test.descriptionRus" />
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="2">
           <v-text-field
             label="Длительность"

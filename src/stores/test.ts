@@ -11,6 +11,8 @@ export const useTestStore = defineStore('test', {
       test: {
         nameRus: '',
         nameKaz: '',
+        descriptionRus: '',
+        descriptionKaz: '',
         isLimitless: false,
         duration: 0,
         areasOfActivities: new Array<string>(),
