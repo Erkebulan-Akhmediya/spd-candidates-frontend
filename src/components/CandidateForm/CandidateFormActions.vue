@@ -82,19 +82,31 @@ export default defineComponent({
 
     async save(): Promise<void> {
       try {
-        this.validatePassword()
         this.validate()
-        if (this.candidatePhoto !== null) {
-          this.candidate.photoFileName = await this.$file.upload(this.candidatePhoto)
-        } else {
-          this.candidate.photoFileName = null
+        if (this.tab === 'create') {
+          await this.saveNewCandidate()
+        } else if (this.tab === 'new') {
+          await this.updateCandidate()
         }
-        await this.$http.post('/candidate', this.candidate)
         await this.goBack()
       } catch (e: unknown) {
         this.$emit('error', `Не удалось сохранить кандидата: ${e}`)
         console.log(e)
       }
+    },
+
+    async saveNewCandidate(): Promise<void> {
+      this.validatePassword()
+      if (this.candidatePhoto !== null) {
+        this.candidate.photoFileName = await this.$file.upload(this.candidatePhoto)
+      } else {
+        this.candidate.photoFileName = null
+      }
+      await this.$http.post('/candidate', this.candidate)
+    },
+
+    async updateCandidate(): Promise<void> {
+      await this.$http.put('/candidate', this.candidate)
     },
 
     async reject() {
@@ -167,7 +179,7 @@ export default defineComponent({
     </v-btn>
     <v-btn variant="elevated" class="mr-3" @click="reject" color="error" v-else>Отказать</v-btn>
 
-    <v-btn variant="elevated" color="primary" @click="save" v-if="tab === 'create'">
+    <v-btn variant="elevated" class="mr-3" color="primary" @click="save" v-if="['create', 'new'].includes(tab)">
       Сохранить
     </v-btn>
 
@@ -175,7 +187,7 @@ export default defineComponent({
       variant="elevated"
       color="primary"
       @click="sendToSecurityCheck"
-      v-else-if="tab === 'new'"
+      v-if="tab === 'new'"
     >
       Направить на проверку ВБ
     </v-btn>

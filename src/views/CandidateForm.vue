@@ -158,7 +158,7 @@ export default defineComponent({
               label="Фото"
               variant="outlined"
               v-model="candidatePhoto"
-              :disabled="['approval', 'security', 'approved', 'rejected'].includes(tab)"
+              :disabled="['new', 'approval', 'security', 'approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
