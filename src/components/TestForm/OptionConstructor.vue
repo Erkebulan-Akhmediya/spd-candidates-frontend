@@ -4,10 +4,11 @@ import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import { TestType } from '@/interfaces/test.ts'
 import OptionScaleSelector from '@/components/TestForm/OptionScaleSelector.vue'
+import OptionNames from '@/components/TestForm/OptionNames.vue'
 
 export default defineComponent({
   name: `OptionConstructor`,
-  components: { OptionScaleSelector },
+  components: { OptionNames, OptionScaleSelector },
 
   props: {
     variantIndex: {
@@ -84,22 +85,11 @@ export default defineComponent({
       <v-col cols="2">
         <h3>Ответ {{ optionIndex + 1 }}</h3>
       </v-col>
-      <v-col cols="5">
-        <v-text-field
-          label="Ответ (каз)"
-          variant="outlined"
-          v-model="
-            test.variants[variantIndex].questions[questionIndex].options[optionIndex].nameKaz
-          "
-        />
-      </v-col>
-      <v-col cols="5">
-        <v-text-field
-          label="Ответ (рус)"
-          variant="outlined"
-          v-model="
-            test.variants[variantIndex].questions[questionIndex].options[optionIndex].nameRus
-          "
+      <v-col cols="10">
+        <option-names
+          :variant-index="variantIndex"
+          :question-index="questionIndex"
+          :option-index="optionIndex"
         />
       </v-col>
     </v-row>

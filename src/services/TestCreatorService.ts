@@ -66,19 +66,4 @@ export default class TestCreatorService {
     }
   }
 
-  public newPointDistributionOptionList(optionsPerQuestion: number): OptionToCreate[] {
-    return Array.from(
-      { length: optionsPerQuestion },
-      (_, index: number): OptionToCreate => this.newPointDistributionOption(index),
-    )
-  }
-
-  public newPointDistributionOption(index: number): OptionToCreate {
-    return {
-      ...this.newOption(),
-      nameRus: String.fromCharCode('a'.charCodeAt(0) + index),
-      nameKaz: String.fromCharCode('a'.charCodeAt(0) + index),
-    }
-  }
-
 }

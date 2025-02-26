@@ -45,11 +45,7 @@ export default defineComponent({
     optionsPerQuestion() {
       this.test.variants.forEach((variant) => {
         variant.questions.forEach((question: QuestionToCreate) => {
-          if (this.test.type === TestType.pointDistribution.valueOf()) {
-            question.options = this.testCreator.newPointDistributionOptionList(this.optionsPerQuestion)
-          } else {
-            question.options = this.testCreator.newOptionList(this.optionsPerQuestion)
-          }
+          question.options = this.testCreator.newOptionList(this.optionsPerQuestion)
         })
       })
     },
