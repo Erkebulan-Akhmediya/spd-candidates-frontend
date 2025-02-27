@@ -2,7 +2,6 @@
 import { defineComponent } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 import Nationalities from '@/components/CandidateForm/Nationalities.vue'
-import Languages from '@/components/CandidateForm/Languages.vue'
 import DriverLicenses from '@/components/CandidateForm/DriverLicenses.vue'
 import RecruitedMethods from '@/components/CandidateForm/RecruitedMethods.vue'
 import Experience from '@/components/CandidateForm/Experience.vue'
@@ -13,11 +12,13 @@ import CandidateFormActions from '@/components/CandidateForm/CandidateFormAction
 import AreaOfActivity from '@/components/CandidateForm/AreaOfActivity.vue'
 import type { Candidate } from '@/interfaces/candidate.ts'
 import Education from '@/components/CandidateForm/Education.vue'
+import LanguageKnowledge from '@/components/CandidateForm/LanguageKnowledge.vue'
 
 export default defineComponent({
   name: 'CandidateForm',
 
   components: {
+    LanguageKnowledge,
     Education,
     AreaOfActivity,
     CandidateFormActions,
@@ -25,28 +26,27 @@ export default defineComponent({
     Experience,
     RecruitedMethods,
     DriverLicenses,
-    Languages,
     Nationalities,
-    VDateInput
+    VDateInput,
   },
 
   props: {
     tab: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   data() {
     return {
       errMsg: String(),
       toShowErr: false,
-      toShowComment: false
+      toShowComment: false,
     }
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto'])
+    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto']),
   },
 
   async mounted() {
@@ -107,8 +107,8 @@ export default defineComponent({
       if (this.tab === 'security') return 'Проверка ВБ'
       if (this.tab === 'approval') return 'Согласование'
       return ''
-    }
-  }
+    },
+  },
 })
 </script>
 
@@ -253,13 +253,6 @@ export default defineComponent({
             />
           </v-col>
           <v-col cols="4">
-            <languages
-              @error="showError"
-              :disabled="['approval', 'security'].includes(tab)"
-              :readonly="['approved', 'rejected'].includes(tab)"
-            />
-          </v-col>
-          <v-col cols="4">
             <driver-licenses
               @error="showError"
               :disabled="['approval', 'security'].includes(tab)"
@@ -304,6 +297,15 @@ export default defineComponent({
           <v-col cols="4" v-if="['approval', 'approved', 'rejected'].includes(tab)">
             <area-of-activity
               @error="showError"
+              :readonly="['approved', 'rejected'].includes(tab)"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col col="12">
+            <language-knowledge
+              :disabled="['approval', 'security'].includes(tab)"
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>

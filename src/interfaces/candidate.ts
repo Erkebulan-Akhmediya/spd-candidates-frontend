@@ -21,6 +21,16 @@ export interface EducationType extends Translatable {
   id: number
 }
 
+export interface Language extends Translatable {
+  code: string
+}
+
+export interface LanguageKnowledge {
+  index: number
+  languageCode: string
+  levelCode: string
+}
+
 export interface Candidate {
   lastName: string
   firstName: string
@@ -31,7 +41,6 @@ export interface Candidate {
   identificationNumber: string
   phoneNumber: string
   nationalityCode: number
-  languageCodes: string[]
   driverLicenseCodes: string[]
   education: Education[]
   sport: string
@@ -44,6 +53,7 @@ export interface Candidate {
   password: string
   areaOfActivity: string
   photoFileName: string | null
+  languageKnowledge: LanguageKnowledge[]
 }
 
 export type Tab = 'create' | 'new' | 'security' | 'approval' | 'approved' | 'rejected'
