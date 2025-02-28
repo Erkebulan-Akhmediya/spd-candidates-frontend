@@ -90,7 +90,7 @@ export default defineComponent({
       this.candidate.identificationNumber = ''
       this.candidate.phoneNumber = ''
       this.candidate.nationalityCode = 0
-      this.candidate.languageCodes = []
+      this.candidate.languageKnowledge = []
       this.candidate.driverLicenseCodes = []
       this.candidate.education = []
       this.candidate.sport = ''

@@ -11,7 +11,8 @@ export interface Experience {
 export interface Education {
   index: number
   startDate: Date
-  endDate: Date
+  untilNow: boolean
+  endDate: Date | null
   type: number
   organization: string
   major: string

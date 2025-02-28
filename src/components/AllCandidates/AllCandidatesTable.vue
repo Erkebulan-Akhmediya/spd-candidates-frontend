@@ -56,6 +56,7 @@ export default defineComponent({
         {
           key: 'viewButton',
           title: '',
+          width: '5%',
         },
       ],
       test: {},
@@ -122,16 +123,24 @@ export default defineComponent({
   >
     <template v-slot:top>
       <v-row justify="end" class="pt-5 pr-5">
-        <v-btn icon v-if="tabType === 'new'" @click="goToCreateCandidate">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <v-btn
+          v-if="tabType === 'new'"
+          icon="mdi-plus"
+          color="primary"
+          @click="goToCreateCandidate"
+        />
       </v-row>
     </template>
 
     <template v-slot:[`item.viewButton`]="{ item }">
-      <v-btn variant="text" class="ma-2" @click="goCandidatePage(item.identificationNumber)">
-        <v-icon>mdi-eye</v-icon>
-      </v-btn>
+      <v-btn
+        icon="mdi-eye"
+        size="40"
+        variant="tonal"
+        color="primary"
+        class="ma-2"
+        @click="goCandidatePage(item.identificationNumber)"
+      />
     </template>
   </v-data-table-server>
 </template>

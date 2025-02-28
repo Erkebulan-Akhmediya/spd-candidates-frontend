@@ -66,7 +66,7 @@ export default defineComponent({
         this.candidate.education.some(
           (education: Education): boolean =>
             !education.startDate ||
-            !education.endDate ||
+            (!education.untilNow && !education.endDate) ||
             !education.type ||
             !education.organization ||
             !education.major
