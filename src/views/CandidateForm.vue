@@ -70,9 +70,10 @@ export default defineComponent({
 
     async fetchCandidate() {
       try {
-        const data = await this.$http.get<Candidate>(`/candidate/${this.$route.params.id}`)
-        this.candidate = data
-        this.candidate.birthDate = new Date(data.birthDate)
+        const candidate = await this.$http.get<Candidate>(`/candidate/${this.$route.params.id}`)
+        console.log('candidate', candidate)
+        this.candidate = candidate
+        this.candidate.birthDate = new Date(candidate.birthDate)
       } catch (e) {
         console.log(e)
         this.showError('Не удалось получить данные канидата')
@@ -322,7 +323,7 @@ export default defineComponent({
           </v-col>
         </v-row>
 
-        <v-row v-if="tab !== 'security'">
+        <v-row>
           <v-col cols="12">
             <experience
               :disabled="['approval', 'security'].includes(tab)"

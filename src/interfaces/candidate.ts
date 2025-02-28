@@ -3,6 +3,7 @@ import type { Translatable } from '@/interfaces/global.ts'
 export interface Experience {
   index: number
   startDate: Date
+  untilNow: boolean
   endDate: Date
   position: string
   companyName: string

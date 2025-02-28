@@ -27,9 +27,9 @@ export default defineComponent({
   data() {
     return {
       headers: [
-        { key: 'language', title: 'Язык', width: '45%' },
-        { key: 'level', title: 'Уровень', width: '45%' },
-        { key: 'deleteButton', title: '', width: '10%' },
+        { key: 'language', title: 'Язык', width: '48%' },
+        { key: 'level', title: 'Уровень', width: '47%' },
+        { key: 'deleteButton', title: '', width: '5%' },
       ],
       languages: new Array<Language>(),
       levels: new Array<LanguageLevel>(),

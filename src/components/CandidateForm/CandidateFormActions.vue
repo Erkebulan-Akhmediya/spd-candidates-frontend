@@ -52,7 +52,7 @@ export default defineComponent({
         this.candidate.experiences.some(
           (experience) =>
             !experience.startDate ||
-            !experience.endDate ||
+            (!experience.untilNow && !experience.endDate) ||
             !experience.companyName ||
             !experience.position,
         )

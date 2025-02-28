@@ -124,11 +124,12 @@ export default defineComponent({
         <template v-slot:[`item.endDate`]="{ item }">
           <v-row class="pa-0 ma-0">
             <v-col cols="9" class="pa-0 ma-0">
-              <v-card v-if="item.untilNow" variant="outlined" class="mt-3">
-                <v-card-text>
-                  <p>По настоящее время</p>
-                </v-card-text>
-              </v-card>
+              <v-card
+                v-if="item.untilNow"
+                variant="outlined"
+                class="mt-3"
+                text="По настоящее время"
+              />
               <v-date-input
                 v-else
                 class="mt-5"
@@ -140,8 +141,13 @@ export default defineComponent({
                 :readonly="readonly"
               />
             </v-col>
-            <v-col cols="3" class="pa-0 ma-0" justify-center>
-              <v-checkbox label="По н.в." v-model="item.untilNow">
+            <v-col cols="3" class="pa-0 ma-0">
+              <v-checkbox
+                label="По н.в."
+                v-model="item.untilNow"
+                :readonly="readonly"
+                :disabled="disabled"
+              >
                 <v-tooltip activator="parent" location="bottom">По настоящее время</v-tooltip>
               </v-checkbox>
             </v-col>

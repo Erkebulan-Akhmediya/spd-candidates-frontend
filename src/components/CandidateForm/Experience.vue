@@ -26,26 +26,11 @@ export default defineComponent({
   data() {
     return {
       headers: [
-        {
-          key: 'startDate',
-          title: 'Дата начала',
-        },
-        {
-          key: 'endDate',
-          title: 'Дата окончания',
-        },
-        {
-          key: 'position',
-          title: 'Должность',
-        },
-        {
-          key: 'companyName',
-          title: 'Компания',
-        },
-        {
-          key: 'deleteButton',
-          title: '',
-        },
+        { key: 'startDate', title: 'Дата начала', width: '20%' },
+        { key: 'endDate', title: 'Дата окончания', width: '30%' },
+        { key: 'position', title: 'Должность', width: '23%' },
+        { key: 'companyName', title: 'Компания', width: '22%' },
+        { key: 'deleteButton', title: '', width: '5%' },
       ],
     }
   },
@@ -54,11 +39,16 @@ export default defineComponent({
     ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
+  mounted() {
+    console.log('Component mounted.', this.candidate)
+  },
+
   methods: {
     addExperience() {
       this.candidate.experiences.push({
         index: this.getNextExperienceIndex(),
         startDate: new Date(),
+        untilNow: false,
         endDate: new Date(),
         position: '',
         companyName: '',
@@ -106,6 +96,8 @@ export default defineComponent({
         <template v-slot:[`item.startDate`]="{ item }">
           <v-date-input
             class="mt-5"
+            prepend-icon=""
+            prepend-inner-icon="$calendar"
             v-model="item.startDate"
             variant="outlined"
             :disabled="disabled"
@@ -114,13 +106,36 @@ export default defineComponent({
         </template>
 
         <template v-slot:[`item.endDate`]="{ item }">
-          <v-date-input
-            class="mt-5"
-            v-model="item.endDate"
-            variant="outlined"
-            :disabled="disabled"
-            :readonly="readonly"
-          />
+          <v-row class="pa-0 ma-0">
+            <v-col cols="9" class="pa-0 ma-0">
+              <v-card
+                v-if="item.untilNow"
+                variant="outlined"
+                class="mt-3"
+                text="По настоящее время"
+              />
+              <v-date-input
+                v-else
+                class="mt-5"
+                prepend-icon=""
+                prepend-inner-icon="$calendar"
+                v-model="item.endDate"
+                variant="outlined"
+                :disabled="disabled"
+                :readonly="readonly"
+              />
+            </v-col>
+            <v-col cols="3" class="pa-0 ma-0">
+              <v-checkbox
+                label="По н.в."
+                v-model="item.untilNow"
+                :readonly="readonly"
+                :disabled="disabled"
+              >
+                <v-tooltip activator="parent" location="bottom">По настоящее время</v-tooltip>
+              </v-checkbox>
+            </v-col>
+          </v-row>
         </template>
 
         <template v-slot:[`item.position`]="{ item }">
