@@ -155,6 +155,8 @@ export default defineComponent({
           </v-col>
           <v-col cols="4">
             <v-file-input
+              prepend-icon=""
+              prepend-inner-icon="$file"
               label="Фото"
               variant="outlined"
               v-model="candidatePhoto"
@@ -197,6 +199,8 @@ export default defineComponent({
           <v-col cols="4">
             <v-date-input
               label="Дата рождения"
+              prepend-icon=""
+              prepend-inner-icon="$calendar"
               variant="outlined"
               v-model="candidate.birthDate"
               :disabled="['approval', 'security'].includes(tab)"
@@ -242,6 +246,15 @@ export default defineComponent({
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
+          <v-col cols="4">
+            <v-text-field
+              label="Отношение к спорту"
+              variant="outlined"
+              v-model="candidate.sport"
+              :disabled="['approval', 'security'].includes(tab)"
+              :readonly="['approved', 'rejected'].includes(tab)"
+            />
+          </v-col>
         </v-row>
 
         <v-row>
@@ -259,21 +272,6 @@ export default defineComponent({
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="4">
-            <v-text-field
-              label="Отношение к спорту"
-              variant="outlined"
-              v-model="candidate.sport"
-              :disabled="['approval', 'security'].includes(tab)"
-              :readonly="['approved', 'rejected'].includes(tab)"
-            />
-          </v-col>
-        </v-row>
-
-        <v-row>
           <v-col cols="4">
             <recruited-methods
               @error="showError"
@@ -282,6 +280,9 @@ export default defineComponent({
               :readonly="['approved', 'rejected'].includes(tab)"
             />
           </v-col>
+        </v-row>
+
+        <v-row>
           <v-col
             cols="4"
             v-if="toShowComment || ['approval', 'security', 'approved', 'rejected'].includes(tab)"
