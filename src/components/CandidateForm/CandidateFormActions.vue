@@ -7,6 +7,8 @@ import type { Education } from '@/interfaces/candidate.ts'
 export default defineComponent({
   name: 'CandidateFormActions',
 
+  emits: ['error'],
+
   props: {
     tab: {
       type: String,
