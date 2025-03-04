@@ -14,6 +14,15 @@ export default defineComponent({
     },
   },
 
+  data() {
+    return {
+      showApproveDeleteDialog: false,
+      approveDeleteDialogData: {
+        candidateIdentificationNumber: '',
+      },
+    }
+  },
+
   computed: {
     ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto']),
   },
@@ -69,7 +78,7 @@ export default defineComponent({
             (!education.untilNow && !education.endDate) ||
             !education.type ||
             !education.organization ||
-            !education.major
+            !education.major,
         )
       ) {
         throw 'Имеются не заполненные поля в образовании'
@@ -154,12 +163,33 @@ export default defineComponent({
             params: {
               areaOfActivity: this.candidate.areaOfActivity,
             },
-          }
+          },
         )
         await this.goBack()
       } catch (e) {
         console.log(e)
         this.$emit('error', 'Ошибка отправки на согласование')
+      }
+    },
+
+    openApproveDeleteDialog(): void {
+      this.showApproveDeleteDialog = true
+    },
+
+    closeApproveDeleteDialog(): void {
+      this.showApproveDeleteDialog = false
+    },
+
+    async deleteCandidate(): Promise<void> {
+      try {
+        if (this.candidate.identificationNumber !== this.approveDeleteDialogData.candidateIdentificationNumber) {
+          return alert('ИИН не совпадает')
+        }
+        await this.$http.delete(`/candidate/${this.candidate.identificationNumber}`)
+        this.closeApproveDeleteDialog()
+        await this.goBack()
+      } catch (e) {
+        console.log('error deleting the candidate', e)
       }
     },
   },
@@ -179,12 +209,19 @@ export default defineComponent({
     </v-btn>
     <v-btn variant="elevated" class="mr-3" @click="reject" color="error" v-else>Отказать</v-btn>
 
-    <v-btn variant="elevated" class="mr-3" color="primary" @click="save" v-if="['create', 'new'].includes(tab)">
+    <v-btn
+      variant="elevated"
+      class="mr-3"
+      color="primary"
+      @click="save"
+      v-if="['create', 'new'].includes(tab)"
+    >
       Сохранить
     </v-btn>
 
     <v-btn
       variant="elevated"
+      class="mr-3"
       color="primary"
       @click="sendToSecurityCheck"
       v-if="tab === 'new'"
@@ -194,6 +231,7 @@ export default defineComponent({
 
     <v-btn
       variant="elevated"
+      class="mr-3"
       color="primary"
       @click="sendToApproval"
       v-else-if="tab === 'security'"
@@ -201,10 +239,48 @@ export default defineComponent({
       Направить на согласование
     </v-btn>
 
-    <v-btn variant="elevated" color="primary" @click="approve" v-else-if="tab === 'approval'">
+    <v-btn
+      variant="elevated"
+      class="mr-3"
+      color="primary"
+      @click="approve"
+      v-else-if="tab === 'approval'"
+    >
       Согласовать
     </v-btn>
+
+    <v-btn
+      variant="elevated"
+      color="error"
+      v-if="tab !== 'create'"
+      @click="openApproveDeleteDialog"
+    >
+      Удалить
+    </v-btn>
   </v-row>
+
+  <v-dialog v-model="showApproveDeleteDialog" max-width="500">
+    <v-card>
+      <v-card-text>
+        <v-col cols="12">
+          <p>Введите ИИН кандмдата, чтобы подтвердить удание</p>
+          <v-chip color="red" label class="my-3">
+            <v-icon icon="mdi-exclamation-thick" start />
+            Удание кандидата необратимо
+          </v-chip>
+          <v-text-field
+            variant="outlined"
+            label="ИИН Кандидата"
+            v-model="approveDeleteDialogData.candidateIdentificationNumber"
+          />
+        </v-col>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn variant="tonal" @click="closeApproveDeleteDialog">Отмена</v-btn>
+        <v-btn variant="elevated" color="error" @click="deleteCandidate">Удалить</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped></style>
