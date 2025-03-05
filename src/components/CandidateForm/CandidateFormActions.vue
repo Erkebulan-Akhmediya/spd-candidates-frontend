@@ -200,6 +200,16 @@ export default defineComponent({
 
 <template>
   <v-row class="pa-5">
+    <v-btn
+      variant="elevated"
+      class="mr-3"
+      color="error"
+      v-if="tab !== 'create'"
+      @click="openApproveDeleteDialog"
+    >
+      Удалить
+    </v-btn>
+
     <v-btn variant="elevated" class="mr-3" @click="goBack" v-if="tab === 'create'">Отмена</v-btn>
     <v-btn
       variant="elevated"
@@ -249,15 +259,6 @@ export default defineComponent({
       v-else-if="tab === 'approval'"
     >
       Согласовать
-    </v-btn>
-
-    <v-btn
-      variant="elevated"
-      color="error"
-      v-if="tab !== 'create'"
-      @click="openApproveDeleteDialog"
-    >
-      Удалить
     </v-btn>
   </v-row>
 
