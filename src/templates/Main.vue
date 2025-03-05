@@ -1,9 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LocaleChanger from '@/components/LocaleChanger.vue'
-import type { Region } from '@/interfaces/global.ts'
 import { mapWritableState } from 'pinia'
 import { useRegionStore } from '@/stores/region.ts'
+import RegionService from '@/services/RegionService.ts'
 
 interface SideBarItem {
   name: string
@@ -57,6 +57,9 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useRegionStore, ['regions']),
+    regionService(): RegionService {
+      return RegionService.getInstance(this.$http)
+    },
   },
 
   async created() {
@@ -95,12 +98,7 @@ export default defineComponent({
 
     async fetchAllRegions(): Promise<void> {
       try {
-        this.regions = await this.$http.get<Region[]>('/region/all')
-        this.regions.unshift({
-          id: -1,
-          nameRus: 'Все регионы',
-          nameKaz: 'Барлық аумақтар',
-        })
+        this.regions = await this.regionService.fetch()
       } catch (e: unknown) {
         console.log(e)
       }

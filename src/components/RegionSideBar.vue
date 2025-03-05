@@ -36,6 +36,4 @@ export default defineComponent({
   </v-navigation-drawer>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

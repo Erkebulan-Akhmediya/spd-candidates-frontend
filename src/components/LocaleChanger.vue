@@ -1,5 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { mapWritableState } from 'pinia'
+import { useRegionStore } from '@/stores/region.ts'
+import RegionService from '@/services/RegionService.ts'
 
 export default defineComponent({
   name: 'LocaleChanger',
@@ -8,18 +11,23 @@ export default defineComponent({
     return {
       currentLocale: this.$i18n.locale,
       availableLocales: this.$i18n.availableLocales,
-    };
+    }
+  },
+
+  computed: {
+    ...mapWritableState(useRegionStore, ['regions']),
+    regionService(): RegionService {
+      return RegionService.getInstance(this.$http)
+    },
   },
 
   methods: {
-
     onLocaleChange(newLocale: string) {
-      this.$i18n.locale = newLocale;
-      sessionStorage.setItem('locale', this.$i18n.locale);
-    }
-
+      this.$i18n.locale = newLocale
+      sessionStorage.setItem('locale', this.$i18n.locale)
+      this.regions = this.regionService.sort(this.regions)
+    },
   },
-
 })
 </script>
 
@@ -33,6 +41,4 @@ export default defineComponent({
   />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
