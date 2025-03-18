@@ -3,28 +3,24 @@ import { defineComponent } from 'vue'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import { mapWritableState } from 'pinia'
 import { useRegionStore } from '@/stores/region.ts'
+import hasRole from '@/utils/HasRole.ts'
 
 export default defineComponent({
   name: 'RegionSideBar',
 
   computed: {
     ...mapWritableState(useRegionStore, ['regions', 'selectedRegionId']),
-    isHr(): boolean {
-      const rolesItem: string | null = sessionStorage.getItem('roles')
-      if (rolesItem === null) return false
-      const roles: string[] = JSON.parse(rolesItem)
-      return roles.includes('hr')
-    },
   },
 
   methods: {
+    hasRole,
     getTranslatedName,
   },
 })
 </script>
 
 <template>
-  <v-navigation-drawer permanent v-if="!isHr">
+  <v-navigation-drawer permanent v-if="!hasRole('hr')">
     <v-list v-model:selected="selectedRegionId" density="compact">
       <v-list-item
         v-for="region in regions"

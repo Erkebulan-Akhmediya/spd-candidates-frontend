@@ -3,6 +3,7 @@ import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
 import type { Education } from '@/interfaces/candidate.ts'
+import hasRole from '@/utils/HasRole.ts'
 
 export default defineComponent({
   name: 'CandidateFormActions',
@@ -30,6 +31,7 @@ export default defineComponent({
   },
 
   methods: {
+    hasRole,
     async goBack() {
       await this.$router.push('/candidate/all')
     },
@@ -236,7 +238,7 @@ export default defineComponent({
       class="mr-3"
       color="primary"
       @click="sendToSecurityCheck"
-      v-if="tab === 'new'"
+      v-if="tab === 'new' && hasRole('admin')"
     >
       Направить на проверку ВБ
     </v-btn>

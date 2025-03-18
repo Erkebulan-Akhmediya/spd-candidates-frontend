@@ -4,6 +4,12 @@ WORKDIR /app
 
 COPY package*.json ./
 
+# in case if a certificate is needed for internet connection
+COPY Unified_State_Internet_Access_Gateway.cer /app/kaguya.cer
+
+# in case if a certificate is needed for internet connection
+ENV NODE_EXTRA_CA_CERTS=/app/kaguya.cer
+
 RUN npm install
 
 COPY . .
