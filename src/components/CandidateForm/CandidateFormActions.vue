@@ -4,6 +4,9 @@ import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
 import type { Education } from '@/interfaces/candidate.ts'
 import hasRole from '@/utils/HasRole.ts'
+import Docxtemplater from 'docxtemplater'
+import { saveAs } from 'file-saver'
+import PizZip from 'pizzip'
 
 export default defineComponent({
   name: 'CandidateFormActions',
@@ -186,7 +189,10 @@ export default defineComponent({
 
     async deleteCandidate(): Promise<void> {
       try {
-        if (this.candidate.identificationNumber !== this.approveDeleteDialogData.candidateIdentificationNumber) {
+        if (
+          this.candidate.identificationNumber !==
+          this.approveDeleteDialogData.candidateIdentificationNumber
+        ) {
           return alert('ИИН не совпадает')
         }
         await this.$http.delete(`/candidate/${this.candidate.identificationNumber}`)
@@ -196,6 +202,36 @@ export default defineComponent({
         console.log('error deleting the candidate', e)
       }
     },
+
+    async downloadCertificate(): Promise<void> {
+      try {
+        const response = await fetch('/candidate-certificate.docx')
+        const templateContent = await response.arrayBuffer()
+        const zip = new PizZip(templateContent)
+        const doc = new Docxtemplater(zip)
+        const data = {
+          lastName: this.candidate.lastName,
+          firstName: this.candidate.firstName,
+          middleName: this.candidate.middleName,
+          birthDate: this.formatBirthDate(this.candidate.birthDate),
+          birthPlace: this.candidate.birthPlace,
+          identificationNumber: this.candidate.identificationNumber,
+          phoneNumber: this.candidate.phoneNumber,
+        }
+        doc.render(data)
+        const outputBlob = doc.getZip().generate({ type: 'blob' })
+        saveAs(outputBlob, 'generated-document.docx')
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    formatBirthDate(birthDate: Date): string {
+      const birthDateDay = birthDate.getDate().toString().padStart(2, '0')
+      const birthDateMonth = (birthDate.getMonth()+1).toString().padStart(2, '0')
+      return `${birthDateDay}.${birthDateMonth}.${birthDate.getFullYear()}`
+    }
+
   },
 })
 </script>
@@ -262,6 +298,10 @@ export default defineComponent({
     >
       Согласовать
     </v-btn>
+
+    <v-btn variant="elevated" class="mr-3" color="primary" @click="downloadCertificate"
+      >Скачать справку</v-btn
+    >
   </v-row>
 
   <v-dialog v-model="showApproveDeleteDialog" max-width="500">
