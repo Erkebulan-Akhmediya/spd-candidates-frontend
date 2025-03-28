@@ -25,4 +25,5 @@ export interface TestSessionResult {
   scaleNameKaz: string | null
   descriptionRus: string | null
   descriptionKaz: string | null
+  fileUrl?: string
 }
