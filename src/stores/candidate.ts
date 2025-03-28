@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Candidate, Education, Experience, LanguageKnowledge } from '@/interfaces/candidate.ts'
+import type { Candidate, Education, Experience, LanguageKnowledge, Nationality } from '@/interfaces/candidate.ts'
 
 export const useCandidateStore = defineStore('candidate', {
   state() {
@@ -29,6 +29,7 @@ export const useCandidateStore = defineStore('candidate', {
         languageKnowledge: new Array<LanguageKnowledge>()
       } as Candidate,
       candidatePhoto: null as File | null,
+      nationalities: new Array<Nationality>(),
     }
   }
 })

@@ -1,5 +1,9 @@
 import type { Translatable } from '@/interfaces/global.ts'
 
+export interface Nationality extends Translatable {
+  code: number
+}
+
 export interface Experience {
   index: number
   startDate: Date

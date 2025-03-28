@@ -2,11 +2,12 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import type { Education } from '@/interfaces/candidate.ts'
+import type { Education, Nationality } from '@/interfaces/candidate.ts'
 import hasRole from '@/utils/HasRole.ts'
 import Docxtemplater from 'docxtemplater'
 import { saveAs } from 'file-saver'
 import PizZip from 'pizzip'
+import { getTranslatedName } from '@/utils/Translate'
 
 export default defineComponent({
   name: 'CandidateFormActions',
@@ -30,11 +31,13 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto']),
+    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto', 'nationalities']),
   },
 
   methods: {
     hasRole,
+    getTranslatedName,
+
     async goBack() {
       await this.$router.push('/candidate/all')
     },
@@ -209,29 +212,52 @@ export default defineComponent({
         const templateContent = await response.arrayBuffer()
         const zip = new PizZip(templateContent)
         const doc = new Docxtemplater(zip)
-        const data = {
-          lastName: this.candidate.lastName,
-          firstName: this.candidate.firstName,
-          middleName: this.candidate.middleName,
-          birthDate: this.formatBirthDate(this.candidate.birthDate),
-          birthPlace: this.candidate.birthPlace,
-          identificationNumber: this.candidate.identificationNumber,
-          phoneNumber: this.candidate.phoneNumber,
-        }
+        const data = this.getCertificateData()
         doc.render(data)
-        const outputBlob = doc.getZip().generate({ type: 'blob' })
-        saveAs(outputBlob, 'generated-document.docx')
+        const outputBlob: Blob = doc.getZip().generate({ type: 'blob' })
+        this.saveCertificate(outputBlob)
       } catch (e) {
         console.log(e)
       }
     },
 
-    formatBirthDate(birthDate: Date): string {
-      const birthDateDay = birthDate.getDate().toString().padStart(2, '0')
-      const birthDateMonth = (birthDate.getMonth()+1).toString().padStart(2, '0')
-      return `${birthDateDay}.${birthDateMonth}.${birthDate.getFullYear()}`
-    }
+    getCertificateData() {
+      return {
+        lastName: this.candidate.lastName,
+        firstName: this.candidate.firstName,
+        middleName: this.candidate.middleName,
+        birthDate: this.formatDate(this.candidate.birthDate),
+        birthPlace: this.candidate.birthPlace,
+        identificationNumber: this.candidate.identificationNumber,
+        phoneNumber: this.candidate.phoneNumber,
+        nationality: this.getCandidateNationalityName(),
+        education: this.candidate.education.map((education: Education) => ({
+          ...education,
+          startYear: new Date(education.startDate).getFullYear(),
+          endYear: education.endDate ? new Date(education.endDate).getFullYear() : 'По настоящее время',
+        })),
+      }
+    },
 
+    saveCertificate(blob: Blob): void {
+      const candidateFullName: string = `${this.candidate.lastName} ${this.candidate.firstName} ${this.candidate.middleName}`
+      const fileName: string = `справка ${candidateFullName} (${this.formatDate(new Date())}).docx`
+      saveAs(blob, fileName)
+    },
+
+    formatDate(birthDate: Date): string {
+      const birthDateDay = birthDate.getDate().toString().padStart(2, '0')
+      const birthDateMonth = (birthDate.getMonth() + 1).toString().padStart(2, '0')
+      return `${birthDateDay}.${birthDateMonth}.${birthDate.getFullYear()}`
+    },
+
+    getCandidateNationalityName(): string {
+      const nationality: Nationality | undefined = this.nationalities.find(
+        (nationality: Nationality): boolean => nationality.code === this.candidate.nationalityCode,
+      )
+      if (!nationality) return ''
+      return getTranslatedName(nationality)
+    },
   },
 })
 </script>
@@ -300,8 +326,8 @@ export default defineComponent({
     </v-btn>
 
     <v-btn variant="elevated" class="mr-3" color="primary" @click="downloadCertificate"
-      >Скачать справку</v-btn
-    >
+      >Скачать справку
+    </v-btn>
   </v-row>
 
   <v-dialog v-model="showApproveDeleteDialog" max-width="500">

@@ -2,12 +2,8 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import type { Translatable } from '@/interfaces/global.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
-
-interface Nationality extends Translatable {
-  code: number
-}
+import type { Nationality } from '@/interfaces/candidate.ts'
 
 export default defineComponent({
   name: `Nationalities`,
@@ -17,18 +13,12 @@ export default defineComponent({
     readonly: Boolean,
   },
 
-  data() {
-    return {
-      nationalities: new Array<Nationality>(),
-    }
-  },
-
   async created() {
     await this.fetchNationalities()
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate']),
+    ...mapWritableState(useCandidateStore, ['candidate', 'nationalities']),
   },
 
   methods: {
