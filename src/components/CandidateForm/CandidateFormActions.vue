@@ -2,7 +2,14 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import type { Education, Nationality } from '@/interfaces/candidate.ts'
+import type {
+  Education,
+  EducationType, Experience,
+  Language,
+  LanguageKnowledge,
+  LanguageLevel,
+  Nationality, RecruitedMethod
+} from '@/interfaces/candidate.ts'
 import hasRole from '@/utils/HasRole.ts'
 import Docxtemplater from 'docxtemplater'
 import { saveAs } from 'file-saver'
@@ -31,14 +38,86 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto', 'nationalities']),
+    ...mapWritableState(useCandidateStore, [
+      'candidate',
+      'candidatePhoto',
+      'nationalities',
+      'educationTypes',
+      'languages',
+      'languageLevels',
+      'recruitedMethods',
+    ]),
+
+    certificateData() {
+      return {
+        lastName: this.candidate.lastName,
+        firstName: this.candidate.firstName,
+        middleName: this.candidate.middleName,
+        birthDate: this.formatDate(this.candidate.birthDate),
+        birthPlace: this.candidate.birthPlace,
+        identificationNumber: this.candidate.identificationNumber,
+        phoneNumber: this.candidate.phoneNumber,
+        nationality: this.candidateNationalityName,
+        education: this.candidateEducation,
+        languages: this.candidateLanguageKnowledge,
+        driverLicenses: this.candidate.driverLicenseCodes.join(', '),
+        sport: this.candidate.sport,
+        additionalData: this.candidate.additionalData,
+        recruitedMethod: this.candidateRecruitedMethodName,
+        securityCheckResult: this.candidate.securityCheckResult,
+        experiences: this.candidateExperiences,
+      }
+    },
+
+    candidateNationalityName(): string {
+      const nationality: Nationality | undefined = this.nationalities.find(
+        (nationality: Nationality): boolean => nationality.code === this.candidate.nationalityCode,
+      )
+      if (!nationality) return ''
+      return getTranslatedName(nationality)
+    },
+
+    candidateEducation() {
+      return this.candidate.education.map((education: Education) => ({
+        ...education,
+        startYear: new Date(education.startDate).getFullYear(),
+        endYear: this.getEducationEndYear(education),
+        type: this.getEducationTypeName(education),
+      }))
+    },
+
+    candidateLanguageKnowledge() {
+      return this.candidate.languageKnowledge.map((knowledge: LanguageKnowledge) => ({
+        language: this.getLanguageName(knowledge),
+        level: this.getLanguageLevelName(knowledge),
+      }))
+    },
+
+    candidateRecruitedMethodName(): string {
+      const recruitedMethod: RecruitedMethod | undefined = this.recruitedMethods.find(
+        (recruitedMethod: RecruitedMethod): boolean => recruitedMethod.id === this.candidate.recruitedMethodId
+      )
+      if (!recruitedMethod) return ''
+      return this.getTranslatedName(recruitedMethod)
+    },
+
+    candidateExperiences() {
+      return this.candidate.experiences.map(
+        (experience: Experience) => ({
+          ...experience,
+          startDate: this.formatDate(experience.startDate),
+          endDate: this.formatDate(experience.endDate)
+        })
+      )
+    },
+
   },
 
   methods: {
     hasRole,
     getTranslatedName,
 
-    async goBack() {
+    async goBack(): Promise<void> {
       await this.$router.push('/candidate/all')
     },
 
@@ -95,7 +174,7 @@ export default defineComponent({
       }
     },
 
-    validatePassword() {
+    validatePassword(): void {
       if (!this.candidate.password) throw 'Пароль обязателен'
     },
 
@@ -128,7 +207,7 @@ export default defineComponent({
       await this.$http.put('/candidate', this.candidate)
     },
 
-    async reject() {
+    async reject(): Promise<void> {
       try {
         this.validate()
         await this.$http.put(`/candidate/reject/${this.candidate.identificationNumber}`)
@@ -139,7 +218,7 @@ export default defineComponent({
       }
     },
 
-    async sendToSecurityCheck() {
+    async sendToSecurityCheck(): Promise<void> {
       try {
         this.validate()
         await this.$http.put('/candidate/to/security', this.candidate)
@@ -150,7 +229,7 @@ export default defineComponent({
       }
     },
 
-    async sendToApproval() {
+    async sendToApproval(): Promise<void> {
       try {
         this.validate()
         await this.$http.put('/candidate/to/approval', this.candidate)
@@ -161,7 +240,7 @@ export default defineComponent({
       }
     },
 
-    async approve() {
+    async approve(): Promise<void> {
       try {
         if (!this.candidate.areaOfActivity) {
           return this.$emit('error', 'Направление деятельности не выбрано')
@@ -212,7 +291,7 @@ export default defineComponent({
         const templateContent = await response.arrayBuffer()
         const zip = new PizZip(templateContent)
         const doc = new Docxtemplater(zip)
-        const data = this.getCertificateData()
+        const data = this.certificateData
         doc.render(data)
         const outputBlob: Blob = doc.getZip().generate({ type: 'blob' })
         this.saveCertificate(outputBlob)
@@ -221,22 +300,33 @@ export default defineComponent({
       }
     },
 
-    getCertificateData() {
-      return {
-        lastName: this.candidate.lastName,
-        firstName: this.candidate.firstName,
-        middleName: this.candidate.middleName,
-        birthDate: this.formatDate(this.candidate.birthDate),
-        birthPlace: this.candidate.birthPlace,
-        identificationNumber: this.candidate.identificationNumber,
-        phoneNumber: this.candidate.phoneNumber,
-        nationality: this.getCandidateNationalityName(),
-        education: this.candidate.education.map((education: Education) => ({
-          ...education,
-          startYear: new Date(education.startDate).getFullYear(),
-          endYear: education.endDate ? new Date(education.endDate).getFullYear() : 'По настоящее время',
-        })),
-      }
+    getEducationTypeName(education: Education): string {
+      const type: EducationType | undefined = this.educationTypes.find(
+        (type: EducationType): boolean => type.id === education.type,
+      )
+      if (!type) return ''
+      return this.getTranslatedName(type)
+    },
+
+    getEducationEndYear(education: Education): string {
+      if (!education.endDate) return 'По настоящее время'
+      return new Date(education.endDate).getFullYear().toString()
+    },
+
+    getLanguageName(knowledge: LanguageKnowledge): string {
+      const lang: Language | undefined = this.languages.find(
+        (language: Language): boolean => language.code === knowledge.languageCode
+      )
+      if (!lang) return ''
+      return this.getTranslatedName(lang)
+    },
+
+    getLanguageLevelName(knowledge: LanguageKnowledge): string {
+      const level: LanguageLevel | undefined = this.languageLevels.find(
+        (level: LanguageLevel): boolean => level.code === knowledge.levelCode
+      )
+      if (!level) return ''
+      return this.getTranslatedName(level)
     },
 
     saveCertificate(blob: Blob): void {
@@ -245,18 +335,11 @@ export default defineComponent({
       saveAs(blob, fileName)
     },
 
-    formatDate(birthDate: Date): string {
-      const birthDateDay = birthDate.getDate().toString().padStart(2, '0')
-      const birthDateMonth = (birthDate.getMonth() + 1).toString().padStart(2, '0')
-      return `${birthDateDay}.${birthDateMonth}.${birthDate.getFullYear()}`
-    },
-
-    getCandidateNationalityName(): string {
-      const nationality: Nationality | undefined = this.nationalities.find(
-        (nationality: Nationality): boolean => nationality.code === this.candidate.nationalityCode,
-      )
-      if (!nationality) return ''
-      return getTranslatedName(nationality)
+    formatDate(date: Date): string {
+      date = new Date(date)
+      const birthDateDay = date.getDate().toString().padStart(2, '0')
+      const birthDateMonth = (date.getMonth() + 1).toString().padStart(2, '0')
+      return `${birthDateDay}.${birthDateMonth}.${date.getFullYear()}`
     },
   },
 })

@@ -31,10 +31,18 @@ export interface Language extends Translatable {
   code: string
 }
 
+export interface LanguageLevel extends Translatable {
+  code: string
+}
+
 export interface LanguageKnowledge {
   index: number
   languageCode: string
   levelCode: string
+}
+
+export interface RecruitedMethod extends Translatable {
+  id: number
 }
 
 export interface Candidate {

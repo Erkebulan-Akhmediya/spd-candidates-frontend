@@ -2,12 +2,8 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import type { Translatable } from '@/interfaces/global.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
-
-interface RecruitedMethod extends Translatable {
-  id: number
-}
+import type { RecruitedMethod } from '@/interfaces/candidate.ts'
 
 export default defineComponent({
   name: 'RecruitedMethods',
@@ -19,7 +15,6 @@ export default defineComponent({
 
   data() {
     return {
-      recruitedMethods: new Array<RecruitedMethod>(),
       selectedMethodId: Number(),
     }
   },
@@ -29,7 +24,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate']),
+    ...mapWritableState(useCandidateStore, ['candidate', 'recruitedMethods']),
   },
 
   methods: {

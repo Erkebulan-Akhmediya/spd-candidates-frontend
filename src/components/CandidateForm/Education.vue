@@ -26,7 +26,6 @@ export default defineComponent({
 
   data() {
     return {
-      educationTypes: new Array<EducationType>(),
       headers: [
         { key: 'startDate', title: 'Дата начала', width: '20%' },
         { key: 'endDate', title: 'Дата окончания', width: '30%' },
@@ -43,7 +42,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate']),
+    ...mapWritableState(useCandidateStore, ['candidate', 'educationTypes']),
 
     nextEducationIndex(): number {
       if (this.candidate.education.length === 0) return 0

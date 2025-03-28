@@ -2,13 +2,8 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import type { Language, LanguageKnowledge } from '@/interfaces/candidate.ts'
-import type { Translatable } from '@/interfaces/global.ts'
+import type { Language, LanguageKnowledge, LanguageLevel } from '@/interfaces/candidate.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
-
-interface LanguageLevel extends Translatable {
-  code: string
-}
 
 export default defineComponent({
   name: 'LanguageKnowledge',
@@ -31,8 +26,6 @@ export default defineComponent({
         { key: 'level', title: 'Уровень', width: '47%' },
         { key: 'deleteButton', title: '', width: '5%' },
       ],
-      languages: new Array<Language>(),
-      levels: new Array<LanguageLevel>(),
     }
   },
 
@@ -55,7 +48,7 @@ export default defineComponent({
 
     async fetchLanguageLevels() {
       try {
-        this.levels = await this.$http.get<LanguageLevel[]>('/language/level/all')
+        this.languageLevels = await this.$http.get<LanguageLevel[]>('/language/level/all')
       } catch (e: unknown) {
         console.log(e)
         this.$emit('error', 'Не удалось вывести справочные данные по уровням владения языков')
@@ -78,7 +71,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, ['candidate']),
+    ...mapWritableState(useCandidateStore, ['candidate', 'languages', 'languageLevels']),
 
     nextLanguageKnowledgeIndex(): number {
       if (this.candidate.languageKnowledge.length === 0) return 0
@@ -132,7 +125,7 @@ export default defineComponent({
         <template v-slot:[`item.level`]="{ item }">
           <v-select
             class="mt-5"
-            :items="levels"
+            :items="languageLevels"
             item-value="code"
             :item-title="getTranslatedName"
             v-model="item.levelCode"
