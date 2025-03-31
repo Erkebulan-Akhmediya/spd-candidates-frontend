@@ -11,6 +11,7 @@ export default {
     tests: 'Тестирование',
     testAssessment: 'Проверка тестов',
     testResults: 'Результаты тестов',
+    essayTopics: 'Темы эссе',
     exit: 'Выход',
   },
   login: {

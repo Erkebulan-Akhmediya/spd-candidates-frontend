@@ -45,6 +45,11 @@ export default defineComponent({
           path: '/test/result/all',
           icon: 'mdi-book-open-variant-outline',
         },
+        {
+          name: 'sideBarItems.essayTopics',
+          path: '/test/constructor/essay',
+          icon: 'mdi-pen-plus',
+        },
       ),
     }
   },

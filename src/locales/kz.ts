@@ -14,6 +14,7 @@ export default {
     tests: 'Тестілеу',
     testAssessment: 'Тесттерді тексеру',
     testResults: 'Тестілеу нәтижелері',
+    essayTopics: 'Эссе тақырыптары',
     exit: 'Шығу',
   },
   login: {

@@ -287,8 +287,8 @@ export default defineComponent({
 
     async downloadCertificate(): Promise<void> {
       try {
-        const response = await fetch('/candidate-certificate.docx')
-        const templateContent = await response.arrayBuffer()
+        const response: Response = await fetch('/candidate-certificate.docx')
+        const templateContent: ArrayBuffer = await response.arrayBuffer()
         const zip = new PizZip(templateContent)
         const doc = new Docxtemplater(zip)
         const data = this.certificateData

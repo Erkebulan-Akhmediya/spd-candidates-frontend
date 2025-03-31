@@ -10,6 +10,10 @@ export default new Array<RouteRecordRaw>(
     component: () => import('@/views/TestsConstructor.vue')
   },
   {
+    path: 'test/constructor/essay',
+    component: () => import('@/views/EssayTopics.vue')
+  },
+  {
     path: 'test/assessment/all',
     component: () => import('@/views/AllTestAssessments.vue')
   },
