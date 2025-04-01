@@ -67,6 +67,7 @@ export default defineComponent({
       try {
         this.loading = true
         this.topics = await this.$http.get<EssayTopic[]>('/test/essay/topic/all')
+        this.error = false
       } catch (e: unknown) {
         console.log(e)
         this.error = true
@@ -78,7 +79,10 @@ export default defineComponent({
     async saveEssayTopics(): Promise<void> {
       try {
         if (this.topicDialogData.variantId) {
-          await this.$http.put(`/test/essay/topic/${this.topicDialogData.variantId}`, this.topicDialogData)
+          await this.$http.put(
+            `/test/essay/topic/${this.topicDialogData.variantId}`,
+            this.topicDialogData,
+          )
         } else {
           await this.$http.post('/test/essay/topic', this.topicDialogData)
         }
@@ -87,6 +91,20 @@ export default defineComponent({
         this.topicDialogData.nameRus = ''
         this.topicDialogData.variantId = null
         await this.fetchEssayTopics()
+        this.error = false
+      } catch (e) {
+        this.error = true
+        console.log(e)
+      }
+    },
+
+    async deleteEssayTopic(variantId: number): Promise<void> {
+      try {
+        await this.$http.delete(`/test/essay/topic/${variantId}`)
+        this.topics = this.topics.filter(
+          (topic: EssayTopic): boolean => topic.variantId !== variantId,
+        )
+        this.error = false
       } catch (e) {
         this.error = true
         console.log(e)
@@ -124,8 +142,11 @@ export default defineComponent({
       <v-col cols="5">
         <v-text-field v-model="topic.nameRus" label="Тема (рус)" variant="outlined" readonly />
       </v-col>
-      <v-col cols="2">
+      <v-col cols="1">
         <v-btn text="Изменить" color="primary" @click="openUpdateDialog(topic)" />
+      </v-col>
+      <v-col cols="1">
+        <v-btn text="Удалить" color="error" @click="deleteEssayTopic(topic.variantId)" />
       </v-col>
     </v-row>
   </v-col>
