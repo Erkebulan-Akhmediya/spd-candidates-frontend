@@ -22,7 +22,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-card :title="getTranslatedName(passingTest.selectedQuestion!)">
+  <v-card>
+    <v-card-title class="title">
+      {{getTranslatedName(passingTest.selectedQuestion!)}}
+    </v-card-title>
     <v-card-text>
       <question-file
         v-if="passingTest.selectedQuestion!.withFile"
@@ -34,4 +37,9 @@ export default defineComponent({
   </v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.title {
+  white-space: normal;
+  word-break: break-word;
+}
+</style>
