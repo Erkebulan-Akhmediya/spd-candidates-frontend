@@ -2,11 +2,9 @@ import { v5 } from 'uuid'
 import type { HttpService } from '@/services/HttpService.ts'
 
 export default class FileService {
-
   private static instance: FileService
 
-  private constructor(private readonly http: HttpService) {
-  }
+  private constructor(private readonly http: HttpService) {}
 
   public static getInstance(http: HttpService): FileService {
     if (!FileService.instance) {
@@ -21,8 +19,8 @@ export default class FileService {
     formData.append('file', file, fileName)
     await this.http.post('/file', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     })
     return fileName
   }
@@ -36,4 +34,9 @@ export default class FileService {
     return `${uuid}.${fileExtension}`
   }
 
+  public async fetchBase64Url(name: string): Promise<string> {
+    return await this.http.get<string>('/file', {
+      params: {name}
+    })
+  }
 }

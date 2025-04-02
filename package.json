@@ -16,6 +16,7 @@
     "@mdi/font": "^7.4.47",
     "axios": "^1.7.9",
     "docxtemplater": "^3.60.2",
+    "docxtemplater-image-module-free": "^1.1.1",
     "file-saver": "^2.0.5",
     "pinia": "^2.3.0",
     "pizzip": "^3.1.8",

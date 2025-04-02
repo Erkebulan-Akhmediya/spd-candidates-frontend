@@ -15,6 +15,7 @@ import Docxtemplater from 'docxtemplater'
 import { saveAs } from 'file-saver'
 import PizZip from 'pizzip'
 import { getTranslatedName } from '@/utils/Translate'
+import ImageModule from 'docxtemplater-image-module-free'
 
 export default defineComponent({
   name: 'CandidateFormActions',
@@ -66,6 +67,7 @@ export default defineComponent({
         recruitedMethod: this.candidateRecruitedMethodName,
         securityCheckResult: this.candidate.securityCheckResult,
         experiences: this.candidateExperiences,
+        image: 'image'
       }
     },
 
@@ -290,9 +292,30 @@ export default defineComponent({
         const response: Response = await fetch('/candidate-certificate.docx')
         const templateContent: ArrayBuffer = await response.arrayBuffer()
         const zip = new PizZip(templateContent)
-        const doc = new Docxtemplater(zip)
-        const data = this.certificateData
-        doc.render(data)
+
+        let base64CandidatePhoto: string | undefined = undefined
+        if (this.candidate.photoFileName) {
+          base64CandidatePhoto = await this.$file.fetchBase64Url(this.candidate.photoFileName)
+        }
+
+        console.log('base64CandidatePhoto', base64CandidatePhoto)
+
+        const imageModule = new ImageModule({
+          centered: false,
+          fileType: 'docx',
+          getImage: (tag: string) => {
+            if (tag === 'image') {
+              return base64CandidatePhoto
+            }
+            return undefined
+          },
+          getSize: () => [150, 200]
+        })
+
+        const doc = new Docxtemplater(zip, {
+          modules: [imageModule],
+        })
+        doc.render(this.certificateData)
         const outputBlob: Blob = doc.getZip().generate({ type: 'blob' })
         this.saveCertificate(outputBlob)
       } catch (e) {
