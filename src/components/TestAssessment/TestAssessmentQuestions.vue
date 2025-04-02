@@ -8,8 +8,26 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'TestAssessmentQuestions',
 
+  props: {
+    url: {
+      type: String,
+      required: true,
+    },
+    small: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   computed: {
     ...mapWritableState(useTestAssessmentStore, ['testSession']),
+    mimeType(): string {
+      return this.url.split(';')[0].split(':')[1]
+    },
+
+    isImage() {
+      return this.mimeType.startsWith('image/')
+    },
   },
 
   methods: {
@@ -20,15 +38,6 @@ export default defineComponent({
         nameRus: answer.questionNameRus,
         nameKaz: answer.questionNameKaz,
       })
-    },
-
-    isImageUrl(url: string): boolean {
-      try {
-        const pathname = new URL(url).pathname
-        return /\.(png|jpe?g|gif|bmp|webp)$/i.test(pathname)
-      } catch (e) {
-        return false
-      }
     },
   },
 })
@@ -44,17 +53,7 @@ export default defineComponent({
         <div v-if="answer.fileUrl">
           <h4>Файл:</h4>
 
-          <div v-if="isImageUrl(answer.fileUrl)">
-            <img
-              :src="answer.fileUrl"
-              alt="Attached Image"
-              style="max-width: 100%; max-height: 400px"
-            />
-          </div>
-
-          <div v-else>
-            <a :href="answer.fileUrl" target="_blank" rel="noopener noreferrer"> Скачать файл </a>
-          </div>
+          <img v-if="isImage" :src="answer.fileUrl" alt="Preview" :width="small ? 300 : 500" />
         </div>
 
         <div v-else>
