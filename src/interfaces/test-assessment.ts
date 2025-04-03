@@ -17,4 +17,5 @@ export interface TestSessionAnswerForAssessment {
   questionNameKaz: string
   answer: string
   assessment: string
+  fileUrl?: string
 }
