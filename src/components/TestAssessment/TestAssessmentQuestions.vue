@@ -9,10 +9,6 @@ export default defineComponent({
   name: 'TestAssessmentQuestions',
 
   props: {
-    url: {
-      type: String,
-      required: true,
-    },
     small: {
       type: Boolean,
       default: false,
@@ -21,13 +17,6 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useTestAssessmentStore, ['testSession']),
-    mimeType(): string {
-      return this.url.split(';')[0].split(':')[1]
-    },
-
-    isImage() {
-      return this.mimeType.startsWith('image/')
-    },
   },
 
   methods: {
@@ -38,6 +27,16 @@ export default defineComponent({
         nameRus: answer.questionNameRus,
         nameKaz: answer.questionNameKaz,
       })
+    },
+    isImage(fileUrl: string | undefined): boolean {
+      if (!fileUrl) return false
+
+      if (fileUrl.startsWith('data:')) {
+        const mime = fileUrl.split(';')[0].split(':')[1]
+        return mime.startsWith('image/')
+      }
+
+      return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(fileUrl)
     },
   },
 })
@@ -53,7 +52,12 @@ export default defineComponent({
         <div v-if="answer.fileUrl">
           <h4>Файл:</h4>
 
-          <img v-if="isImage" :src="answer.fileUrl" alt="Preview" :width="small ? 300 : 500" />
+          <img
+            v-if="isImage(answer.fileUrl)"
+            :src="answer.fileUrl"
+            alt="Preview"
+            :width="small ? 300 : 500"
+          />
         </div>
 
         <div v-else>

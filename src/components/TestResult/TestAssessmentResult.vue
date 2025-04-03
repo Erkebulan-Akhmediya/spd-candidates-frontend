@@ -8,6 +8,13 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'TestAssessmentResult',
 
+  props: {
+    small: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   computed: {
     ...mapWritableState(useTestResultStore, ['testSessionResults']),
   },
@@ -22,13 +29,15 @@ export default defineComponent({
       })
     },
 
-    isImageUrl(url: string): boolean {
-      try {
-        const pathname = new URL(url).pathname
-        return /\.(png|jpe?g|gif|bmp|webp)$/i.test(pathname)
-      } catch (e) {
-        return false
+    isImage(fileUrl: string | undefined): boolean {
+      if (!fileUrl) return false
+
+      if (fileUrl.startsWith('data:')) {
+        const mime = fileUrl.split(';')[0].split(':')[1]
+        return mime.startsWith('image/')
       }
+
+      return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(fileUrl)
     },
   },
 })
@@ -40,22 +49,15 @@ export default defineComponent({
       <v-col cols="12">
         <h4>Вопрос</h4>
         <p class="mb-5">{{ getQuestionName(result) }}</p>
-
-        <!-- File preview -->
         <div v-if="result.fileUrl">
           <h4>Файл:</h4>
 
-          <div v-if="isImageUrl(result.fileUrl)">
-            <img
-              :src="result.fileUrl"
-              alt="Вложенное изображение"
-              style="max-width: 100%; max-height: 400px"
-            />
-          </div>
-
-          <div v-else>
-            <a :href="result.fileUrl" target="_blank" rel="noopener noreferrer"> Скачать файл </a>
-          </div>
+          <img
+            v-if="isImage(result.fileUrl)"
+            :src="result.fileUrl"
+            alt="Preview"
+            :width="small ? 300 : 500"
+          />
         </div>
 
         <!-- Fallback: text answer -->
