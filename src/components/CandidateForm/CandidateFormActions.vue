@@ -4,11 +4,13 @@ import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
 import type {
   Education,
-  EducationType, Experience,
+  EducationType,
+  Experience,
   Language,
   LanguageKnowledge,
   LanguageLevel,
-  Nationality, RecruitedMethod
+  Nationality,
+  RecruitedMethod,
 } from '@/interfaces/candidate.ts'
 import hasRole from '@/utils/HasRole.ts'
 import Docxtemplater from 'docxtemplater'
@@ -67,7 +69,6 @@ export default defineComponent({
         recruitedMethod: this.candidateRecruitedMethodName,
         securityCheckResult: this.candidate.securityCheckResult,
         experiences: this.candidateExperiences,
-        image: 'image'
       }
     },
 
@@ -97,22 +98,20 @@ export default defineComponent({
 
     candidateRecruitedMethodName(): string {
       const recruitedMethod: RecruitedMethod | undefined = this.recruitedMethods.find(
-        (recruitedMethod: RecruitedMethod): boolean => recruitedMethod.id === this.candidate.recruitedMethodId
+        (recruitedMethod: RecruitedMethod): boolean =>
+          recruitedMethod.id === this.candidate.recruitedMethodId,
       )
       if (!recruitedMethod) return ''
       return this.getTranslatedName(recruitedMethod)
     },
 
     candidateExperiences() {
-      return this.candidate.experiences.map(
-        (experience: Experience) => ({
-          ...experience,
-          startDate: this.formatDate(experience.startDate),
-          endDate: this.formatDate(experience.endDate)
-        })
-      )
+      return this.candidate.experiences.map((experience: Experience) => ({
+        ...experience,
+        startDate: this.formatDate(experience.startDate),
+        endDate: this.formatDate(experience.endDate),
+      }))
     },
-
   },
 
   methods: {
@@ -293,29 +292,35 @@ export default defineComponent({
         const templateContent: ArrayBuffer = await response.arrayBuffer()
         const zip = new PizZip(templateContent)
 
-        let base64CandidatePhoto: string | undefined = undefined
+        let base64CandidatePhoto: string = ''
         if (this.candidate.photoFileName) {
           base64CandidatePhoto = await this.$file.fetchBase64Url(this.candidate.photoFileName)
         }
 
-        console.log('base64CandidatePhoto', base64CandidatePhoto)
-
         const imageModule = new ImageModule({
           centered: false,
           fileType: 'docx',
-          getImage: (tag: string) => {
-            if (tag === 'image') {
-              return base64CandidatePhoto
+          getImage: (tagValue: string) => {
+            const base64Regex = /^(?:data:)?image\/(png|jpg|jpeg|svg|svg\+xml);base64,/
+            const stringBase64 = tagValue.replace(base64Regex, '')
+            const binaryString = window.atob(stringBase64)
+            const len = binaryString.length
+            const bytes = new Uint8Array(len)
+            for (let i = 0; i < len; i++) {
+              bytes[i] = binaryString.charCodeAt(i)
             }
-            return undefined
+            return bytes.buffer
           },
-          getSize: () => [150, 200]
+          getSize: () => [150, 200],
         })
 
         const doc = new Docxtemplater(zip, {
           modules: [imageModule],
         })
-        doc.render(this.certificateData)
+        doc.render({
+          ...this.certificateData,
+          image: base64CandidatePhoto,
+        })
         const outputBlob: Blob = doc.getZip().generate({ type: 'blob' })
         this.saveCertificate(outputBlob)
       } catch (e) {
@@ -338,7 +343,7 @@ export default defineComponent({
 
     getLanguageName(knowledge: LanguageKnowledge): string {
       const lang: Language | undefined = this.languages.find(
-        (language: Language): boolean => language.code === knowledge.languageCode
+        (language: Language): boolean => language.code === knowledge.languageCode,
       )
       if (!lang) return ''
       return this.getTranslatedName(lang)
@@ -346,7 +351,7 @@ export default defineComponent({
 
     getLanguageLevelName(knowledge: LanguageKnowledge): string {
       const level: LanguageLevel | undefined = this.languageLevels.find(
-        (level: LanguageLevel): boolean => level.code === knowledge.levelCode
+        (level: LanguageLevel): boolean => level.code === knowledge.levelCode,
       )
       if (!level) return ''
       return this.getTranslatedName(level)
