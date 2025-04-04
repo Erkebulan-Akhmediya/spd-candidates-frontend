@@ -94,7 +94,7 @@ export default defineComponent({
       }))
     },
 
-    imageModule(): ImageModule {
+    imageModule() {
       return new ImageModule({
         centered: false,
         fileType: 'docx',
