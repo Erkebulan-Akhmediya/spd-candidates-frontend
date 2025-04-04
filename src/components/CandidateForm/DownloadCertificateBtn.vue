@@ -17,12 +17,6 @@ import type {
 import { getTranslatedName } from '@/utils/Translate.ts'
 import { saveAs } from 'file-saver'
 
-interface EducationForReference extends Omit<Education, 'type'> {
-  type: string
-  startYear: number
-  endYear: string
-}
-
 export default defineComponent({
   name: 'DownloadCertificateBtn',
 
@@ -66,15 +60,15 @@ export default defineComponent({
       return getTranslatedName(nationality)
     },
 
-    candidateEducation(): EducationForReference[] {
-      return this.candidate.education.map(
-        (education: Education): EducationForReference => ({
-          ...education,
-          startYear: new Date(education.startDate).getFullYear(),
-          endYear: this.getEducationEndYear(education),
-          type: this.getEducationTypeName(education),
-        }),
-      )
+    candidateEducation(): string {
+      return this.candidate.education
+        .filter((education: Education): boolean => !!education.endDate)
+        .map((education: Education): string => {
+          const educationTypeName: string = this.getEducationTypeName(education)
+          const endYear: number = new Date(education.endDate!).getFullYear()
+          return `${educationTypeName}, в ${endYear} году окончил ${education.organization} по специальности ${education.major}`
+        })
+        .join(', ')
     },
 
     candidateLanguageKnowledge(): string {
@@ -96,7 +90,7 @@ export default defineComponent({
       return this.candidate.experiences.map((experience: Experience) => ({
         ...experience,
         startDate: this.formatDate(experience.startDate),
-        endDate: this.formatDate(experience.endDate),
+        endDate: experience.untilNow ? 'по н.в.' : this.formatDate(experience.endDate),
       }))
     },
 
@@ -161,11 +155,6 @@ export default defineComponent({
       )
       if (!type) return ''
       return this.getTranslatedName(type)
-    },
-
-    getEducationEndYear(education: Education): string {
-      if (!education.endDate) return 'По настоящее время'
-      return new Date(education.endDate).getFullYear().toString()
     },
 
     getLanguageName(knowledge: LanguageKnowledge): string {

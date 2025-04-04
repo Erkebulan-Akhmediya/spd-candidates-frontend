@@ -2,11 +2,8 @@
 import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
-import type {
-  Education,
-} from '@/interfaces/candidate.ts'
+import type { Education } from '@/interfaces/candidate.ts'
 import hasRole from '@/utils/HasRole.ts'
-import { getTranslatedName } from '@/utils/Translate'
 import DownloadCertificateBtn from '@/components/CandidateForm/DownloadCertificateBtn.vue'
 
 export default defineComponent({
@@ -32,15 +29,11 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapWritableState(useCandidateStore, [
-      'candidate',
-      'candidatePhoto',
-    ]),
+    ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto']),
   },
 
   methods: {
     hasRole,
-    getTranslatedName,
 
     async goBack(): Promise<void> {
       await this.$router.push('/candidate/all')

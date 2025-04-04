@@ -187,7 +187,7 @@ export default defineComponent({
           </v-col>
           <v-col cols="4">
             <v-text-field
-              label="Отество"
+              label="Отчество"
               variant="outlined"
               v-model="candidate.middleName"
               :disabled="['approval', 'security'].includes(tab)"
