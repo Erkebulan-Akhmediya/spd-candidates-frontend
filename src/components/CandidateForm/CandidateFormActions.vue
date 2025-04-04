@@ -4,23 +4,14 @@ import { mapWritableState } from 'pinia'
 import { useCandidateStore } from '@/stores/candidate.ts'
 import type {
   Education,
-  EducationType,
-  Experience,
-  Language,
-  LanguageKnowledge,
-  LanguageLevel,
-  Nationality,
-  RecruitedMethod,
 } from '@/interfaces/candidate.ts'
 import hasRole from '@/utils/HasRole.ts'
-import Docxtemplater from 'docxtemplater'
-import { saveAs } from 'file-saver'
-import PizZip from 'pizzip'
 import { getTranslatedName } from '@/utils/Translate'
-import ImageModule from 'docxtemplater-image-module-free'
+import DownloadCertificateBtn from '@/components/CandidateForm/DownloadCertificateBtn.vue'
 
 export default defineComponent({
   name: 'CandidateFormActions',
+  components: { DownloadCertificateBtn },
 
   emits: ['error'],
 
@@ -44,74 +35,7 @@ export default defineComponent({
     ...mapWritableState(useCandidateStore, [
       'candidate',
       'candidatePhoto',
-      'nationalities',
-      'educationTypes',
-      'languages',
-      'languageLevels',
-      'recruitedMethods',
     ]),
-
-    certificateData() {
-      return {
-        lastName: this.candidate.lastName,
-        firstName: this.candidate.firstName,
-        middleName: this.candidate.middleName,
-        birthDate: this.formatDate(this.candidate.birthDate),
-        birthPlace: this.candidate.birthPlace,
-        identificationNumber: this.candidate.identificationNumber,
-        phoneNumber: this.candidate.phoneNumber,
-        nationality: this.candidateNationalityName,
-        education: this.candidateEducation,
-        languages: this.candidateLanguageKnowledge,
-        driverLicenses: this.candidate.driverLicenseCodes.join(', '),
-        sport: this.candidate.sport,
-        additionalData: this.candidate.additionalData,
-        recruitedMethod: this.candidateRecruitedMethodName,
-        securityCheckResult: this.candidate.securityCheckResult,
-        experiences: this.candidateExperiences,
-      }
-    },
-
-    candidateNationalityName(): string {
-      const nationality: Nationality | undefined = this.nationalities.find(
-        (nationality: Nationality): boolean => nationality.code === this.candidate.nationalityCode,
-      )
-      if (!nationality) return ''
-      return getTranslatedName(nationality)
-    },
-
-    candidateEducation() {
-      return this.candidate.education.map((education: Education) => ({
-        ...education,
-        startYear: new Date(education.startDate).getFullYear(),
-        endYear: this.getEducationEndYear(education),
-        type: this.getEducationTypeName(education),
-      }))
-    },
-
-    candidateLanguageKnowledge() {
-      return this.candidate.languageKnowledge.map((knowledge: LanguageKnowledge) => ({
-        language: this.getLanguageName(knowledge),
-        level: this.getLanguageLevelName(knowledge),
-      }))
-    },
-
-    candidateRecruitedMethodName(): string {
-      const recruitedMethod: RecruitedMethod | undefined = this.recruitedMethods.find(
-        (recruitedMethod: RecruitedMethod): boolean =>
-          recruitedMethod.id === this.candidate.recruitedMethodId,
-      )
-      if (!recruitedMethod) return ''
-      return this.getTranslatedName(recruitedMethod)
-    },
-
-    candidateExperiences() {
-      return this.candidate.experiences.map((experience: Experience) => ({
-        ...experience,
-        startDate: this.formatDate(experience.startDate),
-        endDate: this.formatDate(experience.endDate),
-      }))
-    },
   },
 
   methods: {
@@ -285,90 +209,6 @@ export default defineComponent({
         console.log('error deleting the candidate', e)
       }
     },
-
-    async downloadCertificate(): Promise<void> {
-      try {
-        const response: Response = await fetch('/candidate-certificate.docx')
-        const templateContent: ArrayBuffer = await response.arrayBuffer()
-        const zip = new PizZip(templateContent)
-
-        let base64CandidatePhoto: string = ''
-        if (this.candidate.photoFileName) {
-          base64CandidatePhoto = await this.$file.fetchBase64Url(this.candidate.photoFileName)
-        }
-
-        const imageModule = new ImageModule({
-          centered: false,
-          fileType: 'docx',
-          getImage: (tagValue: string) => {
-            const base64Regex = /^(?:data:)?image\/(png|jpg|jpeg|svg|svg\+xml);base64,/
-            const stringBase64 = tagValue.replace(base64Regex, '')
-            const binaryString = window.atob(stringBase64)
-            const len = binaryString.length
-            const bytes = new Uint8Array(len)
-            for (let i = 0; i < len; i++) {
-              bytes[i] = binaryString.charCodeAt(i)
-            }
-            return bytes.buffer
-          },
-          getSize: () => [150, 200],
-        })
-
-        const doc = new Docxtemplater(zip, {
-          modules: [imageModule],
-        })
-        doc.render({
-          ...this.certificateData,
-          image: base64CandidatePhoto,
-        })
-        const outputBlob: Blob = doc.getZip().generate({ type: 'blob' })
-        this.saveCertificate(outputBlob)
-      } catch (e) {
-        console.log(e)
-      }
-    },
-
-    getEducationTypeName(education: Education): string {
-      const type: EducationType | undefined = this.educationTypes.find(
-        (type: EducationType): boolean => type.id === education.type,
-      )
-      if (!type) return ''
-      return this.getTranslatedName(type)
-    },
-
-    getEducationEndYear(education: Education): string {
-      if (!education.endDate) return 'По настоящее время'
-      return new Date(education.endDate).getFullYear().toString()
-    },
-
-    getLanguageName(knowledge: LanguageKnowledge): string {
-      const lang: Language | undefined = this.languages.find(
-        (language: Language): boolean => language.code === knowledge.languageCode,
-      )
-      if (!lang) return ''
-      return this.getTranslatedName(lang)
-    },
-
-    getLanguageLevelName(knowledge: LanguageKnowledge): string {
-      const level: LanguageLevel | undefined = this.languageLevels.find(
-        (level: LanguageLevel): boolean => level.code === knowledge.levelCode,
-      )
-      if (!level) return ''
-      return this.getTranslatedName(level)
-    },
-
-    saveCertificate(blob: Blob): void {
-      const candidateFullName: string = `${this.candidate.lastName} ${this.candidate.firstName} ${this.candidate.middleName}`
-      const fileName: string = `справка ${candidateFullName} (${this.formatDate(new Date())}).docx`
-      saveAs(blob, fileName)
-    },
-
-    formatDate(date: Date): string {
-      date = new Date(date)
-      const birthDateDay = date.getDate().toString().padStart(2, '0')
-      const birthDateMonth = (date.getMonth() + 1).toString().padStart(2, '0')
-      return `${birthDateDay}.${birthDateMonth}.${date.getFullYear()}`
-    },
   },
 })
 </script>
@@ -436,9 +276,7 @@ export default defineComponent({
       Согласовать
     </v-btn>
 
-    <v-btn variant="elevated" class="mr-3" color="primary" @click="downloadCertificate"
-      >Скачать справку
-    </v-btn>
+    <download-certificate-btn class="mr-3" />
   </v-row>
 
   <v-dialog v-model="showApproveDeleteDialog" max-width="500">
