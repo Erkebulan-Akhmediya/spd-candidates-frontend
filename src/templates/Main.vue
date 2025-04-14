@@ -1,9 +1,10 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import LocaleChanger from '@/components/LocaleChanger.vue'
-import { mapWritableState } from 'pinia'
-import { useRegionStore } from '@/stores/region.ts'
 import RegionService from '@/services/RegionService.ts'
+import { useRegionStore } from '@/stores/region.ts'
+import hasRole from '@/utils/HasRole'
+import { mapWritableState } from 'pinia'
+import { defineComponent } from 'vue'
 
 interface SideBarItem {
   name: string
@@ -12,7 +13,7 @@ interface SideBarItem {
 }
 
 export default defineComponent({
-  name: `Main template`,
+  name: 'MainTemplate',
   components: { LocaleChanger },
 
   data() {
@@ -38,7 +39,7 @@ export default defineComponent({
         {
           name: 'sideBarItems.testAssessment',
           path: '/test/assessment/all',
-          icon: 'mdi-book-check'
+          icon: 'mdi-book-check',
         },
         {
           name: 'sideBarItems.testResults',
@@ -68,7 +69,7 @@ export default defineComponent({
   },
 
   async created() {
-    await this.fetchAllRegions();
+    await this.fetchAllRegions()
   },
 
   mounted() {
@@ -78,15 +79,24 @@ export default defineComponent({
 
   methods: {
     filterSideBarItems(): void {
-      const rolesItem: string | null = sessionStorage.getItem('roles');
-      if (rolesItem == null) return;
+      const rolesItem: string | null = sessionStorage.getItem('roles')
+      if (rolesItem === null) return
 
       const roles: string[] = JSON.parse(rolesItem)
-      if (!roles.includes('candidate')) return
 
-      this.sideBarItems = this.sideBarItems.filter(
-        (item: SideBarItem): boolean => item.path === '/test/all'
-      )
+      if (roles.includes('candidate')) {
+        this.sideBarItems = this.sideBarItems.filter(
+          (item: SideBarItem): boolean => item.path === '/test/all',
+        )
+        return
+      }
+
+      if (!hasRole('admin')) {
+        this.sideBarItems = this.sideBarItems.filter(
+          (item: SideBarItem): boolean =>
+            item.path !== '/test/assessment/all' && item.path !== '/test/result/all',
+        )
+      }
     },
 
     setSelectedSideBarItem(): void {
