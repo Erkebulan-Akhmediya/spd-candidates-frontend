@@ -1,10 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import Docxtemplater from 'docxtemplater'
-import PizZip from 'pizzip'
-import ImageModule from 'docxtemplater-image-module-free'
-import { mapWritableState } from 'pinia'
-import { useCandidateStore } from '@/stores/candidate.ts'
 import type {
   Education,
   EducationType,
@@ -14,8 +8,14 @@ import type {
   Nationality,
   RecruitedMethod,
 } from '@/interfaces/candidate.ts'
+import { useCandidateStore } from '@/stores/candidate.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
+import Docxtemplater from 'docxtemplater'
+import ImageModule from 'docxtemplater-image-module-free'
 import { saveAs } from 'file-saver'
+import { mapWritableState } from 'pinia'
+import PizZip from 'pizzip'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'DownloadCertificateBtn',
@@ -73,7 +73,15 @@ export default defineComponent({
 
     candidateLanguageKnowledge(): string {
       return this.candidate.languageKnowledge
-        .map((knowledge: LanguageKnowledge): string => this.getLanguageName(knowledge))
+        .map((knowledge: LanguageKnowledge): string => {
+          const language = this.languages.find((l) => l.code === knowledge.languageCode)
+          const level = this.languageLevels.find((l) => l.code === knowledge.levelCode)
+
+          const languageName = language ? this.getTranslatedName(language) : knowledge.languageCode
+          const levelName = level ? this.getTranslatedName(level) : knowledge.levelCode
+
+          return `${languageName} (${levelName})`
+        })
         .join(', ')
     },
 
