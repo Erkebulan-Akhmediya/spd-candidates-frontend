@@ -94,7 +94,9 @@ export default defineComponent({
       if (!hasRole('admin')) {
         this.sideBarItems = this.sideBarItems.filter(
           (item: SideBarItem): boolean =>
-            item.path !== '/test/assessment/all' && item.path !== '/test/result/all',
+            item.path !== '/test/assessment/all' &&
+            item.path !== '/test/result/all' &&
+            item.path !== '/test/constructor/essay',
         )
       }
     },

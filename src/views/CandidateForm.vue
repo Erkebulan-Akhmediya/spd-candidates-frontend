@@ -1,18 +1,18 @@
 <script lang="ts">
+import AreaOfActivity from '@/components/CandidateForm/AreaOfActivity.vue'
+import CandidateFormActions from '@/components/CandidateForm/CandidateFormActions.vue'
+import DriverLicenses from '@/components/CandidateForm/DriverLicenses.vue'
+import Education from '@/components/CandidateForm/Education.vue'
+import Experience from '@/components/CandidateForm/Experience.vue'
+import LanguageKnowledge from '@/components/CandidateForm/LanguageKnowledge.vue'
+import Nationalities from '@/components/CandidateForm/Nationalities.vue'
+import RecruitedMethods from '@/components/CandidateForm/RecruitedMethods.vue'
+import TestingRegion from '@/components/CandidateForm/TestingRegion.vue'
+import type { Candidate } from '@/interfaces/candidate.ts'
+import { useCandidateStore } from '@/stores/candidate.ts'
+import { mapWritableState } from 'pinia'
 import { defineComponent } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
-import Nationalities from '@/components/CandidateForm/Nationalities.vue'
-import DriverLicenses from '@/components/CandidateForm/DriverLicenses.vue'
-import RecruitedMethods from '@/components/CandidateForm/RecruitedMethods.vue'
-import Experience from '@/components/CandidateForm/Experience.vue'
-import { mapWritableState } from 'pinia'
-import { useCandidateStore } from '@/stores/candidate.ts'
-import TestingRegion from '@/components/CandidateForm/TestingRegion.vue'
-import CandidateFormActions from '@/components/CandidateForm/CandidateFormActions.vue'
-import AreaOfActivity from '@/components/CandidateForm/AreaOfActivity.vue'
-import type { Candidate } from '@/interfaces/candidate.ts'
-import Education from '@/components/CandidateForm/Education.vue'
-import LanguageKnowledge from '@/components/CandidateForm/LanguageKnowledge.vue'
 
 export default defineComponent({
   name: 'CandidateForm',
@@ -161,7 +161,7 @@ export default defineComponent({
               label="Фото"
               variant="outlined"
               v-model="candidatePhoto"
-              :disabled="['new', 'approval', 'security', 'approved', 'rejected'].includes(tab)"
+              :disabled="['approval', 'security', 'approved', 'rejected'].includes(tab)"
             />
           </v-col>
         </v-row>
