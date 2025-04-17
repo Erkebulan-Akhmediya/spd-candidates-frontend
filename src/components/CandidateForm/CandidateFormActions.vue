@@ -1,10 +1,10 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { mapWritableState } from 'pinia'
-import { useCandidateStore } from '@/stores/candidate.ts'
-import type { Education } from '@/interfaces/candidate.ts'
-import hasRole from '@/utils/HasRole.ts'
 import DownloadCertificateBtn from '@/components/CandidateForm/DownloadCertificateBtn.vue'
+import type { Education } from '@/interfaces/candidate.ts'
+import { useCandidateStore } from '@/stores/candidate.ts'
+import hasRole from '@/utils/HasRole.ts'
+import { mapWritableState } from 'pinia'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'CandidateFormActions',
@@ -64,15 +64,17 @@ export default defineComponent({
     },
 
     validateExperiences(): void {
-      if (
-        this.candidate.experiences.some(
-          (experience) =>
-            !experience.startDate ||
-            (!experience.untilNow && !experience.endDate) ||
-            !experience.companyName ||
-            !experience.position,
-        )
-      ) {
+      if (this.tab === 'create' || this.candidate.experiences.length === 0) return
+
+      const hasInvalid = this.candidate.experiences.some(
+        (experience) =>
+          !experience.startDate ||
+          (!experience.untilNow && !experience.endDate) ||
+          !experience.companyName ||
+          !experience.position,
+      )
+
+      if (hasInvalid) {
         throw 'Имеются не заполненные поля в опыте работы'
       }
     },
