@@ -64,7 +64,7 @@ export default defineComponent({
     },
 
     validateExperiences(): void {
-      if (this.tab === 'create' || this.candidate.experiences.length === 0) return
+      if (this.candidate.experiences.length === 0) return
 
       const hasInvalid = this.candidate.experiences.some(
         (experience) =>
