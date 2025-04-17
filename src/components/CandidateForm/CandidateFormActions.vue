@@ -124,7 +124,11 @@ export default defineComponent({
     },
 
     async updateCandidate(): Promise<void> {
+      if (this.candidatePhoto !== null) {
+        this.candidate.photoFileName = await this.$file.upload(this.candidatePhoto)
+      }
       await this.$http.put('/candidate', this.candidate)
+      this.candidatePhoto = null
     },
 
     async reject(): Promise<void> {
