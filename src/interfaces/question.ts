@@ -8,11 +8,15 @@ export interface Question extends Translatable {
 export interface QuestionToCreate extends Question {
   file: File | null
   options: OptionToCreate[]
+  isDisappearing: boolean
+  timeToDisappear: number
 }
 
 export interface QuestionToSend extends Question {
   fileName: string | null
   options: OptionToSend[]
+  isDisappearing: boolean
+  timeToDisappear: number
 }
 
 export interface PassingQuestion extends Question {

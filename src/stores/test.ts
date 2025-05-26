@@ -36,6 +36,8 @@ export const useTestStore = defineStore('test', {
             file: null,
             nameRus: '',
             nameKaz: '',
+            isDisappearing: false,
+            timeToDisappear: 1,
             options: new Array<OptionToCreate>({
               withFile: false,
               file: null,
