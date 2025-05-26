@@ -93,7 +93,7 @@ export default defineComponent({
             label="Видимость"
             variant="outlined"
             type="number"
-            suffix="мин"
+            suffix="сек"
             :rules="[(n) => n > 0 || 'Значение не может быть ниже 1']"
           />
         </v-col>

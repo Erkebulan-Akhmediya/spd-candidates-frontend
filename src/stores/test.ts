@@ -60,6 +60,7 @@ export const useTestStore = defineStore('test', {
         TestType.withMcqHavingOneCorrect,
         TestType.withMcqHavingMultipleCorrect
       ],
+      answerAllowed: true,
     }
   },
 })

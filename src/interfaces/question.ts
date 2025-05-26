@@ -23,6 +23,8 @@ export interface PassingQuestion extends Question {
   id: number
   answer: Answer | null
   fileUrl: string | null
+  isDisappearing: boolean
+  timeToDisappear: number
   options: PassingOption[]
 }
 
