@@ -18,3 +18,16 @@ export interface OptionIncrement {
   scaleIndex: number
   score: number
 }
+
+export interface ConditionalSectioningVar {
+  name: string
+  type: ConditionalSectioningVarType
+  reference: string[]
+}
+
+export enum ConditionalSectioningVarType {
+  number = 0,
+  string = 1,
+  boolean = 2,
+  reference = 3,
+}

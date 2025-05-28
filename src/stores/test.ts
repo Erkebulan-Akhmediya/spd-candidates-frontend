@@ -3,7 +3,7 @@ import { type PassingTest, type TestToCreate, TestType, type TestTypeApi } from 
 import type { VariantToCreate } from '@/interfaces/variant.ts'
 import { type QuestionToCreate} from '@/interfaces/question.ts'
 import type { OptionToCreate } from '@/interfaces/option.ts'
-import type { Scale, ScaleSection } from '@/interfaces/test-evaluation.ts'
+import type { ConditionalSectioningVar, Scale, ScaleSection } from '@/interfaces/test-evaluation.ts'
 
 export const useTestStore = defineStore('test', {
   state() {
@@ -18,6 +18,8 @@ export const useTestStore = defineStore('test', {
         areasOfActivities: new Array<string>(),
         type: TestType.withMcqHavingNoCorrect,
         maxPointsPerQuestion: 3,
+        conditionallySectioned: false,
+        conditionalVars: new Array<ConditionalSectioningVar>(),
         scales: new Array<Scale>({
           index: 1,
           nameRus: 'Шкала по умолчанию',

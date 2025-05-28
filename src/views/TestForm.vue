@@ -10,10 +10,17 @@ import TestValidatorService from '@/services/TestValidatorService.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import OptionsPerQuestion from '@/components/TestForm/OptionsPerQuestion.vue'
 import Scales from '@/components/TestForm/Scales.vue'
+import ConditionalVars from '@/components/TestForm/ConditionalVars.vue'
 
 export default defineComponent({
   name: 'TestForm',
-  components: { Scales, OptionsPerQuestion, TestAreaOfActivity, VariantConstructorList },
+  components: {
+    ConditionalVars,
+    Scales,
+    OptionsPerQuestion,
+    TestAreaOfActivity,
+    VariantConstructorList,
+  },
 
   computed: {
     ...mapWritableState(useTestStore, ['test', 'testTypes']),
@@ -161,14 +168,22 @@ export default defineComponent({
         <v-col cols="3">
           <options-per-question />
         </v-col>
-        <v-col cols="3">
+        <v-col cols="3" v-if="test.type === TestType.pointDistribution.valueOf()">
           <v-text-field
-            v-if="test.type === TestType.pointDistribution.valueOf()"
             label="Макс кл-во баллов"
             variant="outlined"
             type="number"
             v-model="test.maxPointsPerQuestion"
           />
+        </v-col>
+        <v-col cols="3" v-else-if="test.type === TestType.withMcqHavingNoCorrect">
+          <v-checkbox label="Усолвные секции" v-model="test.conditionallySectioned" />
+        </v-col>
+      </v-row>
+
+      <v-row v-if="test.conditionallySectioned">
+        <v-col cols="12">
+          <conditional-vars />
         </v-col>
       </v-row>
 
