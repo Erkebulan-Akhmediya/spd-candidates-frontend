@@ -94,6 +94,15 @@ export default defineComponent({
       if (!hasRole('admin')) {
         this.sideBarItems = this.sideBarItems.filter(
           (item: SideBarItem): boolean =>
+            item.path !== '/candidate/all' &&
+            item.path !== '/test/constructor/all' &&
+            item.path !== '/test/all' &&
+            item.path !== '/test/constructor/essay',
+        )
+      }
+      if (!hasRole('psycho')) {
+        this.sideBarItems = this.sideBarItems.filter(
+          (item: SideBarItem): boolean =>
             item.path !== '/test/assessment/all' &&
             item.path !== '/test/result/all' &&
             item.path !== '/test/constructor/essay',
