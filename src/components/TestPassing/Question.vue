@@ -11,24 +11,87 @@ export default defineComponent({
   name: `Question`,
   components: { QuestionChanger, Answer, QuestionFile },
 
+  data() {
+    return {
+      interval: setInterval(() => {}) as NodeJS.Timeout,
+    }
+  },
+
   computed: {
-    ...mapWritableState(useTestStore, ['passingTest']),
+    ...mapWritableState(useTestStore, ['passingTest', 'answerAllowed']),
+
+    isShowQuestionFileVisible(): boolean {
+      return (
+        this.questionHasFile &&
+        (this.questionIsNotDisappearing || this.questionIsDisappearingButHasTime)
+      )
+    },
+
+    isQuestionTitleVisible(): boolean {
+      return this.questionIsNotDisappearing || this.questionIsDisappearingButHasTime
+    },
+
+    questionHasFile(): boolean {
+      return this.passingTest.selectedQuestion!.withFile
+    },
+
+    questionIsNotDisappearing(): boolean {
+      return !this.passingTest.selectedQuestion!.isDisappearing
+    },
+
+    questionIsDisappearingButHasTime(): boolean {
+      return (
+        this.passingTest.selectedQuestion!.isDisappearing &&
+        this.passingTest.selectedQuestion!.timeToDisappear > 0
+      )
+    },
+  },
+
+  created() {
+    this.startCountDown()
   },
 
   methods: {
     getTranslatedName,
+
+    startCountDown() {
+      clearInterval(this.interval)
+      if (
+        this.passingTest.selectedQuestion == null ||
+        !this.passingTest.selectedQuestion.isDisappearing ||
+        this.passingTest.selectedQuestion.timeToDisappear <= 0
+      ) {
+        this.answerAllowed = true
+        return
+      }
+
+      this.answerAllowed = false
+      this.interval = setInterval(() => {
+        this.passingTest.selectedQuestion!.timeToDisappear--
+        if (this.passingTest.selectedQuestion!.timeToDisappear <= 0) {
+          this.answerAllowed = true
+          clearInterval(this.interval)
+        }
+      }, 1000)
+    },
+  },
+
+  watch: {
+    'passingTest.selectedQuestion'() {
+      this.startCountDown()
+    },
   },
 })
 </script>
 
 <template>
   <v-card>
-    <v-card-title class="title">
-      {{getTranslatedName(passingTest.selectedQuestion!)}}
+    <v-card-title v-if="isQuestionTitleVisible" class="title">
+      {{ getTranslatedName(passingTest.selectedQuestion!) }}
     </v-card-title>
     <v-card-text>
       <question-file
-        v-if="passingTest.selectedQuestion!.withFile"
+        v-if="isShowQuestionFileVisible"
         :url="passingTest.selectedQuestion!.fileUrl!"
       />
       <answer />

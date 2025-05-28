@@ -14,17 +14,28 @@ export default defineComponent({
   components: { File, Open, PointDistribution, Options },
 
   computed: {
-    ...mapWritableState(useTestStore, ['passingTest']),
+    ...mapWritableState(useTestStore, ['passingTest', 'answerAllowed']),
     TestType: () => TestType,
     isMcq(): boolean {
       const mcqTypes: number[] = [
         TestType.withMcqHavingNoCorrect,
         TestType.withMcqHavingOneCorrect,
-        TestType.withMcqHavingMultipleCorrect
+        TestType.withMcqHavingMultipleCorrect,
       ]
       return mcqTypes.includes(this.passingTest.testTypeId)
-    }
+    },
+    remainingTime(): string {
+      if (this.passingTest.selectedQuestion == null) return ''
+
+      const minutes = Math.floor(this.passingTest.selectedQuestion.timeToDisappear / 60)
+        .toString()
+        .padStart(2, '0')
+      const seconds = String(this.passingTest.selectedQuestion.timeToDisappear % 60).padStart(2, '0')
+      return `${minutes}:${seconds}`
+    },
   },
+
+
 
   methods: {
     updateQuestionAnswer(answer: Answer | null): void {
@@ -34,28 +45,29 @@ export default defineComponent({
       })
     },
   },
+
 })
 </script>
 
 <template>
-  <open
-    v-if="passingTest.testTypeId === TestType.withOpenQuestions"
-    variant="outlined"
-    label="Ответ"
-    @answered="updateQuestionAnswer"
-  />
-  <point-distribution
-    v-else-if="passingTest.testTypeId === TestType.pointDistribution"
-    @answered="updateQuestionAnswer"
-  />
-  <file
-    v-else-if="passingTest.testTypeId === TestType.fileAnswer"
-    @answered="updateQuestionAnswer"
-  />
-  <options
-    v-else-if="isMcq"
-    @answered="updateQuestionAnswer"
-  />
+  <div v-if="answerAllowed">
+    <open
+      v-if="passingTest.testTypeId === TestType.withOpenQuestions"
+      variant="outlined"
+      label="Ответ"
+      @answered="updateQuestionAnswer"
+    />
+    <point-distribution
+      v-else-if="passingTest.testTypeId === TestType.pointDistribution"
+      @answered="updateQuestionAnswer"
+    />
+    <file
+      v-else-if="passingTest.testTypeId === TestType.fileAnswer"
+      @answered="updateQuestionAnswer"
+    />
+    <options v-else-if="isMcq" @answered="updateQuestionAnswer" />
+  </div>
+  <h1 v-else>Поле ответа откроется через: {{ remainingTime }}</h1>
 </template>
 
 <style scoped></style>

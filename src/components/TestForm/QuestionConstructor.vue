@@ -26,15 +26,14 @@ export default defineComponent({
     ...mapWritableState(useTestStore, ['test', 'optionsPerQuestion']),
 
     withOptions(): boolean {
-      const mcqTypes: number [] = [
+      const mcqTypes: number[] = [
         TestType.withMcqHavingNoCorrect,
         TestType.withMcqHavingOneCorrect,
         TestType.withMcqHavingMultipleCorrect,
-        TestType.pointDistribution
-      ];
+        TestType.pointDistribution,
+      ]
       return mcqTypes.includes(this.test.type)
     },
-
   },
 
   methods: {
@@ -79,6 +78,23 @@ export default defineComponent({
             variant="outlined"
             show-size
             v-model="test.variants[variantIndex].questions[questionIndex].file"
+          />
+        </v-col>
+        <v-col cols="2">
+          <v-checkbox
+            label="Исчезающий?"
+            v-model="test.variants[variantIndex].questions[questionIndex].isDisappearing"
+          />
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            v-if="test.variants[variantIndex].questions[questionIndex].isDisappearing"
+            v-model="test.variants[variantIndex].questions[questionIndex].timeToDisappear"
+            label="Видимость"
+            variant="outlined"
+            type="number"
+            suffix="сек"
+            :rules="[(n) => n > 0 || 'Значение не может быть ниже 1']"
           />
         </v-col>
         <v-col cols="2" v-if="test.variants[variantIndex].questions.length > 1">
