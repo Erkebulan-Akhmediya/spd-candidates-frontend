@@ -30,6 +30,7 @@ export const useTestStore = defineStore('test', {
             lowerBound: 0,
             descriptionRus: '',
             descriptionKaz: '',
+            conditions: []
           }),
         }),
         variants: new Array<VariantToCreate>({

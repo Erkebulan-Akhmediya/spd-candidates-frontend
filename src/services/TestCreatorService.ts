@@ -31,6 +31,7 @@ export default class TestCreatorService {
       upperBound: 0,
       descriptionKaz: '',
       descriptionRus: '',
+      conditions: []
     }
   }
 
@@ -41,6 +42,8 @@ export default class TestCreatorService {
       nameRus: '',
       nameKaz: '',
       options: this.newOptionList(optionsPerQuestion),
+      isDisappearing: false,
+      timeToDisappear: 1
     }
   }
 

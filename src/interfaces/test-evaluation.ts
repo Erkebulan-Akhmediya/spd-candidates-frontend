@@ -11,12 +11,13 @@ export interface ScaleSection {
   lowerBound: number
   descriptionRus: string
   descriptionKaz: string
+  conditions: Condition[]
 }
 
-export interface OptionIncrement {
-  index: number
-  scaleIndex: number
-  score: number
+export interface Condition {
+  varName: string
+  operator: number
+  value: string[]
 }
 
 export interface ConditionalSectioningVar {
@@ -30,4 +31,10 @@ export enum ConditionalSectioningVarType {
   string = 1,
   boolean = 2,
   reference = 3,
+}
+
+export interface OptionIncrement {
+  index: number
+  scaleIndex: number
+  score: number
 }

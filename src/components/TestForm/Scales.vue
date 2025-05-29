@@ -48,6 +48,7 @@ export default defineComponent({
           lowerBound: 0,
           descriptionRus: '',
           descriptionKaz: '',
+          conditions: []
         }),
       }]
     }
