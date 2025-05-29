@@ -2,7 +2,7 @@ import type { OptionToCreate } from '@/interfaces/option.ts'
 import { type QuestionToCreate } from '@/interfaces/question.ts'
 import { type TestToCreate, TestType } from '@/interfaces/test.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
-import type { Scale } from '@/interfaces/test-evaluation.ts'
+import type { ConditionalSectioningVar, Scale } from '@/interfaces/test-evaluation.ts'
 
 export default class TestValidatorService {
   private static instance: TestValidatorService
@@ -70,6 +70,25 @@ export default class TestValidatorService {
     if (!this.test.isLimitless && !this.test.duration) this.emptyFields.push('длительность')
     if (this.test.areasOfActivities.length === 0) {
       this.emptyFields.push('направления деятельности')
+    }
+    if (this.test.conditionallySectioned) {
+      this.validateConditionalSectioningVars()
+    }
+  }
+
+  private validateConditionalSectioningVars(): void {
+    if (this.test === null) throw 'Test is required for validation'
+
+    const seen: Set<string> = new Set()
+    const names: string[] = this.test.conditionalVars.map(
+      (condVar: ConditionalSectioningVar): string => condVar.name
+    )
+    for (const name of names) {
+      if (seen.has(name)) {
+        this.errors.push('Названия переменных должны быть уникальными')
+        return
+      }
+      seen.add(name)
     }
   }
 
@@ -190,5 +209,4 @@ export default class TestValidatorService {
   private getOptionByIndex(): OptionToCreate {
     return this.getQuestionByIndex().options[this.optionIndex]
   }
-
 }

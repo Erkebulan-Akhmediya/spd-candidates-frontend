@@ -16,7 +16,7 @@ export interface ScaleSection {
 
 export interface Condition {
   varName: string
-  operator: number
+  operator: string
   value: string[]
 }
 
