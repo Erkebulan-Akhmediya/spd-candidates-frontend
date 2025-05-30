@@ -5,11 +5,17 @@ import { useTestStore } from '@/stores/test.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
 import type { GetAllTestsResponse, TestListItem } from '@/interfaces/test.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
+import type {
+  ConditionalSectioningVar,
+  ConditionalSectioningVarValue,
+} from '@/interfaces/test-evaluation.ts'
 
 interface CreateTestSessionResponse {
-  questionIds: number[],
-  testSessionId: number,
-  testTypeId: number,
+  questionIds: number[]
+  testSessionId: number
+  testTypeId: number
+  conditionallySectioned: boolean
+  conditionalVars: ConditionalSectioningVar[]
 }
 
 export default defineComponent({
@@ -53,13 +59,16 @@ export default defineComponent({
       )
       this.passingTest = {
         ...test,
-        id: test.id,
-        questionIds: data.questionIds,
+        ...data,
         questions: new Map<number, PassingQuestion>(),
-        testSessionId: data.testSessionId,
         selectedQuestionIndex: 0,
         selectedQuestion: null,
-        testTypeId: data.testTypeId,
+        conditionalVarValues: data.conditionalVars.map(
+          (condVar: ConditionalSectioningVar): ConditionalSectioningVarValue => ({
+            varName: condVar.name,
+            value: [],
+          }),
+        ),
       }
       await this.$router.push({ path: `/test/${test.id}` })
     },

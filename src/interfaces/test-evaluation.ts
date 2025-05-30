@@ -26,6 +26,8 @@ export interface ConditionalSectioningVar {
   reference: string[]
 }
 
+export type ConditionalSectioningVarValue = Omit<Condition, 'operator'>
+
 export enum ConditionalSectioningVarType {
   number = 0,
   string = 1,
