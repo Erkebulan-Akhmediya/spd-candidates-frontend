@@ -51,7 +51,7 @@ export default defineComponent({
     addCondition(): void {
       this.test.scales[this.scaleIndex - 1].sections[this.sectionIndex - 1].conditions.push({
         varName: '',
-        operator: 0,
+        operator: '',
         value: [],
       })
     },
@@ -141,11 +141,13 @@ export default defineComponent({
             <v-col cols="4">
               <v-text-field
                 v-if="getCondVarType(condition.varName) !== ConditionalSectioningVarType.reference"
+                v-model="condition.value[0]"
                 variant="outlined"
                 label="Значение"
               />
               <v-select
                 v-else
+                v-model="condition.value"
                 variant="outlined"
                 :items="getCondVarReference(condition.varName)"
                 multiple

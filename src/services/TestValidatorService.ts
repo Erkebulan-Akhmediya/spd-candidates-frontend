@@ -2,7 +2,12 @@ import type { OptionToCreate } from '@/interfaces/option.ts'
 import { type QuestionToCreate } from '@/interfaces/question.ts'
 import { type TestToCreate, TestType } from '@/interfaces/test.ts'
 import type { VariantToCreate } from '@/interfaces/variant.ts'
-import type { ConditionalSectioningVar, Scale } from '@/interfaces/test-evaluation.ts'
+import type {
+  Condition,
+  ConditionalSectioningVar,
+  Scale,
+  ScaleSection,
+} from '@/interfaces/test-evaluation.ts'
 
 export default class TestValidatorService {
   private static instance: TestValidatorService
@@ -11,6 +16,8 @@ export default class TestValidatorService {
   private errors: string[]
   private test: TestToCreate | null
   private scaleIndex: number
+  private sectionIndex: number
+  private conditionIndex: number
   private variantIndex: number
   private questionIndex: number
   private optionIndex: number
@@ -20,6 +27,8 @@ export default class TestValidatorService {
     this.errors = []
     this.test = null
     this.scaleIndex = 0
+    this.sectionIndex = 0
+    this.conditionIndex = 0
     this.variantIndex = 0
     this.questionIndex = 0
     this.optionIndex = 0
@@ -81,7 +90,7 @@ export default class TestValidatorService {
 
     const seen: Set<string> = new Set()
     const names: string[] = this.test.conditionalVars.map(
-      (condVar: ConditionalSectioningVar): string => condVar.name
+      (condVar: ConditionalSectioningVar): string => condVar.name,
     )
     for (const name of names) {
       if (seen.has(name)) {
@@ -98,6 +107,53 @@ export default class TestValidatorService {
     const scale: Scale = this.test.scales[this.scaleIndex]
     if (!scale.nameKaz) this.emptyFields.push(`название (каз) в шкале ${scale.index}`)
     if (!scale.nameRus) this.emptyFields.push(`название (рус) в шкале ${scale.index}`)
+
+    scale.sections.forEach((_, sectionIndex: number): void => {
+      this.sectionIndex = sectionIndex
+      this.validateSection()
+    })
+  }
+
+  private validateSection(): void {
+    if (this.test === null) throw 'Test is required for validation'
+
+    const section: ScaleSection = this.test.scales[this.scaleIndex].sections[this.sectionIndex]
+    section.conditions.forEach((_, conditionIndex: number): void => {
+      this.conditionIndex = conditionIndex
+      if (this.test!.conditionallySectioned) {
+        this.validateCondition()
+      }
+    })
+  }
+
+  private validateCondition(): void {
+    if (this.test === null) throw 'Test is required for validation'
+
+    const condition: Condition =
+      this.test.scales[this.scaleIndex].sections[this.sectionIndex].conditions[this.conditionIndex]
+    const where :string = `в условии ${this.conditionIndex + 1} в секции ${this.sectionIndex + 1} в шкале ${this.scaleIndex + 1}`
+
+    const validOperators: string[] = [
+      'equals',
+      'not equals',
+      'greater',
+      'greater or equal',
+      'less',
+      'less or equal',
+      'in',
+      'not in',
+    ]
+    if (!validOperators.includes(condition.operator)) {
+      this.errors.push(
+        `не верное значние оператора ${where}`,
+      )
+    }
+    if (condition.varName === '') {
+      this.emptyFields.push(`переменная ${where} обязательна`)
+    }
+    if (condition.value.length == 0) {
+      this.emptyFields.push(`значение переменной ${where} обязательно`)
+    }
   }
 
   private validateVariant(): void {
