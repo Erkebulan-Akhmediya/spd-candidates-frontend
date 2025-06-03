@@ -3,9 +3,11 @@ import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import type { ScaleSection } from '@/interfaces/test-evaluation.ts'
+import SectionConditions from '@/components/TestForm/Scales/SectionConditions.vue'
 
 export default defineComponent({
   name: 'ScaleSectionPanel',
+  components: { SectionConditions },
   props: {
     scaleIndex: {
       type: Number,
@@ -78,6 +80,11 @@ export default defineComponent({
               rows="7"
               v-model="test.scales[scaleIndex-1].sections[sectionIndex-1].descriptionRus"
             />
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col cols="12">
+            <section-conditions :scale-index="scaleIndex" :section-index="sectionIndex" />
           </v-col>
         </v-row>
       </v-col>

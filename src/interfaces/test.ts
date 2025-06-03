@@ -1,7 +1,7 @@
 import type { Translatable } from '@/interfaces/global.ts'
 import type { VariantToCreate, VariantToSend } from '@/interfaces/variant.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
-import type { Scale } from '@/interfaces/test-evaluation.ts'
+import type { ConditionalSectioningVar, ConditionalSectioningVarValue, Scale } from '@/interfaces/test-evaluation.ts'
 
 export interface Test extends Translatable {
   isLimitless: boolean
@@ -15,6 +15,8 @@ interface TestToCreateOrSend extends Test {
   type: TestType.withMcqHavingNoCorrect
   maxPointsPerQuestion: number
   scales: Scale[]
+  conditionallySectioned: boolean
+  conditionalVars: ConditionalSectioningVar[]
 }
 
 export interface TestToCreate extends TestToCreateOrSend {
@@ -33,6 +35,9 @@ export interface PassingTest extends Test {
   testSessionId: number
   selectedQuestion: PassingQuestion | null
   testTypeId: number
+  conditionallySectioned: boolean
+  conditionalVars: ConditionalSectioningVar[]
+  conditionalVarValues: ConditionalSectioningVarValue[]
 }
 
 export interface TestListItem extends Test {

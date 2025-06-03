@@ -5,6 +5,7 @@ import type { Answer, PassingQuestion } from '@/interfaces/question.ts'
 import { useTestStore } from '@/stores/test.ts'
 import { mapWritableState } from 'pinia'
 import { defineComponent } from 'vue'
+import { ConditionalSectioningVarType } from '@/interfaces/test-evaluation.ts'
 
 interface AnswerDto {
   questionId: number
@@ -20,11 +21,14 @@ export default defineComponent({
       toShowEndTestConfirm: false,
       remainingTime: 0,
       timerInterval: null as number | null,
+      conditionalVarsDialog: false,
     }
   },
 
   computed: {
     ...mapWritableState(useTestStore, ['passingTest']),
+
+    ConditionalSectioningVarType: () => ConditionalSectioningVarType,
 
     selectedQuestionId(): number {
       return this.passingTest.questionIds[this.passingTest.selectedQuestionIndex]
@@ -44,6 +48,10 @@ export default defineComponent({
   },
 
   async created() {
+    if (this.passingTest.conditionallySectioned) {
+      this.conditionalVarsDialog = true
+    }
+
     await this.updateSelectedQuestion()
 
     if (!this.passingTest.isLimitless) {
@@ -107,16 +115,20 @@ export default defineComponent({
         const questions: PassingQuestion[] = [...this.passingTest.questions.values()]
         const answers: AnswerDto[] = await Promise.all(
           questions.map(async ({ id, answer }): Promise<AnswerDto> => {
-            if (answer instanceof File) {
-              answer = await this.$file.upload(answer)
-            }
+            if (answer instanceof File) answer = await this.$file.upload(answer)
             return {
               questionId: id,
               answer,
             }
           }),
         )
-        await this.$http.put(`/test/session/${this.passingTest.testSessionId}`, answers)
+        await this.$http.put(
+          `/test/session/${this.passingTest.testSessionId}`,
+          {
+            answers,
+            conditionalVarVals: this.passingTest.conditionalVarValues
+          }
+        )
         await this.$router.push('/test/all')
       } catch (e) {
         console.log(e)
@@ -138,7 +150,7 @@ export default defineComponent({
       <v-card-subtitle v-if="!passingTest.isLimitless">
         Осталось времени: {{ formattedTime }}
       </v-card-subtitle>
-      <v-card-subtitle v-else> Неограниченное время </v-card-subtitle>
+      <v-card-subtitle v-else> Неограниченное время</v-card-subtitle>
 
       <v-card-text>
         <question v-if="selectedQuestionFetched" />
@@ -148,19 +160,73 @@ export default defineComponent({
 
     <v-card-actions>
       <v-row class="pa-3" justify="end">
-        <v-btn color="error" variant="elevated" @click="showEndTestConfirm">Завершить тест</v-btn>
+        <v-btn
+          class="mr-3"
+          color="primary"
+          variant="elevated"
+          @click="conditionalVarsDialog = true"
+          text="Доп. данные"
+        />
+        <v-btn color="error" variant="elevated" @click="showEndTestConfirm" text="Завершить тест" />
       </v-row>
     </v-card-actions>
   </v-container>
 
   <v-dialog v-model="toShowEndTestConfirm" max-width="300">
-    <v-card>
-      <v-card-title>Завершить тест?</v-card-title>
+    <v-card title="Завершить тест?">
       <v-card-actions>
         <v-row justify="end">
           <v-btn variant="elevated" @click="toShowEndTestConfirm = false">Назад</v-btn>
           <v-btn variant="elevated" color="error" @click="endTest" class="mx-3">Завершить</v-btn>
         </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog v-model="conditionalVarsDialog" max-width="500">
+    <v-card title="Доп. информ. для оценивания теста">
+      <v-card-text>
+        <v-col cols="12">
+          <v-row v-for="(condVar, index) in passingTest.conditionalVars" :key="index">
+            <v-text-field
+              v-if="condVar.type === ConditionalSectioningVarType.number"
+              v-model="passingTest.conditionalVarValues[index].value[0]"
+              :label="condVar.name"
+              variant="outlined"
+              type="number"
+            />
+            <v-text-field
+              v-else-if="condVar.type === ConditionalSectioningVarType.string"
+              v-model="passingTest.conditionalVarValues[index].value[0]"
+              :label="condVar.name"
+              variant="outlined"
+            />
+            <v-checkbox
+              v-else-if="condVar.type === ConditionalSectioningVarType.boolean"
+              v-model="passingTest.conditionalVarValues[index].value[0]"
+              :label="condVar.name"
+            />
+            <v-select
+              v-else-if="condVar.type === ConditionalSectioningVarType.reference"
+              v-model="passingTest.conditionalVarValues[index].value"
+              :label="condVar.name"
+              variant="outlined"
+              :items="condVar.reference"
+              multiple
+              chips
+              closable-chips
+              clearable
+            />
+          </v-row>
+        </v-col>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          color="primary"
+          @click="conditionalVarsDialog = false"
+          variant="elevated"
+          text="Готово"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
