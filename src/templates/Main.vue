@@ -4,6 +4,7 @@ import RegionService from '@/services/RegionService.ts'
 import { useRegionStore } from '@/stores/region.ts'
 import { mapWritableState } from 'pinia'
 import { defineComponent } from 'vue'
+import hasRole from '@/utils/HasRole.ts'
 
 interface SideBarItem {
   name: string
@@ -78,31 +79,28 @@ export default defineComponent({
 
   methods: {
     filterSideBarItems(): void {
-      const rolesItem: string | null = sessionStorage.getItem('roles')
-      if (rolesItem === null) return
-      const roles: string[] = JSON.parse(rolesItem)
-      switch (roles[0]) {
-        case 'candidate':
+      switch (true) {
+        case hasRole('candidate'):
           this.sideBarItems = this.sideBarItems.filter(
             (item: SideBarItem): boolean => item.path === '/test/all',
           )
-          return
-        case 'admin':
+          break
+        case hasRole('admin'):
           this.sideBarItems = this.sideBarItems.filter(
             (item: SideBarItem): boolean => item.path !== '/test/all',
           )
-          return
-        case 'security':
+          break
+        case hasRole('security'):
           this.sideBarItems = this.sideBarItems.filter(
             (item: SideBarItem): boolean => item.path === '/candidate/all',
           )
-          return
-        case 'hr':
+          break
+        case hasRole('hr'):
           this.sideBarItems = this.sideBarItems.filter(
             (item: SideBarItem): boolean => item.path === '/candidate/all',
           )
-          return
-        case 'psycho':
+          break
+        case hasRole('psycho'):
           this.sideBarItems = this.sideBarItems.filter(
             (item: SideBarItem): boolean =>
               item.path !== '/candidate/all' &&
@@ -110,9 +108,9 @@ export default defineComponent({
               item.path !== '/test/constructor/all' &&
               item.path !== '/test/all',
           )
-          return
-        default:
           break
+        default:
+          this.sideBarItems = []
       }
     },
 
