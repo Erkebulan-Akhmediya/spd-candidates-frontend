@@ -33,6 +33,8 @@ export default defineComponent({
             file: null,
             nameRus: '',
             nameKaz: '',
+            isDisappearing: false,
+            timeToDisappear: 1,
             options: new Array<OptionToCreate>(
               {
                 withFile: false,
