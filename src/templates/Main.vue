@@ -2,9 +2,9 @@
 import LocaleChanger from '@/components/LocaleChanger.vue'
 import RegionService from '@/services/RegionService.ts'
 import { useRegionStore } from '@/stores/region.ts'
-import hasRole from '@/utils/HasRole'
 import { mapWritableState } from 'pinia'
 import { defineComponent } from 'vue'
+import hasRole from '@/utils/HasRole.ts'
 
 interface SideBarItem {
   name: string
@@ -79,34 +79,38 @@ export default defineComponent({
 
   methods: {
     filterSideBarItems(): void {
-      const rolesItem: string | null = sessionStorage.getItem('roles')
-      if (rolesItem === null) return
-
-      const roles: string[] = JSON.parse(rolesItem)
-
-      if (roles.includes('candidate')) {
-        this.sideBarItems = this.sideBarItems.filter(
-          (item: SideBarItem): boolean => item.path === '/test/all',
-        )
-        return
-      }
-
-      if (!hasRole('admin')) {
-        this.sideBarItems = this.sideBarItems.filter(
-          (item: SideBarItem): boolean =>
-            item.path !== '/candidate/all' &&
-            item.path !== '/test/constructor/all' &&
-            item.path !== '/test/all' &&
-            item.path !== '/test/constructor/essay',
-        )
-      }
-      if (!hasRole('psycho')) {
-        this.sideBarItems = this.sideBarItems.filter(
-          (item: SideBarItem): boolean =>
-            item.path !== '/test/assessment/all' &&
-            item.path !== '/test/result/all' &&
-            item.path !== '/test/constructor/essay',
-        )
+      switch (true) {
+        case hasRole('candidate'):
+          this.sideBarItems = this.sideBarItems.filter(
+            (item: SideBarItem): boolean => item.path === '/test/all',
+          )
+          break
+        case hasRole('admin'):
+          this.sideBarItems = this.sideBarItems.filter(
+            (item: SideBarItem): boolean => item.path !== '/test/all',
+          )
+          break
+        case hasRole('security'):
+          this.sideBarItems = this.sideBarItems.filter(
+            (item: SideBarItem): boolean => item.path === '/candidate/all',
+          )
+          break
+        case hasRole('hr'):
+          this.sideBarItems = this.sideBarItems.filter(
+            (item: SideBarItem): boolean => item.path === '/candidate/all',
+          )
+          break
+        case hasRole('psycho'):
+          this.sideBarItems = this.sideBarItems.filter(
+            (item: SideBarItem): boolean =>
+              item.path !== '/candidate/all' &&
+              item.path !== '/test/constructor/essay' &&
+              item.path !== '/test/constructor/all' &&
+              item.path !== '/test/all',
+          )
+          break
+        default:
+          this.sideBarItems = []
       }
     },
 
