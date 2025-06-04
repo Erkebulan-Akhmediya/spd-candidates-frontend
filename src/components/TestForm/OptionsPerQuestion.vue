@@ -3,9 +3,9 @@ import { defineComponent } from 'vue'
 import { TestType } from '@/interfaces/test.ts'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
-import type { VariantToCreate } from '@/interfaces/variant.ts'
-import type { QuestionToCreate } from '@/interfaces/question.ts'
-import type { OptionToCreate } from '@/interfaces/option.ts'
+import type { EditableVariant } from '@/interfaces/variant.ts'
+import type { EditableQuestion } from '@/interfaces/question.ts'
+import type { EditableOption } from '@/interfaces/option.ts'
 import TestCreatorService from '@/services/TestCreatorService.ts'
 
 export default defineComponent({
@@ -26,10 +26,10 @@ export default defineComponent({
     },
     isDisabled(): boolean {
       if (this.test.type === TestType.pointDistribution.valueOf()) return false
-      return this.test.variants.some((variant: VariantToCreate): boolean =>
-        variant.questions.some((question: QuestionToCreate): boolean =>
+      return this.test.variants.some((variant: EditableVariant): boolean =>
+        variant.questions.some((question: EditableQuestion): boolean =>
           question.options.some(
-            (option: OptionToCreate): boolean =>
+            (option: EditableOption): boolean =>
               !!option.nameRus || !!option.nameKaz || !!option.isCorrect,
           ),
         ),
@@ -44,7 +44,7 @@ export default defineComponent({
   watch: {
     optionsPerQuestion() {
       this.test.variants.forEach((variant) => {
-        variant.questions.forEach((question: QuestionToCreate) => {
+        variant.questions.forEach((question: EditableQuestion) => {
           question.options = this.testCreator.newOptionList(this.optionsPerQuestion)
         })
       })

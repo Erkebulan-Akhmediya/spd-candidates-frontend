@@ -4,7 +4,7 @@ import { useIrohaStore } from '@/stores/iroha.ts'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestConverterService from '@/services/TestConverterService.ts'
-import { type TestToSend, TestType } from '@/interfaces/test.ts'
+import { type SendableTest, TestType } from '@/interfaces/test.ts'
 import TestCreatorService from '@/services/TestCreatorService.ts'
 import type { Translatable } from '@/interfaces/global.ts'
 
@@ -56,7 +56,7 @@ export default defineComponent({
         this.test.type = TestType.withOpenQuestions.valueOf()
         this.test.scales = [this.testCreator.newScale(1)]
         this.test.variants = []
-        const test: TestToSend = await this.testConverter.convertTestToSend(this.test)
+        const test: SendableTest = await this.testConverter.convertTestToSend(this.test)
         await this.$http.post('/test', test)
       } catch (e: unknown) {
         console.log(e)

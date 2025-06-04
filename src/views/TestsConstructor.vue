@@ -26,8 +26,9 @@ export default defineComponent({
           title: 'Направления',
         },
         {
-          key: 'menu',
+          key: 'edit',
           title: '',
+          width: '10%',
         },
       ],
     }
@@ -40,12 +41,12 @@ export default defineComponent({
   methods: {
     getTranslatedName,
 
-    async openTestForm(): Promise<void> {
+    async openCreateTestForm(): Promise<void> {
       await this.$router.push({ path: '/test/create' })
     },
 
-    async openTestEvaluationForm(testId: number): Promise<void> {
-      await this.$router.push({ path: `/test/${testId}/evaluation` })
+    async openEditTestForm(testId: number): Promise<void> {
+      await this.$router.push({ path : `/test/${testId}/edit` })
     },
 
     async fetchTests(): Promise<void> {
@@ -79,7 +80,7 @@ export default defineComponent({
     >
       <template v-slot:top>
         <v-row justify="end">
-          <v-btn icon="mdi-plus" color="primary" @click="openTestForm" />
+          <v-btn icon="mdi-plus" color="primary" @click="openCreateTestForm" />
         </v-row>
       </template>
 
@@ -99,18 +100,8 @@ export default defineComponent({
         </v-row>
       </template>
 
-      <template v-slot:[`item.menu`]="{item}">
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props" />
-          </template>
-
-          <v-list hover="hover">
-            <v-list-item title="Методика оценивания" @click="openTestEvaluationForm(item.id)" />
-            <v-list-item title="Вопросы"></v-list-item>
-            <v-list-item title="Удалить"></v-list-item>
-          </v-list>
-        </v-menu>
+      <template v-slot:[`item.edit`]="{ item }">
+        <v-btn color="primary" text="Редактировать" @click="openEditTestForm(item.id)" />
       </template>
     </v-data-table-server>
   </v-container>

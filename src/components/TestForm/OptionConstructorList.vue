@@ -4,8 +4,8 @@ import OptionConstructor from '@/components/TestForm/OptionConstructor.vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestCreatorService from '@/services/TestCreatorService.ts'
-import type { QuestionToCreate } from '@/interfaces/question.ts'
-import type { VariantToCreate } from '@/interfaces/variant.ts'
+import type { EditableQuestion } from '@/interfaces/question.ts'
+import type { EditableVariant } from '@/interfaces/variant.ts'
 import PointDistributionOptionConstructor from '@/components/TestForm/PointDistributionOptionConstructor.vue'
 import { TestType } from '@/interfaces/test.ts'
 
@@ -38,8 +38,8 @@ export default defineComponent({
 
   methods: {
     correctOptionCount(): void {
-      const variant: VariantToCreate = this.test.variants[this.variantIndex]
-      const question: QuestionToCreate = variant.questions[this.questionIndex]
+      const variant: EditableVariant = this.test.variants[this.variantIndex]
+      const question: EditableQuestion = variant.questions[this.questionIndex]
       const optionCount: number = question.options.length
 
       if (optionCount === this.optionsPerQuestion) return

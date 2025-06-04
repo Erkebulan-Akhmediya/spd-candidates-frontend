@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import { type PassingTest, type TestToCreate, TestType, type TestTypeApi } from '@/interfaces/test.ts'
-import type { VariantToCreate } from '@/interfaces/variant.ts'
-import { type QuestionToCreate} from '@/interfaces/question.ts'
-import type { OptionToCreate } from '@/interfaces/option.ts'
+import { type PassingTest, type EditableTest, TestType, type TestTypeApi } from '@/interfaces/test.ts'
+import type { EditableVariant } from '@/interfaces/variant.ts'
+import { type EditableQuestion} from '@/interfaces/question.ts'
+import type { EditableOption } from '@/interfaces/option.ts'
 import type { ConditionalSectioningVar, Scale, ScaleSection } from '@/interfaces/test-evaluation.ts'
 
 export const useTestStore = defineStore('test', {
@@ -33,15 +33,15 @@ export const useTestStore = defineStore('test', {
             conditions: []
           }),
         }),
-        variants: new Array<VariantToCreate>({
-          questions: new Array<QuestionToCreate>({
+        variants: new Array<EditableVariant>({
+          questions: new Array<EditableQuestion>({
             withFile: false,
             file: null,
             nameRus: '',
             nameKaz: '',
             isDisappearing: false,
             timeToDisappear: 1,
-            options: new Array<OptionToCreate>({
+            options: new Array<EditableOption>({
               withFile: false,
               file: null,
               nameKaz: '',
@@ -55,7 +55,7 @@ export const useTestStore = defineStore('test', {
             }),
           }),
         }),
-      } as TestToCreate,
+      } as EditableTest,
       passingTest: {} as PassingTest,
       optionsPerQuestion: 2,
       testTypes: new Array<TestTypeApi>(),

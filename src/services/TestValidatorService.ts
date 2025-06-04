@@ -1,7 +1,7 @@
-import type { OptionToCreate } from '@/interfaces/option.ts'
-import { type QuestionToCreate } from '@/interfaces/question.ts'
-import { type TestToCreate, TestType } from '@/interfaces/test.ts'
-import type { VariantToCreate } from '@/interfaces/variant.ts'
+import type { EditableOption } from '@/interfaces/option.ts'
+import { type EditableQuestion } from '@/interfaces/question.ts'
+import { type EditableTest, TestType } from '@/interfaces/test.ts'
+import type { EditableVariant } from '@/interfaces/variant.ts'
 import type {
   Condition,
   ConditionalSectioningVar,
@@ -14,7 +14,7 @@ export default class TestValidatorService {
 
   private emptyFields: string[]
   private errors: string[]
-  private test: TestToCreate | null
+  private test: EditableTest | null
   private scaleIndex: number
   private sectionIndex: number
   private conditionIndex: number
@@ -41,7 +41,7 @@ export default class TestValidatorService {
     return TestValidatorService.instance
   }
 
-  public validate(test: TestToCreate): void {
+  public validate(test: EditableTest): void {
     this.emptyFields = []
     this.errors = []
 
@@ -164,7 +164,7 @@ export default class TestValidatorService {
     })
   }
 
-  private getVariantByIndex(): VariantToCreate {
+  private getVariantByIndex(): EditableVariant {
     if (this.test === null) throw 'Test is required for validation'
     return this.test.variants[this.variantIndex]
   }
@@ -183,7 +183,7 @@ export default class TestValidatorService {
     if (typesRequiringNoValidation.includes(this.test.type)) return
     this.validateQuestionByType()
 
-    const question: QuestionToCreate = this.getQuestionByIndex()
+    const question: EditableQuestion = this.getQuestionByIndex()
     question.options.forEach((_, optionIndex: number): void => {
       this.optionIndex = optionIndex
       this.validateOption()
@@ -191,7 +191,7 @@ export default class TestValidatorService {
   }
 
   private validateQuestionFields(): void {
-    const question: QuestionToCreate = this.getQuestionByIndex()
+    const question: EditableQuestion = this.getQuestionByIndex()
 
     if (question.withFile && question.file === null) {
       this.emptyFields.push(
@@ -213,7 +213,7 @@ export default class TestValidatorService {
   }
 
   private validateOptionCount(): void {
-    const question: QuestionToCreate = this.getQuestionByIndex()
+    const question: EditableQuestion = this.getQuestionByIndex()
     if (question.options.length > 1) return
     this.errors.push(
       `не достаточное количество вариантов ответа в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`,
@@ -232,12 +232,12 @@ export default class TestValidatorService {
 
   private countCorrectOptions(): number {
     if (this.test === null) throw 'Test is required for validation'
-    const question: QuestionToCreate = this.getQuestionByIndex()
-    return question.options.filter((option: OptionToCreate): boolean => option.isCorrect ?? false)
+    const question: EditableQuestion = this.getQuestionByIndex()
+    return question.options.filter((option: EditableOption): boolean => option.isCorrect ?? false)
       .length
   }
 
-  private getQuestionByIndex(): QuestionToCreate {
+  private getQuestionByIndex(): EditableQuestion {
     return this.getVariantByIndex().questions[this.questionIndex]
   }
 
@@ -255,14 +255,14 @@ export default class TestValidatorService {
   }
 
   private validateOption(): void {
-    const option: OptionToCreate = this.getOptionByIndex()
+    const option: EditableOption = this.getOptionByIndex()
     const emptyFieldLocation: string = `в варианте ответа ${this.optionIndex + 1} в вопросе ${this.questionIndex + 1} в варианте ${this.variantIndex + 1}`
     if (option.withFile && option.file === null) this.emptyFields.push(`файл ${emptyFieldLocation}`)
     if (!option.nameKaz) this.emptyFields.push(`ответ (каз) ${emptyFieldLocation}`)
     if (!option.nameRus) this.emptyFields.push(`ответ (рус) ${emptyFieldLocation}`)
   }
 
-  private getOptionByIndex(): OptionToCreate {
+  private getOptionByIndex(): EditableOption {
     return this.getQuestionByIndex().options[this.optionIndex]
   }
 }

@@ -1,20 +1,20 @@
 import type { Translatable } from '@/interfaces/global.ts'
-import type { OptionToCreate, OptionToSend, PassingOption } from '@/interfaces/option.ts'
+import type { EditableOption, SendableOption, PassingOption } from '@/interfaces/option.ts'
 
 export interface Question extends Translatable {
   withFile: boolean
 }
 
-export interface QuestionToCreate extends Question {
+export interface EditableQuestion extends Question {
   file: File | null
-  options: OptionToCreate[]
+  options: EditableOption[]
   isDisappearing: boolean
   timeToDisappear: number
 }
 
-export interface QuestionToSend extends Question {
+export interface SendableQuestion extends Question {
   fileName: string | null
-  options: OptionToSend[]
+  options: SendableOption[]
   isDisappearing: boolean
   timeToDisappear: number
 }

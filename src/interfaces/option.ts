@@ -6,12 +6,12 @@ export interface Option extends Translatable {
   isCorrect: boolean | null
 }
 
-export interface OptionToCreate extends Option {
+export interface EditableOption extends Option {
   file: File | null
   increment: OptionIncrement
 }
 
-export interface OptionToSend extends Option {
+export interface SendableOption extends Option {
   fileName: string | null
   increment: OptionIncrement
 }

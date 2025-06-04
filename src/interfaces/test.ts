@@ -1,5 +1,5 @@
 import type { Translatable } from '@/interfaces/global.ts'
-import type { VariantToCreate, VariantToSend } from '@/interfaces/variant.ts'
+import type { EditableVariant, SendableVariant } from '@/interfaces/variant.ts'
 import type { PassingQuestion } from '@/interfaces/question.ts'
 import type { ConditionalSectioningVar, ConditionalSectioningVarValue, Scale } from '@/interfaces/test-evaluation.ts'
 
@@ -10,7 +10,7 @@ export interface Test extends Translatable {
   descriptionKaz: string
 }
 
-interface TestToCreateOrSend extends Test {
+interface EditableAndSendableTest extends Test {
   areasOfActivities: string[]
   type: TestType.withMcqHavingNoCorrect
   maxPointsPerQuestion: number
@@ -19,12 +19,12 @@ interface TestToCreateOrSend extends Test {
   conditionalVars: ConditionalSectioningVar[]
 }
 
-export interface TestToCreate extends TestToCreateOrSend {
-  variants: VariantToCreate[]
+export interface EditableTest extends EditableAndSendableTest {
+  variants: EditableVariant[]
 }
 
-export interface TestToSend extends TestToCreateOrSend {
-  variants: VariantToSend[]
+export interface SendableTest extends EditableAndSendableTest {
+  variants: SendableVariant[]
 }
 
 export interface PassingTest extends Test {

@@ -3,8 +3,8 @@ import { defineComponent } from 'vue'
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import VariantConstructor from '@/components/TestForm/VariantConstructor.vue'
-import { type QuestionToCreate } from '@/interfaces/question.ts'
-import type { OptionToCreate } from '@/interfaces/option.ts'
+import { type EditableQuestion } from '@/interfaces/question.ts'
+import type { EditableOption } from '@/interfaces/option.ts'
 
 export default defineComponent({
   name: `VariantConstructorList`,
@@ -27,7 +27,7 @@ export default defineComponent({
 
     addVariant() {
       this.test.variants.push({
-        questions: new Array<QuestionToCreate>(
+        questions: new Array<EditableQuestion>(
           {
             withFile: false,
             file: null,
@@ -35,7 +35,7 @@ export default defineComponent({
             nameKaz: '',
             isDisappearing: false,
             timeToDisappear: 1,
-            options: new Array<OptionToCreate>(
+            options: new Array<EditableOption>(
               {
                 withFile: false,
                 file: null,

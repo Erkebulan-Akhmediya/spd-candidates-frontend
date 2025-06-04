@@ -1,5 +1,5 @@
-import type { OptionToCreate } from '@/interfaces/option.ts'
-import { type QuestionToCreate } from '@/interfaces/question.ts'
+import type { EditableOption } from '@/interfaces/option.ts'
+import { type EditableQuestion } from '@/interfaces/question.ts'
 import type { Scale, ScaleSection } from '@/interfaces/test-evaluation.ts'
 
 export default class TestCreatorService {
@@ -35,7 +35,7 @@ export default class TestCreatorService {
     }
   }
 
-  public newQuestion(optionsPerQuestion: number): QuestionToCreate {
+  public newQuestion(optionsPerQuestion: number): EditableQuestion {
     return {
       withFile: false,
       file: null,
@@ -47,14 +47,14 @@ export default class TestCreatorService {
     }
   }
 
-  public newOptionList(optionsPerQuestion: number): OptionToCreate[] {
+  public newOptionList(optionsPerQuestion: number): EditableOption[] {
     return Array.from(
       { length: optionsPerQuestion },
-      (): OptionToCreate => this.newOption(),
+      (): EditableOption => this.newOption(),
     )
   }
 
-  public newOption(): OptionToCreate {
+  public newOption(): EditableOption {
     return {
       withFile: false,
       file: null,

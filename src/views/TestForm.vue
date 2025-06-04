@@ -4,7 +4,7 @@ import VariantConstructorList from '@/components/TestForm/VariantConstructorList
 import { mapWritableState } from 'pinia'
 import { useTestStore } from '@/stores/test.ts'
 import TestAreaOfActivity from '@/components/TestForm/TestAreaOfActivity.vue'
-import { type TestToSend, TestType, type TestTypeApi } from '@/interfaces/test.ts'
+import { type SendableTest, TestType, type TestTypeApi } from '@/interfaces/test.ts'
 import TestConverterService from '@/services/TestConverterService.ts'
 import TestValidatorService from '@/services/TestValidatorService.ts'
 import { getTranslatedName } from '@/utils/Translate.ts'
@@ -33,6 +33,16 @@ export default defineComponent({
 
     testValidator: () => TestValidatorService.getInstance(),
 
+    edit(): boolean {
+      const pathParts: string[] = this.$route.path.split('/')
+      return pathParts.length === 4 && pathParts[1] == 'test' && pathParts[3] == 'edit'
+    },
+
+    testId(): number {
+      const pathParts: string[] = this.$route.path.split('/')
+      return parseInt(pathParts[2])
+    },
+
     automaticallyEvaluated(): boolean {
       const autoEvaluatedTestTypes: TestTypeApi[] = this.testTypes.filter(
         (type: TestTypeApi): boolean => type.automaticallyEvaluated,
@@ -60,10 +70,16 @@ export default defineComponent({
     await this.fetchTestTypes()
   },
 
+  async mounted() {
+    if (this.edit) {
+      await this.fetchTest()
+    }
+  },
+
   methods: {
     getTranslatedName,
     async goBack(): Promise<void> {
-      await this.$router.push('/test/all')
+      await this.$router.push('/test/constructor/all')
     },
 
     async fetchTestTypes(): Promise<void> {
@@ -78,13 +94,27 @@ export default defineComponent({
       try {
         this.testValidator.validate(this.test)
 
-        const test: TestToSend = await this.testConverter.convertTestToSend(this.test)
+        const test: SendableTest = await this.testConverter.convertTestToSend(this.test)
 
-        await this.$http.post('/test', test)
+        if (this.edit) {
+          await this.$http.put(`/test/${this.testId}`, test)
+        } else {
+          await this.$http.post('/test', test)
+        }
 
         await this.$router.push('/test/constructor/all')
       } catch (e) {
         this.isConfirmSaveDialogOpen = false
+        console.log(e)
+        await this.showErr(`${e}`)
+      }
+    },
+
+    async fetchTest(): Promise<void> {
+      try {
+        const test: SendableTest = await this.$http.get<SendableTest>(`/test/${this.testId}`)
+        this.test = await this.testConverter.convertTestToEdit(test)
+      } catch (e) {
         console.log(e)
         await this.showErr(`${e}`)
       }
