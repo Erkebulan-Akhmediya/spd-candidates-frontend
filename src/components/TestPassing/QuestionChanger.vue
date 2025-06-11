@@ -14,18 +14,18 @@ export default defineComponent({
     isLast(): boolean {
       return this.passingTest.selectedQuestionIndex === this.passingTest.questionIds.length - 1
     },
-    rowJustification(): 'end' | 'start' | 'space-between' {
-      if (this.isFirst) return 'end'
-      if (this.isLast) return 'start'
-      return 'space-between'
-    },
   },
 })
 </script>
 
 <template>
-  <v-row :justify="rowJustification" class="pa-3">
-    <v-btn v-if="!isFirst" @click="passingTest.selectedQuestionIndex--" color="primary">
+  <v-row justify="start" class="pa-3">
+    <v-btn
+      v-if="!isFirst"
+      @click="passingTest.selectedQuestionIndex--"
+      color="primary"
+      class="mr-3"
+    >
       <v-icon>mdi-arrow-left</v-icon>
       Пред.
     </v-btn>

@@ -86,6 +86,10 @@ export default defineComponent({
       >
         <v-expansion-panel-text>
           <p>Длительность: {{ test.isLimitless ? 'Без ограничений' : `${test.duration} мин` }}</p>
+          <p>
+            Описание:
+            {{ getTranslatedName({ nameRus: test.descriptionRus, nameKaz: test.descriptionKaz }) }}
+          </p>
           <v-row justify="end">
             <v-btn color="primary" class="mb-2" @click="startTest(test)">Начать</v-btn>
           </v-row>

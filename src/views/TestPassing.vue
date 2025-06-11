@@ -161,6 +161,7 @@ export default defineComponent({
     <v-card-actions>
       <v-row class="pa-3" justify="end">
         <v-btn
+          v-if="passingTest.conditionallySectioned"
           class="mr-3"
           color="primary"
           variant="elevated"
