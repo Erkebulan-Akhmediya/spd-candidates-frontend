@@ -220,61 +220,49 @@ export default defineComponent({
       color="error"
       v-if="tab !== 'create'"
       @click="openApproveDeleteDialog"
-    >
-      Удалить
-    </v-btn>
-
-    <v-btn variant="elevated" class="mr-3" @click="goBack" v-if="tab === 'create'">Отмена</v-btn>
+      text="Удалить"
+    />
+    <v-btn variant="elevated" class="mr-3" @click="goBack" v-if="tab === 'create'" text="Отмена" />
     <v-btn
       variant="elevated"
       class="mr-3"
       @click="goBack"
       v-else-if="['approved', 'rejected'].includes(tab)"
-    >
-      Назад
-    </v-btn>
-    <v-btn variant="elevated" class="mr-3" @click="reject" color="error" v-else>Отказать</v-btn>
-
+      text="Назад"
+    />
+    <v-btn variant="elevated" class="mr-3" @click="reject" color="error" v-else text="Отказать" />
     <v-btn
       variant="elevated"
       class="mr-3"
       color="primary"
       @click="save"
       v-if="['create', 'new'].includes(tab)"
-    >
-      Сохранить
-    </v-btn>
-
+      text="Сохранить"
+    />
     <v-btn
       variant="elevated"
       class="mr-3"
       color="primary"
       @click="sendToSecurityCheck"
       v-if="tab === 'new' && hasRole('admin')"
-    >
-      Направить на проверку ВБ
-    </v-btn>
-
+      text="Направить на проверку ВБ"
+    />
     <v-btn
       variant="elevated"
       class="mr-3"
       color="primary"
       @click="sendToApproval"
       v-else-if="tab === 'security'"
-    >
-      Направить на согласование
-    </v-btn>
-
+      text="Направить на согласование"
+    />
     <v-btn
       variant="elevated"
       class="mr-3"
       color="primary"
       @click="approve"
       v-else-if="tab === 'approval'"
-    >
-      Согласовать
-    </v-btn>
-
+      text="Согласовать"
+    />
     <download-certificate-btn class="mr-3" />
   </v-row>
 

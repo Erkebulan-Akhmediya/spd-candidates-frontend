@@ -71,7 +71,6 @@ export default defineComponent({
     async fetchCandidate() {
       try {
         const candidate = await this.$http.get<Candidate>(`/candidate/${this.$route.params.id}`)
-        console.log('candidate', candidate)
         this.candidate = candidate
         this.candidate.birthDate = new Date(candidate.birthDate)
       } catch (e) {

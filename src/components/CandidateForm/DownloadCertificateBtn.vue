@@ -3,7 +3,6 @@ import type {
   Education,
   EducationType,
   Experience,
-  Language,
   LanguageKnowledge,
   Nationality,
   RecruitedMethod,
@@ -165,14 +164,6 @@ export default defineComponent({
       return this.getTranslatedName(type)
     },
 
-    getLanguageName(knowledge: LanguageKnowledge): string {
-      const lang: Language | undefined = this.languages.find(
-        (language: Language): boolean => language.code === knowledge.languageCode,
-      )
-      if (!lang) return ''
-      return this.getTranslatedName(lang)
-    },
-
     saveCertificate(blob: Blob): void {
       const candidateFullName: string = `${this.candidate.lastName} ${this.candidate.firstName} ${this.candidate.middleName}`
       const fileName: string = `справка ${candidateFullName} (${this.formatDate(new Date())}).docx`
@@ -190,7 +181,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-btn variant="elevated" color="primary" @click="downloadCertificate">Скачать справку</v-btn>
+  <v-btn variant="elevated" color="primary" @click="downloadCertificate" text="Скачать справку" />
 </template>
 
 <style scoped></style>

@@ -1,4 +1,4 @@
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios'
 
 interface Response<Type> {
   message: string
@@ -20,8 +20,13 @@ export class HttpService {
   }
 
   public async get<Type>(url: string, config?: AxiosRequestConfig): Promise<Type> {
-    const {data} = await this.axios.get<Response<Type>>(url, config)
-    return data.data
+    try {
+      const {data} = await this.axios.get<Response<Type>>(url, config)
+      return data.data
+    } catch (e) {
+      console.error('axios:', e)
+      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+    }
   }
 
   public async post<Type>(
@@ -29,8 +34,13 @@ export class HttpService {
     payload?: unknown,
     config?: AxiosRequestConfig
   ): Promise<Type> {
-    const {data} = await this.axios.post<Response<Type>>(url, payload, config)
-    return data.data
+    try {
+      const {data} = await this.axios.post<Response<Type>>(url, payload, config)
+      return data.data
+    } catch (e) {
+      console.error('axios:', e)
+      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+    }
   }
 
   public async put<Type>(
@@ -38,13 +48,23 @@ export class HttpService {
     payload?: unknown,
     config?: AxiosRequestConfig
   ): Promise<Type> {
-    const {data} = await this.axios.put<Response<Type>>(url, payload, config)
-    return data.data
+    try {
+      const {data} = await this.axios.put<Response<Type>>(url, payload, config)
+      return data.data
+    } catch (e) {
+      console.error('axios:', e)
+      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+    }
   }
 
   public async delete<Type>(url: string, config?: AxiosRequestConfig): Promise<Type> {
-    const {data} = await this.axios.delete<Response<Type>>(url, config)
-    return data.data
+    try {
+      const {data} = await this.axios.delete<Response<Type>>(url, config)
+      return data.data
+    } catch (e) {
+      console.error('axios:', e)
+      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+    }
   }
 
 }
