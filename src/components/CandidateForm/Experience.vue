@@ -39,10 +39,6 @@ export default defineComponent({
     ...mapWritableState(useCandidateStore, ['candidate']),
   },
 
-  mounted() {
-    console.log('Component mounted.', this.candidate)
-  },
-
   methods: {
     addExperience() {
       this.candidate.experiences.push({
