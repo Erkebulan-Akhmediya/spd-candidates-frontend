@@ -25,7 +25,7 @@ export class HttpService {
       return data.data
     } catch (e) {
       console.error('axios:', e)
-      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+      throw `ошибка сети ${(e as AxiosError)?.code ?? ''}`
     }
   }
 
@@ -39,7 +39,7 @@ export class HttpService {
       return data.data
     } catch (e) {
       console.error('axios:', e)
-      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+      throw `ошибка сети ${(e as AxiosError)?.code ?? ''}`
     }
   }
 
@@ -53,7 +53,7 @@ export class HttpService {
       return data.data
     } catch (e) {
       console.error('axios:', e)
-      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+      throw `ошибка сети ${(e as AxiosError)?.code ?? ''}`
     }
   }
 
@@ -63,7 +63,7 @@ export class HttpService {
       return data.data
     } catch (e) {
       console.error('axios:', e)
-      throw `Ошибка ${(e as AxiosError)?.code ?? ':/'}`
+      throw `ошибка сети ${(e as AxiosError)?.code ?? ''}`
     }
   }
 

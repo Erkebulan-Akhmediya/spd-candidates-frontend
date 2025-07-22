@@ -47,6 +47,14 @@ export default defineComponent({
 
   computed: {
     ...mapWritableState(useCandidateStore, ['candidate', 'candidatePhoto']),
+
+    title(): string {
+      if (this.tab === 'create') return 'Новый кандидат'
+      if (this.tab === 'new') return 'Анкета кандидата'
+      if (this.tab === 'security') return 'Проверка ВБ'
+      if (this.tab === 'approval') return 'Согласование'
+      return ''
+    },
   },
 
   async mounted() {
@@ -100,14 +108,6 @@ export default defineComponent({
       this.candidate.securityCheckResult = ''
       this.candidate.additionalData = ''
     },
-
-    getTitle(): string {
-      if (this.tab === 'create') return 'Новый кандидат'
-      if (this.tab === 'new') return 'Анкета кандидата'
-      if (this.tab === 'security') return 'Проверка ВБ'
-      if (this.tab === 'approval') return 'Согласование'
-      return ''
-    },
   },
 })
 </script>
@@ -129,7 +129,7 @@ export default defineComponent({
           <v-icon>mdi-arrow-left</v-icon>
           <p>Назад</p>
         </v-btn>
-        <p class="ml-5">{{ getTitle() }}</p>
+        <p class="ml-5">{{ title }}</p>
       </v-row>
     </v-card-title>
 

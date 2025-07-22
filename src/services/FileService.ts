@@ -14,15 +14,20 @@ export default class FileService {
   }
 
   public async upload(file: File): Promise<string> {
-    const formData: FormData = new FormData()
-    const fileName: string = await this.generateUniqueName(file)
-    formData.append('file', file, fileName)
-    await this.http.post('/file', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    return fileName
+    try {
+      const formData: FormData = new FormData()
+      const fileName: string = await this.generateUniqueName(file)
+      formData.append('file', file, fileName)
+      await this.http.post('/file', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      return fileName
+    } catch (e) {
+      console.error('file service:', e)
+      throw `ошибка загрузки файла: ${e}`
+    }
   }
 
   private async generateUniqueName(file: File): Promise<string> {
@@ -30,13 +35,21 @@ export default class FileService {
     const byteArray: Uint8Array = new Uint8Array(arrayBuffer)
     const uuid: string = v5(byteArray, v5.URL)
     const fileExtension: string | undefined = file.name.split('.').pop()
-    if (fileExtension === undefined) throw 'Отсутствует расширение файла'
+    if (fileExtension === undefined) throw 'отсутствует расширение файла'
+    if (!['jpg', 'jpeg', 'png'].includes(fileExtension)) {
+      throw `не допустимый фотмат файла: ${fileExtension}`
+    }
     return `${uuid}.${fileExtension}`
   }
 
   public async fetchBase64Url(name: string): Promise<string> {
-    return await this.http.get<string>('/file', {
-      params: {name}
-    })
+    try {
+      return await this.http.get<string>('/file', {
+        params: {name}
+      })
+    } catch (e) {
+      console.error('file service:', e)
+      throw 'ошибка скачивания файла'
+    }
   }
 }
